@@ -26,6 +26,7 @@ interface Subcategory {
 interface ProductFormData {
   name: string;
   brand_id: string;
+  custom_brand?: string | null;
   gender: 'men' | 'women' | 'unisex' | 'kids';
   description: string;
   price: number;
@@ -497,37 +498,40 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
 
       if (productError) throw productError;
 
-      const imagePromises = images.map(async (file, index) => {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}-${index}.${fileExt}`;
-        const filePath = `${product.id}/${fileName}`;
+      // Handle new images
+      if (images.length > 0) {
+        const imagePromises = images.map(async (file, index) => {
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${Date.now()}-${index}.${fileExt}`;
+          const filePath = `${product.id}/${fileName}`;
 
-        const { error: uploadError } = await supabase.storage
-          .from('product-images')
-          .upload(filePath, file);
+          const { error: uploadError } = await supabase.storage
+            .from('product-images')
+            .upload(filePath, file);
 
-        if (uploadError) throw uploadError;
+          if (uploadError) throw uploadError;
 
-        const { data: { publicUrl } } = supabase.storage
-          .from('product-images')
-          .getPublicUrl(filePath);
+          const { data: { publicUrl } } = supabase.storage
+            .from('product-images')
+            .getPublicUrl(filePath);
 
-        return publicUrl;
-      });
+          return publicUrl;
+        });
 
-      const imageUrls = await Promise.all(imagePromises);
+        const imageUrls = await Promise.all(imagePromises);
 
-      const { error: imagesError } = await supabase
-        .from('product_images')
-        .insert(
-          imageUrls.map((url, index) => ({
-            product_id: product.id,
-            url,
-            position: index,
-          }))
-        );
+        const { error: imagesError } = await supabase
+          .from('product_images')
+          .insert(
+            imageUrls.map((url, index) => ({
+              product_id: product.id,
+              url,
+              position: index,
+            }))
+          );
 
-      if (imagesError) throw imagesError;
+        if (imagesError) throw imagesError;
+      }
 
       onSuccess();
       toast.success('Product added successfully');
@@ -852,6 +856,35 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                       rows={3}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                     />
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-medium mb-4">Product Settings</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="is_visible"
+                      {...register('is_visible')}
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    />
+                    <label htmlFor="is_visible" className="ml-2 block text-sm text-gray-900">
+                      Make product visible
+                    </label>
+                  </div>
+                  
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="is_returnable"
+                      {...register('is_returnable')}
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    />
+                    <label htmlFor="is_returnable" className="ml-2 block text-sm text-gray-900">
+                      Product is returnable
+                    </label>
                   </div>
                 </div>
               </div>

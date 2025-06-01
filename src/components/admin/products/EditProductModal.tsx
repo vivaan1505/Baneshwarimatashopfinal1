@@ -252,7 +252,8 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       custom_brand: null,
       tags: product.tags || [],
       type: product.type || mapCategoryToType(category),
-      subcategory: product.subcategory || ''
+      subcategory: product.subcategory || '',
+      is_returnable: product.is_returnable !== false // Default to true if not explicitly set to false
     }
   });
 
@@ -296,7 +297,8 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       custom_brand: null,
       tags: product.tags || [],
       type: product.type || mapCategoryToType(category),
-      subcategory: product.subcategory || ''
+      subcategory: product.subcategory || '',
+      is_returnable: product.is_returnable !== false // Default to true if not explicitly set to false
     });
 
     if (isSpecialCategory && !product.tags?.includes(category)) {
@@ -738,6 +740,17 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
                   />
                   <label className="ml-2 block text-sm text-gray-900">
                     Make product visible
+                  </label>
+                </div>
+
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    {...register('is_returnable')}
+                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  />
+                  <label className="ml-2 block text-sm text-gray-900">
+                    Product is returnable
                   </label>
                 </div>
 
