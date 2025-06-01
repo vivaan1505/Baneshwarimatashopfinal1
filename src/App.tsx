@@ -10,7 +10,6 @@ import NewArrivalsPage from './pages/NewArrivalsPage';
 import CollectionsPage from './pages/CollectionsPage';
 import BridalBoutique from './pages/specialty/BridalBoutique';
 import FestiveStore from './pages/specialty/FestiveStore';
-import FestiveGiftGuidesPage from './pages/specialty/FestiveGiftGuidesPage';
 import BlogPage from './pages/BlogPage';
 import BlogPost from './pages/BlogPost';
 import CareersPage from './pages/CareersPage';
@@ -23,10 +22,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import AccountPage from './pages/AccountPage';
 import BrandPage from './pages/BrandPage';
 import ThemeProvider from './components/theme/ThemeProvider';
-import SearchResultsPage from './pages/SearchResultsPage';
 import WishlistPage from './pages/WishlistPage';
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
-import TermsConditionsPage from './pages/TermsConditionsPage';
 
 // Category Pages
 import FootwearPage from './pages/FootwearPage';
@@ -94,7 +90,6 @@ function App() {
             <Route path="product/:id" element={<ProductPage />} />
             <Route path="coupons" element={<CouponsPage />} />
             <Route path="brand/:slug" element={<BrandPage />} />
-            <Route path="search" element={<SearchResultsPage />} />
             <Route path="wishlist" element={<WishlistPage />} />
             
             {/* Protected Routes */}
@@ -107,7 +102,6 @@ function App() {
             {/* Specialty Store Routes */}
             <Route path="bridal-boutique" element={<BridalBoutique />} />
             <Route path="festive-store" element={<FestiveStore />} />
-            <Route path="festive-store/gift-guides" element={<FestiveGiftGuidesPage />} />
             
             {/* Information Routes */}
             <Route path="blog" element={<BlogPage />} />
@@ -115,8 +109,6 @@ function App() {
             <Route path="careers" element={<CareersPage />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="contact" element={<ContactPage />} />
-            <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
-            <Route path="terms-conditions" element={<TermsConditionsPage />} />
             
             {/* 404 Route */}
             <Route path="*" element={<NotFoundPage />} />

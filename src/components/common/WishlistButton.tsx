@@ -7,27 +7,25 @@ import { toast } from 'react-hot-toast';
 interface WishlistButtonProps {
   productId: string;
   className?: string;
-  size?: number;
+  iconSize?: number;
   showText?: boolean;
 }
 
 const WishlistButton: React.FC<WishlistButtonProps> = ({ 
   productId, 
   className = '', 
-  size = 20,
+  iconSize = 20,
   showText = false
 }) => {
-  const { user } = useAuthStore();
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [wishlistId, setWishlistId] = useState<string | null>(null);
+  const { user } = useAuthStore();
 
   useEffect(() => {
     if (user) {
       checkWishlistStatus();
     } else {
       setIsInWishlist(false);
-      setWishlistId(null);
     }
   }, [user, productId]);
 
@@ -38,15 +36,10 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
         .select('id')
         .eq('user_id', user?.id)
         .eq('product_id', productId)
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error checking wishlist status:', error);
-        return;
-      }
-
+      if (error) throw error;
       setIsInWishlist(!!data);
-      setWishlistId(data?.id || null);
     } catch (error) {
       console.error('Error checking wishlist status:', error);
     }
@@ -60,34 +53,29 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
 
     setLoading(true);
     try {
-      if (isInWishlist && wishlistId) {
+      if (isInWishlist) {
         // Remove from wishlist
         const { error } = await supabase
           .from('wishlists')
           .delete()
-          .eq('id', wishlistId);
+          .eq('user_id', user.id)
+          .eq('product_id', productId);
 
         if (error) throw error;
         setIsInWishlist(false);
-        setWishlistId(null);
         toast.success('Removed from wishlist');
       } else {
         // Add to wishlist
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from('wishlists')
-          .insert([
-            { user_id: user.id, product_id: productId }
-          ])
-          .select()
-          .single();
+          .insert([{ user_id: user.id, product_id: productId }]);
 
         if (error) throw error;
         setIsInWishlist(true);
-        setWishlistId(data.id);
         toast.success('Added to wishlist');
       }
     } catch (error) {
-      console.error('Error toggling wishlist:', error);
+      console.error('Error updating wishlist:', error);
       toast.error('Failed to update wishlist');
     } finally {
       setLoading(false);
@@ -98,24 +86,20 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
     <button
       onClick={toggleWishlist}
       disabled={loading}
-      className={`group flex items-center justify-center ${className}`}
-      aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
+      className={`flex items-center justify-center ${
+        isInWishlist 
+          ? 'text-red-500 hover:text-red-600' 
+          : 'text-gray-500 hover:text-gray-700'
+      } transition-colors ${className}`}
+      aria-label={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
     >
-      <Heart
-        size={size}
-        className={`transition-colors ${
-          isInWishlist 
-            ? 'text-red-500 fill-red-500' 
-            : 'text-gray-400 group-hover:text-red-500'
-        }`}
+      <Heart 
+        size={iconSize} 
+        className={isInWishlist ? 'fill-current' : ''} 
       />
       {showText && (
-        <span className={`ml-2 text-sm ${
-          isInWishlist 
-            ? 'text-red-500' 
-            : 'text-gray-600 group-hover:text-red-500 dark:text-gray-300'
-        }`}>
-          {isInWishlist ? 'Saved' : 'Save'}
+        <span className="ml-2">
+          {isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
         </span>
       )}
     </button>
