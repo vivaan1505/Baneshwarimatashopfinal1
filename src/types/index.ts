@@ -40,7 +40,7 @@ export interface Product {
     position?: number;
   }>;
   is_visible?: boolean;
-  type?: 'clothing' | 'accessories' | 'shoes' | 'bags';
+  type?: 'footwear' | 'clothing' | 'jewelry' | 'beauty' | 'accessories' | 'bags';
   sku?: string;
   barcode?: string;
   weight?: number;
