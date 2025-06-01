@@ -9,6 +9,8 @@ interface UseProductsOptions {
   collection?: string;
   isNew?: boolean;
   isFeatured?: boolean;
+  filters?: Record<string, any>;
+  limit?: number;
 }
 
 export const useProducts = ({
@@ -17,19 +19,23 @@ export const useProducts = ({
   gender,
   collection,
   isNew,
-  isFeatured
+  isFeatured,
+  filters = {},
+  limit
 }: UseProductsOptions = {}) => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchProducts();
-  }, [category, subcategory, gender, collection, isNew, isFeatured]);
+  }, [category, subcategory, gender, collection, isNew, isFeatured, JSON.stringify(filters), limit]);
 
   const fetchProducts = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
+      setError(null);
+      
       let query = supabase
         .from('products')
         .select(`
@@ -37,83 +43,111 @@ export const useProducts = ({
           brand:brands(*),
           category:categories(*),
           images:product_images(*)
-        `);
+        `)
+        .eq('is_visible', true);
 
+      // Apply category filter
       if (category) {
-        query = query.eq('category.slug', category);
+        if (category === 'footwear' || category === 'clothing' || category === 'jewelry' || category === 'beauty') {
+          query = query.eq('type', category);
+        } else if (category === 'bridal') {
+          query = query.contains('tags', ['bridal']);
+        } else if (category === 'christmas') {
+          query = query.contains('tags', ['christmas']);
+        } else if (category === 'sale') {
+          query = query.not('compare_at_price', 'is', null);
+        }
       }
+      
+      // Apply subcategory filter
       if (subcategory) {
         query = query.eq('subcategory', subcategory);
       }
+      
+      // Apply gender filter
       if (gender) {
         query = query.eq('gender', gender);
       }
+      
+      // Apply collection filter
       if (collection) {
-        query = query.eq('collection', collection);
+        // This would need a join with collection_products table
+        // For now, we'll use a simplified approach
+        query = query.contains('tags', [collection]);
       }
+      
+      // Apply isNew filter
       if (isNew) {
         query = query.eq('is_new', true);
       }
+      
+      // Apply isFeatured filter
       if (isFeatured) {
         query = query.eq('is_featured', true);
       }
-
-      const { data, error } = await query.order('created_at', { ascending: false });
+      
+      // Apply custom filters
+      Object.entries(filters).forEach(([key, value]) => {
+        if (typeof value === 'object' && value !== null) {
+          // Handle operators like gt, lt, etc.
+          const operator = Object.keys(value)[0];
+          const operatorValue = value[operator];
+          
+          if (operator === 'gt') {
+            query = query.gt(key, operatorValue);
+          } else if (operator === 'lt') {
+            query = query.lt(key, operatorValue);
+          } else if (operator === 'gte') {
+            query = query.gte(key, operatorValue);
+          } else if (operator === 'lte') {
+            query = query.lte(key, operatorValue);
+          } else if (operator === 'in') {
+            query = query.in(key, operatorValue);
+          } else if (operator === 'contains') {
+            query = query.contains(key, operatorValue);
+          }
+        } else {
+          // Simple equality filter
+          query = query.eq(key, value);
+        }
+      });
+      
+      // Apply limit if provided
+      if (limit) {
+        query = query.limit(limit);
+      }
+      
+      // Order by created_at by default
+      query = query.order('created_at', { ascending: false });
+      
+      const { data, error } = await query;
 
       if (error) throw error;
-      setProducts(data || []);
-      setError(null);
+      
+      // Transform data to match Product interface
+      const transformedData = (data || []).map(item => ({
+        ...item,
+        imageUrl: item.images?.[0]?.url || '',
+        reviewCount: item.review_count,
+        isNew: item.is_new,
+        isBestSeller: item.is_bestseller,
+        discount: item.compare_at_price ? Math.round((1 - item.price / item.compare_at_price) * 100) : 0,
+        discountedPrice: item.compare_at_price ? item.price : undefined
+      }));
+      
+      setData(transformedData);
     } catch (err) {
       console.error('Error fetching products:', err);
       setError('Failed to fetch products');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
-  };
-
-  const filterProducts = (searchQuery: string, selectedCategory: string, sortBy: string) => {
-    let filtered = [...products];
-
-    // Apply search filter
-    if (searchQuery) {
-      filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description?.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Apply category filter
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(product => 
-        product.category?.slug === selectedCategory ||
-        product.subcategory === selectedCategory
-      );
-    }
-
-    // Apply sorting
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'price-asc':
-          return a.price - b.price;
-        case 'price-desc':
-          return b.price - a.price;
-        case 'rating':
-          return (b.rating || 0) - (a.rating || 0);
-        case 'newest':
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-        default:
-          return 0;
-      }
-    });
-
-    return filtered;
   };
 
   return {
-    products,
-    loading,
+    data,
+    isLoading,
     error,
-    filterProducts,
-    refetch: fetchProducts // Export fetchProducts as refetch
+    refetch: fetchProducts
   };
 };

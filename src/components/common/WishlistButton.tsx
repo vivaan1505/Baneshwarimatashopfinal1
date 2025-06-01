@@ -30,11 +30,19 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
   }, [user, productId]);
 
   const checkWishlistStatus = async () => {
+    if (!user) return;
+    
     try {
+      // Ensure productId is a valid UUID
+      if (!isValidUUID(productId)) {
+        console.error('Invalid product ID format:', productId);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('wishlists')
         .select('id')
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .eq('product_id', productId)
         .maybeSingle();
 
@@ -48,6 +56,12 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
   const toggleWishlist = async () => {
     if (!user) {
       toast.error('Please sign in to add items to your wishlist');
+      return;
+    }
+
+    // Ensure productId is a valid UUID
+    if (!isValidUUID(productId)) {
+      toast.error('Invalid product ID format');
       return;
     }
 
@@ -80,6 +94,12 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
     } finally {
       setLoading(false);
     }
+  };
+
+  // Function to validate UUID format
+  const isValidUUID = (uuid: string) => {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(uuid);
   };
 
   return (
