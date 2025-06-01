@@ -328,6 +328,47 @@ const SUBCATEGORIES = {
     { id: 'laptop-bags', name: 'Laptop Bags', gender: 'unisex' },
     { id: 'wallets-purses', name: 'Wallets & Purses', gender: 'unisex' },
     { id: 'luggage', name: 'Luggage', gender: 'unisex' }
+  ],
+  bridal: [
+    // Bridal Dresses
+    { id: 'wedding-gowns', name: 'Wedding Gowns', gender: 'women' },
+    { id: 'reception-dresses', name: 'Reception Dresses', gender: 'women' },
+    { id: 'engagement-dresses', name: 'Engagement Dresses', gender: 'women' },
+    { id: 'mehndi-haldi-dresses', name: 'Mehndi / Haldi Dresses', gender: 'women' },
+    { id: 'sangeet-dresses', name: 'Sangeet Dresses', gender: 'women' },
+    
+    // Bridal Jewelry
+    { id: 'bridal-necklaces-sets', name: 'Necklaces & Sets', gender: 'women' },
+    { id: 'bridal-earrings', name: 'Earrings', gender: 'women' },
+    { id: 'bridal-bangles-bracelets', name: 'Bangles & Bracelets', gender: 'women' },
+    { id: 'maang-tikka-headpieces', name: 'Maang Tikka & Headpieces', gender: 'women' },
+    { id: 'nose-rings-nath', name: 'Nose Rings & Nath', gender: 'women' },
+    { id: 'waist-belts-kamarbandh', name: 'Waist Belts (Kamarbandh)', gender: 'women' },
+    
+    // Bridal Footwear
+    { id: 'bridal-heels-sandals', name: 'Heels & Sandals', gender: 'women' },
+    { id: 'mojaris-juttis', name: 'Mojaris & Juttis', gender: 'women' },
+    { id: 'bridal-flats', name: 'Bridal Flats', gender: 'women' },
+    
+    // Bridal Accessories
+    { id: 'veils-dupattas', name: 'Veils & Dupattas', gender: 'women' },
+    { id: 'clutches-potlis', name: 'Clutches & Potlis', gender: 'women' },
+    { id: 'bridal-hair-accessories', name: 'Hair Accessories (Pins, Combs)', gender: 'women' },
+    { id: 'bridal-gloves', name: 'Bridal Gloves', gender: 'women' },
+    
+    // Bridal Makeup Kits
+    { id: 'bridal-foundation-concealers', name: 'Foundation & Concealers', gender: 'women' },
+    { id: 'bridal-lipsticks-lip-gloss', name: 'Lipsticks & Lip Gloss', gender: 'women' },
+    { id: 'bridal-eye-makeup', name: 'Eye Makeup (Kajal, Eyeliner, Mascara)', gender: 'women' },
+    
+    // Bridal Hair Care
+    { id: 'bridal-hair-oils-serums', name: 'Hair Oils & Serums', gender: 'women' },
+    { id: 'hair-extensions-wigs', name: 'Hair Extensions & Wigs', gender: 'women' },
+    
+    // Other Bridal Categories
+    { id: 'bridal-mehndi-henna-kits', name: 'Bridal Mehndi & Henna Kits', gender: 'women' },
+    { id: 'bridal-lingerie-undergarments', name: 'Bridal Lingerie & Undergarments', gender: 'women' },
+    { id: 'bridal-gift-sets-packaging', name: 'Bridal Gift Sets & Packaging', gender: 'women' }
   ]
 };
 
@@ -820,9 +861,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                       className="pl-7 block w-full rounded-md border-gray-300 focus:border-primary-500 focus:ring-primary-500"
                     />
                   </div>
-                  {errors.compare_at_price && (
-                    <p className="mt-1 text-sm text-red-600">{errors.compare_at_price.message}</p>
-                  )}
                 </div>
 
                 <div>
