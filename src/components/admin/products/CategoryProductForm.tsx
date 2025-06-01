@@ -436,11 +436,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
       return;
     }
 
-    if (data.compare_at_price && data.compare_at_price < data.price) {
-      toast.error('Compare at price must be greater than regular price');
-      return;
-    }
-
     // Check for duplicate SKU before proceeding
     try {
       const { data: existingProduct, error: skuCheckError } = await supabase
@@ -649,10 +644,10 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Subcategory
+                    Subcategory <span className="text-red-500">*</span>
                   </label>
                   <select
-                    {...register('subcategory')}
+                    {...register('subcategory', { required: 'Subcategory is required' })}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                   >
                     <option value="">Select Subcategory</option>
@@ -662,6 +657,9 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                       </option>
                     ))}
                   </select>
+                  {errors.subcategory && (
+                    <p className="mt-1 text-sm text-red-600">{errors.subcategory.message}</p>
+                  )}
                   <p className="mt-1 text-xs text-gray-500">
                     Select a subcategory to help customers find your product more easily
                   </p>
