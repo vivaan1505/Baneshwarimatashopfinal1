@@ -77,26 +77,26 @@ const AdminSidebar: React.FC = () => {
   ];
   
   return (
-    <div className="w-64 bg-white border-r">
+    <div className="w-64 bg-white border-r dark:bg-gray-800 dark:border-gray-700">
       <div className="h-full flex flex-col">
-        <div className="flex items-center justify-center h-16 border-b">
-          <Link to="/admin" className="text-xl font-heading font-bold text-primary-800">
+        <div className="flex items-center justify-center h-16 border-b dark:border-gray-700">
+          <Link to="/admin" className="text-xl font-heading font-bold text-primary-800 dark:text-primary-400">
             Admin Panel
           </Link>
         </div>
         
         {/* Admin User Info */}
         {user && (
-          <div className="px-4 py-3 border-b bg-gray-50">
+          <div className="px-4 py-3 border-b bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
             <div className="flex items-center">
-              <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center mr-3">
-                <User className="w-4 h-4 text-primary-600" />
+              <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center mr-3 dark:bg-primary-900">
+                <User className="w-4 h-4 text-primary-600 dark:text-primary-400" />
               </div>
               <div className="overflow-hidden">
-                <p className="text-sm font-medium truncate">
+                <p className="text-sm font-medium truncate dark:text-white">
                   {user.user_metadata?.first_name} {user.user_metadata?.last_name}
                 </p>
-                <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                <p className="text-xs text-gray-500 truncate dark:text-gray-400">{user.email}</p>
               </div>
             </div>
           </div>
@@ -116,10 +116,10 @@ const AdminSidebar: React.FC = () => {
                       <Link
                         to={item.href}
                         className={cn(
-                          "flex items-center justify-between w-full p-3 text-base font-medium text-gray-700 hover:bg-gray-100 rounded-md",
+                          "flex items-center justify-between w-full p-3 text-base font-medium text-gray-700 hover:bg-gray-100 rounded-md dark:text-gray-200 dark:hover:bg-gray-700",
                           (isActive || isSubmenuActive)
-                            ? "bg-primary-50 text-primary-700" 
-                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                            ? "bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400" 
+                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
                         )}
                       >
                         <div className="flex items-center">
@@ -135,10 +135,10 @@ const AdminSidebar: React.FC = () => {
                               key={subitem.name}
                               to={subitem.href}
                               className={cn(
-                                "flex items-center px-4 py-2 rounded-md text-sm transition-colors",
+                                "flex items-center px-4 py-2 rounded-md text-sm transition-colors dark:text-gray-400",
                                 location.pathname === subitem.href
-                                  ? "bg-primary-50 text-primary-700" 
-                                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                  ? "bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400" 
+                                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-gray-200"
                               )}
                             >
                               <subitem.icon className="w-4 h-4 mr-3" />
@@ -152,10 +152,10 @@ const AdminSidebar: React.FC = () => {
                     <Link
                       to={item.href}
                       className={cn(
-                        "flex items-center p-3 text-base font-medium text-gray-700 hover:bg-gray-100 rounded-md",
+                        "flex items-center p-3 text-base font-medium text-gray-700 hover:bg-gray-100 rounded-md dark:hover:bg-gray-700",
                         isActive 
-                          ? "bg-primary-50 text-primary-700" 
-                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                          ? "bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400" 
+                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
                       )}
                     >
                       <item.icon className="w-5 h-5 mr-3" />
@@ -168,10 +168,10 @@ const AdminSidebar: React.FC = () => {
           </ul>
         </nav>
         
-        <div className="p-4 border-t">
+        <div className="p-4 border-t dark:border-gray-700">
           <button
             onClick={() => signOut()}
-            className="flex items-center w-full px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors"
+            className="flex items-center w-full px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
           >
             <LogOut className="w-5 h-5 mr-3" />
             Sign Out
