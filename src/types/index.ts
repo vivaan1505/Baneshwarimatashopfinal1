@@ -27,10 +27,9 @@ export interface Product {
   };
   subcategory?: string;
   rating?: number;
-  reviewCount?: number;
-  isNew?: boolean;
-  isBestSeller?: boolean;
-  colors?: string[];
+  review_count?: number;
+  is_new?: boolean;
+  is_bestseller?: boolean;
   sizes?: string[];
   created_at?: string;
   stock_quantity?: number;
@@ -41,7 +40,29 @@ export interface Product {
     position?: number;
   }>;
   is_visible?: boolean;
-  type?: 'footwear' | 'clothing' | 'jewelry' | 'beauty';
+  type?: 'clothing' | 'accessories' | 'shoes' | 'bags';
+  sku?: string;
+  barcode?: string;
+  weight?: number;
+  dimensions?: {
+    length: number;
+    width: number;
+    height: number;
+    unit: string;
+  };
+  features?: string[];
+  meta_title?: string;
+  meta_description?: string;
+  care_instructions?: string;
+  tags?: string[];
+  materials?: string[];
+  size_guide?: {
+    [key: string]: {
+      [measurement: string]: string | number;
+    };
+  };
+  shipping_info?: string;
+  return_policy?: string;
 }
 
 export interface BlogPost {

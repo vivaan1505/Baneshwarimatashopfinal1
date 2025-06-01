@@ -1,23 +1,50 @@
 import React from 'react';
 import ProductCard from '../common/ProductCard';
-import { Product } from '../../types';
-import { FEATURED_PRODUCTS } from '../../data/products';
+import { useProducts } from '../../hooks/useProducts';
 
 const FeaturedProducts: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState('bestsellers');
-  
-  const filteredProducts = React.useMemo(() => {
-    switch (activeTab) {
-      case 'bestsellers':
-        return FEATURED_PRODUCTS.filter(product => product.isBestSeller);
-      case 'new':
-        return FEATURED_PRODUCTS.filter(product => product.isNew);
-      case 'sale':
-        return FEATURED_PRODUCTS.filter(product => product.discount > 0);
-      default:
-        return FEATURED_PRODUCTS;
-    }
-  }, [activeTab]);
+  const { data: products, isLoading, error } = useProducts({
+    filters: {
+      is_visible: true,
+      ...(activeTab === 'bestsellers' && { is_bestseller: true }),
+      ...(activeTab === 'new' && { is_new: true }),
+      ...(activeTab === 'sale' && { discount: { gt: 0 } })
+    },
+    limit: 8
+  });
+
+  if (isLoading) {
+    return (
+      <section className="py-16">
+        <div className="container-custom">
+          <div className="text-center mb-8">
+            <div className="h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-96 mx-auto"></div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="h-64 bg-gray-200 rounded-lg mb-4"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-16">
+        <div className="container-custom text-center">
+          <p className="text-red-500">Failed to load featured products</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-16">
@@ -66,7 +93,7 @@ const FeaturedProducts: React.FC = () => {
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredProducts.map(product => (
+          {products?.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

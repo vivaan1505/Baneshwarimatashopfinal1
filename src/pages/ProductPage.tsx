@@ -1,16 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { PRODUCTS } from '../data/products';
 import { useCartStore } from '../stores/cartStore';
 import { toast } from 'react-hot-toast';
 import WishlistButton from '../components/common/WishlistButton';
+import { supabase } from '../lib/supabase';
+import type { Product } from '../types';
 
 const ProductPage: React.FC = () => {
   const { id } = useParams();
-  const product = PRODUCTS.find(p => p.id === id);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
   const { addItem } = useCartStore();
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [quantity, setQuantity] = useState(1);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select(`
+            *,
+            brand:brands(*),
+            category:categories(*),
+            images:product_images(*)
+          `)
+          .eq('id', id)
+          .single();
+
+        if (error) throw error;
+        
+        if (data) {
+          setProduct({
+            ...data,
+            imageUrl: data.images?.[0]?.url || '',
+            discountedPrice: data.price * (1 - (data.discount || 0) / 100)
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching product:', error);
+        toast.error('Failed to load product details');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchProduct();
+    }
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="container-custom py-16">
+        <div className="animate-pulse">
+          <div className="h-96 bg-gray-200 rounded-lg mb-8"></div>
+          <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        </div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -49,7 +99,7 @@ const ProductPage: React.FC = () => {
               alt={product.name}
               className="w-full rounded-lg shadow-lg"
             />
-            {product.isNew && (
+            {product.is_new && (
               <span className="absolute top-4 left-4 badge-secondary">New</span>
             )}
             {product.discount > 0 && (
@@ -67,7 +117,7 @@ const ProductPage: React.FC = () => {
               </h1>
               <WishlistButton productId={product.id} iconSize={24} />
             </div>
-            <p className="text-lg text-gray-500 mb-4">{product.brand?.name || product.brand}</p>
+            <p className="text-lg text-gray-500 mb-4">{product.brand?.name}</p>
 
             {/* Price */}
             <div className="mb-6">
@@ -89,23 +139,6 @@ const ProductPage: React.FC = () => {
 
             {/* Description */}
             <p className="text-gray-600 mb-6">{product.description}</p>
-
-            {/* Colors */}
-            {product.colors && (
-              <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-900 mb-2">Color</h3>
-                <div className="flex gap-2">
-                  {product.colors.map(color => (
-                    <button
-                      key={color}
-                      className="w-8 h-8 rounded-full border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-                    >
-                      <span className="sr-only">{color}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Sizes */}
             {product.sizes && (
@@ -177,7 +210,7 @@ const ProductPage: React.FC = () => {
                   <svg
                     key={i}
                     className={`w-5 h-5 ${
-                      i < product.rating ? 'fill-current' : 'text-gray-300'
+                      i < (product.rating || 0) ? 'fill-current' : 'text-gray-300'
                     }`}
                     viewBox="0 0 20 20"
                   >
@@ -186,7 +219,7 @@ const ProductPage: React.FC = () => {
                 ))}
               </div>
               <span className="ml-2 text-sm text-gray-500">
-                ({product.reviewCount} reviews)
+                ({product.review_count || 0} reviews)
               </span>
             </div>
 
@@ -196,12 +229,12 @@ const ProductPage: React.FC = () => {
                 <div>
                   <h3 className="text-sm font-medium text-gray-900">Category</h3>
                   <p className="mt-1 text-sm text-gray-500 capitalize">
-                    {product.category} - {product.subcategory}
+                    {product.category?.name} {product.subcategory && `- ${product.subcategory}`}
                   </p>
                 </div>
                 <div>
                   <h3 className="text-sm font-medium text-gray-900">SKU</h3>
-                  <p className="mt-1 text-sm text-gray-500">{product.id}</p>
+                  <p className="mt-1 text-sm text-gray-500">{product.sku}</p>
                 </div>
               </div>
             </div>
