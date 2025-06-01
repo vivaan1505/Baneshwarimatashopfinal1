@@ -79,28 +79,44 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
         setIsInWishlist(false);
         toast.success('Removed from wishlist');
       } else {
+        // First check if the item is already in the wishlist to prevent duplicate entries
+        const { data: existingItem, error: checkError } = await supabase
+          .from('wishlists')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('product_id', productId)
+          .maybeSingle();
+          
+        if (checkError) throw checkError;
+        
+        if (existingItem) {
+          // Item is already in the wishlist
+          setIsInWishlist(true);
+          toast.success('Item is already in your wishlist');
+          return;
+        }
+        
         // Add to wishlist
         const { error } = await supabase
           .from('wishlists')
           .insert([{ user_id: user.id, product_id: productId }]);
 
         if (error) {
-          // Check if error is due to unique constraint violation
-          if (error.code === '23505') {
-            // Item is already in wishlist, update UI state
+          // If there's still an error (e.g., race condition), handle it gracefully
+          if (error.code === '23505') { // Unique constraint violation
             setIsInWishlist(true);
-            toast.success('Item is already in your wishlist');
+            toast.success('Item added to wishlist');
             return;
           }
           throw error;
         }
+        
         setIsInWishlist(true);
         toast.success('Added to wishlist');
       }
     } catch (error: any) {
       console.error('Error updating wishlist:', error);
-      // Show a more specific error message
-      toast.error(error.message || 'Failed to update wishlist');
+      toast.error('Failed to update wishlist. Please try again.');
     } finally {
       setLoading(false);
     }
