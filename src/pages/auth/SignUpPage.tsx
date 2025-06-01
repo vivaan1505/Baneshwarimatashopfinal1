@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useAuthStore } from '../../stores/authStore';
 import { toast } from 'react-hot-toast';
+import { AuthError } from '@supabase/supabase-js';
 
 interface SignUpFormData {
   email: string;
@@ -27,7 +28,39 @@ const SignUpPage: React.FC = () => {
       toast.success('Account created successfully! Please check your email to verify your account.');
       navigate('/signin');
     } catch (error) {
-      toast.error('Failed to create account. Please try again.');
+      const authError = error as AuthError;
+      
+      if (authError.message === 'User already registered') {
+        toast((t) => (
+          <div className="flex flex-col gap-2">
+            <p>An account with this email already exists.</p>
+            <div className="flex gap-2">
+              <Link 
+                to="/signin"
+                className="text-sm font-medium text-primary-600 hover:text-primary-500"
+                onClick={() => toast.dismiss(t.id)}
+              >
+                Sign in
+              </Link>
+              <span>or</span>
+              <Link 
+                to="/forgot-password"
+                className="text-sm font-medium text-primary-600 hover:text-primary-500"
+                onClick={() => toast.dismiss(t.id)}
+              >
+                Reset password
+              </Link>
+            </div>
+          </div>
+        ), {
+          duration: 6000,
+          style: {
+            minWidth: '300px',
+          },
+        });
+      } else {
+        toast.error('Failed to create account. Please try again.');
+      }
     }
   };
 
