@@ -78,26 +78,21 @@ const KidsPage: React.FC = () => {
 
   const filteredProducts = filterProducts(products);
 
-  // Create categories array for filter - using Set to remove duplicates
-  const categorySet = new Set([
-    { id: 'all', name: 'All Categories' }
-  ].map(cat => JSON.stringify(cat)));
-  
-  // Convert back to array
-  const categories = [...Array.from(categorySet).map(cat => JSON.parse(cat))];
-  
-  // Add predefined categories only if they don't already exist
-  const predefinedCategories = [
+  // Create categories array for filter
+  const categories = [
+    { id: 'all', name: 'All Categories' },
     { id: 'clothing', name: 'Clothing' },
     { id: 'footwear', name: 'Footwear' },
     { id: 'accessories', name: 'Accessories' }
   ];
-  
-  predefinedCategories.forEach(cat => {
-    if (!categories.some(existing => existing.id === cat.id)) {
-      categories.push(cat);
-    }
-  });
+
+  // Age groups for kids
+  const ageGroups = [
+    { name: 'Baby (0-2 years)', image: 'https://images.pexels.com/photos/265987/pexels-photo-265987.jpeg' },
+    { name: 'Toddler (2-4 years)', image: 'https://images.pexels.com/photos/3662667/pexels-photo-3662667.jpeg' },
+    { name: 'Kids (4-8 years)', image: 'https://images.pexels.com/photos/3771679/pexels-photo-3771679.jpeg' },
+    { name: 'Pre-Teen (8-12 years)', image: 'https://images.pexels.com/photos/3771639/pexels-photo-3771639.jpeg' }
+  ];
 
   return (
     <div className="py-8">
@@ -106,34 +101,59 @@ const KidsPage: React.FC = () => {
         <nav className="mb-6">
           <ol className="flex text-sm">
             <li className="flex items-center">
-              <Link to="/" className="text-gray-500 hover:text-primary-700">Home</Link>
-              <svg className="mx-2 w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <Link to="/" className="text-gray-500 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-400">Home</Link>
+              <svg className="mx-2 w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
               </svg>
             </li>
-            <li className="text-gray-900 font-medium">Kids</li>
+            <li className="text-gray-900 font-medium dark:text-white">Kids</li>
           </ol>
         </nav>
 
         {/* Category Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-heading font-bold mb-4">Kids' Collection</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <h1 className="text-3xl font-heading font-bold mb-4 dark:text-white">Kids' Collection</h1>
+          <p className="text-gray-600 max-w-2xl mx-auto dark:text-gray-300">
             Discover our premium selection of kids' clothing, footwear, and accessories, designed for comfort, durability, and style.
           </p>
         </div>
 
-        {/* Subcategory Navigation */}
-        <div className="mb-8">
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/clothing" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors">
-              Clothing
+        {/* Age Groups */}
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-8 dark:bg-gray-800">
+          <h3 className="text-sm font-medium text-gray-700 mb-4 dark:text-gray-300">Shop by Age</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {ageGroups.map((group, index) => (
+              <div key={index} className="relative overflow-hidden rounded-lg aspect-square group">
+                <img 
+                  src={group.image} 
+                  alt={group.name} 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                  <div className="p-4">
+                    <h3 className="text-sm font-medium text-white">{group.name}</h3>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Featured Categories */}
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-8 dark:bg-gray-800">
+          <h3 className="text-sm font-medium text-gray-700 mb-4 dark:text-gray-300">Shop by Category</h3>
+          <div className="flex flex-wrap gap-4">
+            <Link to="/clothing?gender=kids" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
+              <div className="font-medium text-gray-900 dark:text-white">Clothing</div>
+              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Tops, Bottoms & Outerwear</p>
             </Link>
-            <Link to="/footwear" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors">
-              Footwear
+            <Link to="/footwear?gender=kids" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
+              <div className="font-medium text-gray-900 dark:text-white">Footwear</div>
+              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Shoes, Sneakers & Boots</p>
             </Link>
-            <Link to="/accessories" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors">
-              Accessories
+            <Link to="/accessories?gender=kids" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
+              <div className="font-medium text-gray-900 dark:text-white">Accessories</div>
+              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Bags, Hats & More</p>
             </Link>
           </div>
         </div>
@@ -152,12 +172,12 @@ const KidsPage: React.FC = () => {
         {/* Products Grid */}
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-            <p className="mt-2 text-gray-600">Loading products...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 dark:border-primary-400"></div>
+            <p className="mt-2 text-gray-600 dark:text-gray-400">Loading products...</p>
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No products found matching your criteria</p>
+            <p className="text-gray-500 dark:text-gray-400">No products found matching your criteria</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

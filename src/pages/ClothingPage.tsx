@@ -145,17 +145,21 @@ const ClothingPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Subcategory Navigation */}
-        <div className="mb-8">
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/men" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
-              Men
+        {/* Gender Quick Links */}
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-8 dark:bg-gray-800">
+          <h3 className="text-sm font-medium text-gray-700 mb-4 dark:text-gray-300">Shop by Gender</h3>
+          <div className="flex flex-wrap gap-4">
+            <Link to="/men" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
+              <div className="font-medium text-gray-900 dark:text-white">Men</div>
+              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Formal, Casual & Activewear</p>
             </Link>
-            <Link to="/women" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
-              Women
+            <Link to="/women" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
+              <div className="font-medium text-gray-900 dark:text-white">Women</div>
+              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Dresses, Tops & Bottoms</p>
             </Link>
-            <Link to="/kids" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
-              Kids
+            <Link to="/kids" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
+              <div className="font-medium text-gray-900 dark:text-white">Kids</div>
+              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">All Ages & Styles</p>
             </Link>
           </div>
         </div>
