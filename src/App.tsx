@@ -25,6 +25,8 @@ import BrandPage from './pages/BrandPage';
 import ThemeProvider from './components/theme/ThemeProvider';
 import SearchResultsPage from './pages/SearchResultsPage';
 import WishlistPage from './pages/WishlistPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsConditionsPage from './pages/TermsConditionsPage';
 
 // Category Pages
 import FootwearPage from './pages/FootwearPage';
@@ -113,6 +115,8 @@ function App() {
             <Route path="careers" element={<CareersPage />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="contact" element={<ContactPage />} />
+            <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="terms-conditions" element={<TermsConditionsPage />} />
             
             {/* 404 Route */}
             <Route path="*" element={<NotFoundPage />} />
