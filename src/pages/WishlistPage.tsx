@@ -89,6 +89,11 @@ const WishlistPage: React.FC = () => {
   };
 
   const addToCart = (product: WishlistItem['product']) => {
+    if (product.stock_quantity <= 0) {
+      toast.error('This product is out of stock');
+      return;
+    }
+    
     addItem({
       productId: product.id,
       name: product.name,
@@ -96,6 +101,7 @@ const WishlistPage: React.FC = () => {
       quantity: 1,
       image: product.images[0]?.url || ''
     });
+    
     toast.success('Added to cart!');
   };
 
@@ -103,9 +109,9 @@ const WishlistPage: React.FC = () => {
     return (
       <div className="container-custom py-12">
         <div className="max-w-md mx-auto text-center">
-          <Heart className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-          <h1 className="text-2xl font-medium mb-4">Your Wishlist</h1>
-          <p className="text-gray-600 mb-6">Please sign in to view your wishlist</p>
+          <Heart className="w-16 h-16 mx-auto text-gray-300 mb-4 dark:text-gray-600" />
+          <h1 className="text-2xl font-medium mb-4 dark:text-white">Your Wishlist</h1>
+          <p className="text-gray-600 mb-6 dark:text-gray-400">Please sign in to view your wishlist</p>
           <Link to="/auth/signin" className="btn-primary">
             Sign In
           </Link>
@@ -116,18 +122,18 @@ const WishlistPage: React.FC = () => {
 
   return (
     <div className="container-custom py-12">
-      <h1 className="text-3xl font-heading font-bold mb-8">Your Wishlist</h1>
+      <h1 className="text-3xl font-heading font-bold mb-8 dark:text-white">Your Wishlist</h1>
       
       {loading ? (
         <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          <p className="mt-2 text-gray-600">Loading your wishlist...</p>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 dark:border-primary-400"></div>
+          <p className="mt-2 text-gray-600 dark:text-gray-400">Loading your wishlist...</p>
         </div>
       ) : wishlistItems.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-lg shadow-sm">
-          <Heart className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-          <h2 className="text-xl font-medium mb-2">Your wishlist is empty</h2>
-          <p className="text-gray-600 mb-6">Browse our collections and add your favorite items</p>
+        <div className="text-center py-12 bg-white rounded-lg shadow-sm dark:bg-gray-800">
+          <Heart className="w-16 h-16 mx-auto text-gray-300 mb-4 dark:text-gray-600" />
+          <h2 className="text-xl font-medium mb-2 dark:text-white">Your wishlist is empty</h2>
+          <p className="text-gray-600 mb-6 dark:text-gray-400">Browse our collections and add your favorite items</p>
           <Link to="/" className="btn-primary">
             Start Shopping
           </Link>
@@ -135,7 +141,7 @@ const WishlistPage: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {wishlistItems.map((item) => (
-            <div key={item.id} className="bg-white rounded-lg shadow-sm overflow-hidden group">
+            <div key={item.id} className="bg-white rounded-lg shadow-sm overflow-hidden group dark:bg-gray-800">
               <div className="relative aspect-square overflow-hidden">
                 <img
                   src={item.product.images[0]?.url || 'https://via.placeholder.com/300'}
@@ -144,7 +150,7 @@ const WishlistPage: React.FC = () => {
                 />
                 <button
                   onClick={() => removeFromWishlist(item.id)}
-                  className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-sm text-gray-500 hover:text-red-500 transition-colors"
+                  className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-sm text-gray-500 hover:text-red-500 transition-colors dark:bg-gray-700 dark:text-gray-400 dark:hover:text-red-400"
                   aria-label="Remove from wishlist"
                 >
                   <Trash className="w-5 h-5" />
@@ -153,25 +159,25 @@ const WishlistPage: React.FC = () => {
               
               <div className="p-4">
                 <Link to={`/product/${item.product.id}`} className="block">
-                  <h3 className="font-medium text-gray-900 mb-1 hover:text-primary-700 transition-colors">
+                  <h3 className="font-medium text-gray-900 mb-1 hover:text-primary-700 transition-colors dark:text-white dark:hover:text-primary-400">
                     {item.product.name}
                   </h3>
                 </Link>
-                <p className="text-sm text-gray-500 mb-2">{item.product.brand?.name || 'Brand'}</p>
+                <p className="text-sm text-gray-500 mb-2 dark:text-gray-400">{item.product.brand?.name || 'Brand'}</p>
                 
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     {item.product.compare_at_price ? (
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-gray-900">${item.product.price.toFixed(2)}</span>
-                        <span className="text-sm text-gray-500 line-through">${item.product.compare_at_price.toFixed(2)}</span>
+                        <span className="font-medium text-gray-900 dark:text-white">${item.product.price.toFixed(2)}</span>
+                        <span className="text-sm text-gray-500 line-through dark:text-gray-400">${item.product.compare_at_price.toFixed(2)}</span>
                       </div>
                     ) : (
-                      <span className="font-medium text-gray-900">${item.product.price.toFixed(2)}</span>
+                      <span className="font-medium text-gray-900 dark:text-white">${item.product.price.toFixed(2)}</span>
                     )}
                   </div>
                   
-                  <span className={`text-sm ${item.product.stock_quantity > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <span className={`text-sm ${item.product.stock_quantity > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                     {item.product.stock_quantity > 0 ? 'In Stock' : 'Out of Stock'}
                   </span>
                 </div>

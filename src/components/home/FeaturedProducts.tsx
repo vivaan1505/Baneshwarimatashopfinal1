@@ -1,68 +1,53 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import ProductCard from '../common/ProductCard';
 import { useProducts } from '../../hooks/useProducts';
 
 const FeaturedProducts: React.FC = () => {
-  const [activeTab, setActiveTab] = React.useState('bestsellers');
-  const { data: products, isLoading, error } = useProducts({
-    filters: {
-      is_visible: true,
-      ...(activeTab === 'bestsellers' && { is_bestseller: true }),
-      ...(activeTab === 'new' && { is_new: true }),
-      ...(activeTab === 'sale' && { discount: { gt: 0 } })
-    },
+  const [activeTab, setActiveTab] = useState('bestsellers');
+  
+  const { data: bestsellerProducts, isLoading: loadingBestsellers } = useProducts({
+    filters: { is_bestseller: true },
+    limit: 8
+  });
+  
+  const { data: newProducts, isLoading: loadingNew } = useProducts({
+    filters: { is_new: true },
+    limit: 8
+  });
+  
+  const { data: saleProducts, isLoading: loadingSale } = useProducts({
+    filters: { discount: { gt: 0 } },
     limit: 8
   });
 
-  if (isLoading) {
-    return (
-      <section className="py-16">
-        <div className="container-custom">
-          <div className="text-center mb-8">
-            <div className="h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-96 mx-auto"></div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="h-64 bg-gray-200 rounded-lg mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  if (error) {
-    return (
-      <section className="py-16">
-        <div className="container-custom text-center">
-          <p className="text-red-500">Failed to load featured products</p>
-        </div>
-      </section>
-    );
-  }
+  const isLoading = 
+    (activeTab === 'bestsellers' && loadingBestsellers) || 
+    (activeTab === 'new' && loadingNew) || 
+    (activeTab === 'sale' && loadingSale);
+  
+  const products = 
+    activeTab === 'bestsellers' ? bestsellerProducts :
+    activeTab === 'new' ? newProducts :
+    saleProducts;
 
   return (
-    <section className="py-16">
+    <section className="py-16 dark:bg-gray-900">
       <div className="container-custom">
         <div className="text-center mb-8">
-          <h2 className="font-heading text-3xl md:text-4xl font-medium mb-4">Featured Products</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto mb-8">
+          <h2 className="font-heading text-3xl md:text-4xl font-medium mb-4 dark:text-white">Featured Products</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto mb-8 dark:text-gray-300">
             Explore our handpicked selection of premium products
           </p>
           
           {/* Tabs */}
-          <div className="flex flex-wrap justify-center mb-12 border-b">
+          <div className="flex flex-wrap justify-center mb-12 border-b dark:border-gray-700">
             <button 
               onClick={() => setActiveTab('bestsellers')}
               className={`px-6 py-3 font-medium text-sm transition-colors ${
                 activeTab === 'bestsellers' 
-                  ? 'text-primary-700 border-b-2 border-primary-700' 
-                  : 'text-gray-600 hover:text-primary-600'
+                  ? 'text-primary-700 border-b-2 border-primary-700 dark:text-primary-400 dark:border-primary-400' 
+                  : 'text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400'
               }`}
             >
               Best Sellers
@@ -72,8 +57,8 @@ const FeaturedProducts: React.FC = () => {
               onClick={() => setActiveTab('new')}
               className={`px-6 py-3 font-medium text-sm transition-colors ${
                 activeTab === 'new' 
-                  ? 'text-primary-700 border-b-2 border-primary-700' 
-                  : 'text-gray-600 hover:text-primary-600'
+                  ? 'text-primary-700 border-b-2 border-primary-700 dark:text-primary-400 dark:border-primary-400' 
+                  : 'text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400'
               }`}
             >
               New Arrivals
@@ -83,8 +68,8 @@ const FeaturedProducts: React.FC = () => {
               onClick={() => setActiveTab('sale')}
               className={`px-6 py-3 font-medium text-sm transition-colors ${
                 activeTab === 'sale' 
-                  ? 'text-primary-700 border-b-2 border-primary-700' 
-                  : 'text-gray-600 hover:text-primary-600'
+                  ? 'text-primary-700 border-b-2 border-primary-700 dark:text-primary-400 dark:border-primary-400' 
+                  : 'text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400'
               }`}
             >
               On Sale
@@ -92,16 +77,39 @@ const FeaturedProducts: React.FC = () => {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products?.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="h-64 bg-gray-200 rounded-lg mb-4 dark:bg-gray-700"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2 dark:bg-gray-700"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2 dark:bg-gray-700"></div>
+              </div>
+            ))}
+          </div>
+        ) : products && products.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {products.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-gray-500 dark:text-gray-400">No products found in this category</p>
+          </div>
+        )}
         
         <div className="text-center mt-12">
-          <button className="btn-outline">
-            View All Products
-          </button>
+          <Link 
+            to={activeTab === 'bestsellers' ? '/products?filter=bestsellers' : 
+                activeTab === 'new' ? '/new-arrivals' : 
+                '/products?filter=sale'}
+            className="btn-outline"
+          >
+            View All {activeTab === 'bestsellers' ? 'Best Sellers' : 
+                      activeTab === 'new' ? 'New Arrivals' : 
+                      'Sale Items'}
+          </Link>
         </div>
       </div>
     </section>

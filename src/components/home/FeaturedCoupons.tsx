@@ -61,7 +61,36 @@ const FeaturedCoupons: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="py-12 text-center">Loading coupons...</div>;
+    return (
+      <section className="py-16 bg-gray-50 dark:bg-gray-900">
+        <div className="container-custom">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-heading font-medium dark:text-white">Featured Coupons</h2>
+            <Link to="/coupons" className="text-primary-600 hover:text-primary-700 flex items-center dark:text-primary-400 dark:hover:text-primary-300">
+              View All Coupons
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="bg-white rounded-lg shadow-sm p-6 animate-pulse dark:bg-gray-800">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                  <div className="ml-3">
+                    <div className="h-4 bg-gray-200 rounded w-24 dark:bg-gray-700"></div>
+                    <div className="h-3 bg-gray-200 rounded w-16 mt-2 dark:bg-gray-700"></div>
+                  </div>
+                </div>
+                <div className="h-6 bg-gray-200 rounded w-32 mb-2 dark:bg-gray-700"></div>
+                <div className="h-4 bg-gray-200 rounded w-full mb-4 dark:bg-gray-700"></div>
+                <div className="h-10 bg-gray-200 rounded w-full dark:bg-gray-700"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
   }
 
   if (coupons.length === 0) {
@@ -69,11 +98,11 @@ const FeaturedCoupons: React.FC = () => {
   }
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-gray-50 dark:bg-gray-900">
       <div className="container-custom">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-heading font-medium">Featured Coupons</h2>
-          <Link to="/coupons" className="text-primary-600 hover:text-primary-700 flex items-center">
+          <h2 className="text-3xl font-heading font-medium dark:text-white">Featured Coupons</h2>
+          <Link to="/coupons" className="text-primary-600 hover:text-primary-700 flex items-center dark:text-primary-400 dark:hover:text-primary-300">
             View All Coupons
             <ArrowRight className="ml-2 h-5 w-5" />
           </Link>

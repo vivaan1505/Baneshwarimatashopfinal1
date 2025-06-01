@@ -108,8 +108,8 @@ const BrandPage: React.FC = () => {
     return (
       <div className="container-custom py-12">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          <p className="mt-2 text-gray-600">Loading brand information...</p>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 dark:border-primary-400"></div>
+          <p className="mt-2 text-gray-600 dark:text-gray-400">Loading brand information...</p>
         </div>
       </div>
     );
@@ -119,7 +119,7 @@ const BrandPage: React.FC = () => {
     return (
       <div className="container-custom py-12">
         <div className="text-center">
-          <h2 className="text-2xl font-medium mb-4">Brand not found</h2>
+          <h2 className="text-2xl font-medium mb-4 dark:text-white">Brand not found</h2>
           <Link to="/coupons" className="btn-primary">
             Back to Coupons
           </Link>
@@ -133,29 +133,29 @@ const BrandPage: React.FC = () => {
       <div className="container-custom">
         {/* Breadcrumbs */}
         <div className="mb-8">
-          <Link to="/coupons" className="flex items-center text-primary-600 hover:text-primary-700">
+          <Link to="/coupons" className="flex items-center text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Coupons
           </Link>
         </div>
         
         {/* Brand Header */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-12">
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-12 dark:bg-gray-800">
           <div className="flex flex-col md:flex-row items-center gap-6">
             <img 
-              src={brand.logo_url} 
+              src={brand.logo_url || 'https://via.placeholder.com/200?text=Logo'} 
               alt={brand.name} 
               className="w-32 h-32 object-contain"
             />
             <div>
-              <h1 className="text-3xl font-heading font-bold mb-2">{brand.name}</h1>
-              <p className="text-gray-600 mb-4">{brand.description}</p>
+              <h1 className="text-3xl font-heading font-bold mb-2 dark:text-white">{brand.name}</h1>
+              <p className="text-gray-600 mb-4 dark:text-gray-300">{brand.description}</p>
               {brand.website && (
                 <a 
                   href={brand.website.startsWith('http') ? brand.website : `https://${brand.website}`} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium"
+                  className="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium dark:text-primary-400 dark:hover:text-primary-300"
                 >
                   Visit Official Website
                   <ExternalLink className="ml-1 h-4 w-4" />
@@ -168,7 +168,7 @@ const BrandPage: React.FC = () => {
         {/* Available Coupons */}
         {coupons.length > 0 && (
           <div className="mb-12">
-            <h2 className="text-2xl font-heading font-medium mb-6">Available Coupons</h2>
+            <h2 className="text-2xl font-heading font-medium mb-6 dark:text-white">Available Coupons</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {coupons.map(coupon => (
                 <CouponCard key={coupon.id} coupon={coupon} />
@@ -180,7 +180,7 @@ const BrandPage: React.FC = () => {
         {/* Brand Products */}
         {products.length > 0 && (
           <div>
-            <h2 className="text-2xl font-heading font-medium mb-6">Featured Products</h2>
+            <h2 className="text-2xl font-heading font-medium mb-6 dark:text-white">Featured Products</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.map(product => (
                 <ProductCard key={product.id} product={product} />
