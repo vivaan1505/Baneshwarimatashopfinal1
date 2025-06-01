@@ -23,6 +23,10 @@ import AccountPage from './pages/AccountPage';
 import BrandPage from './pages/BrandPage';
 import ThemeProvider from './components/theme/ThemeProvider';
 import WishlistPage from './pages/WishlistPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsConditionsPage from './pages/TermsConditionsPage';
+import SearchResultsPage from './pages/SearchResultsPage';
+import FestiveGiftGuidesPage from './pages/specialty/FestiveGiftGuidesPage';
 
 // Category Pages
 import FootwearPage from './pages/FootwearPage';
@@ -91,6 +95,7 @@ function App() {
             <Route path="coupons" element={<CouponsPage />} />
             <Route path="brand/:slug" element={<BrandPage />} />
             <Route path="wishlist" element={<WishlistPage />} />
+            <Route path="search" element={<SearchResultsPage />} />
             
             {/* Protected Routes */}
             <Route path="account" element={<AccountPage />} />
@@ -102,6 +107,7 @@ function App() {
             {/* Specialty Store Routes */}
             <Route path="bridal-boutique" element={<BridalBoutique />} />
             <Route path="festive-store" element={<FestiveStore />} />
+            <Route path="festive-store/gift-guides" element={<FestiveGiftGuidesPage />} />
             
             {/* Information Routes */}
             <Route path="blog" element={<BlogPage />} />
@@ -109,6 +115,8 @@ function App() {
             <Route path="careers" element={<CareersPage />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="contact" element={<ContactPage />} />
+            <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="terms-conditions" element={<TermsConditionsPage />} />
             
             {/* 404 Route */}
             <Route path="*" element={<NotFoundPage />} />

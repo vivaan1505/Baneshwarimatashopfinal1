@@ -31,33 +31,33 @@ const NavigationMenu: React.FC = () => {
         </button>
         
         {activeMenu === 'categories' && (
-          <div className="absolute left-0 z-10 mt-2 w-56 origin-top-left bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none animate-fade-in">
+          <div className="absolute left-0 z-10 mt-2 w-56 origin-top-left bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none animate-fade-in dark:bg-gray-800 dark:ring-gray-700">
             <div className="py-1">
               <Link 
                 to="/footwear" 
                 onClick={handleNavClick}
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 Footwear
               </Link>
               <Link 
                 to="/clothing" 
                 onClick={handleNavClick}
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 Clothing
               </Link>
               <Link 
                 to="/jewelry" 
                 onClick={handleNavClick}
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 Jewelry
               </Link>
               <Link 
                 to="/beauty" 
                 onClick={handleNavClick}
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 Beauty
               </Link>
@@ -76,26 +76,26 @@ const NavigationMenu: React.FC = () => {
         </button>
         
         {activeMenu === 'gender' && (
-          <div className="absolute left-0 z-10 mt-2 w-56 origin-top-left bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none animate-fade-in">
+          <div className="absolute left-0 z-10 mt-2 w-56 origin-top-left bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none animate-fade-in dark:bg-gray-800 dark:ring-gray-700">
             <div className="py-1">
               <Link 
                 to="/women" 
                 onClick={handleNavClick}
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 Women
               </Link>
               <Link 
                 to="/men" 
                 onClick={handleNavClick}
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 Men
               </Link>
               <Link 
                 to="/kids" 
                 onClick={handleNavClick}
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 Kids
               </Link>
@@ -147,28 +147,42 @@ const NavigationMenu: React.FC = () => {
         </button>
         
         {activeMenu === 'about' && (
-          <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none animate-fade-in">
+          <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none animate-fade-in dark:bg-gray-800 dark:ring-gray-700">
             <div className="py-1">
               <Link 
                 to="/about" 
                 onClick={handleNavClick}
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 About Us
               </Link>
               <Link 
                 to="/careers" 
                 onClick={handleNavClick}
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 Careers
               </Link>
               <Link 
                 to="/contact" 
                 onClick={handleNavClick}
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 Contact Us
+              </Link>
+              <Link 
+                to="/privacy-policy" 
+                onClick={handleNavClick}
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+              >
+                Privacy Policy
+              </Link>
+              <Link 
+                to="/terms-conditions" 
+                onClick={handleNavClick}
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+              >
+                Terms & Conditions
               </Link>
             </div>
           </div>
