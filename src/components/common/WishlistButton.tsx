@@ -84,13 +84,23 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
           .from('wishlists')
           .insert([{ user_id: user.id, product_id: productId }]);
 
-        if (error) throw error;
+        if (error) {
+          // Check if error is due to unique constraint violation
+          if (error.code === '23505') {
+            // Item is already in wishlist, update UI state
+            setIsInWishlist(true);
+            toast.success('Item is already in your wishlist');
+            return;
+          }
+          throw error;
+        }
         setIsInWishlist(true);
         toast.success('Added to wishlist');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating wishlist:', error);
-      toast.error('Failed to update wishlist');
+      // Show a more specific error message
+      toast.error(error.message || 'Failed to update wishlist');
     } finally {
       setLoading(false);
     }
