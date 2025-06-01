@@ -108,8 +108,8 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
       disabled={loading}
       className={`flex items-center justify-center ${
         isInWishlist 
-          ? 'text-red-500 hover:text-red-600' 
-          : 'text-gray-500 hover:text-gray-700'
+          ? 'text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300' 
+          : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
       } transition-colors ${className}`}
       aria-label={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
     >

@@ -27,6 +27,8 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsConditionsPage from './pages/TermsConditionsPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import FestiveGiftGuidesPage from './pages/specialty/FestiveGiftGuidesPage';
+import AccessibilityPage from './pages/AccessibilityPage';
+import SitemapPage from './pages/SitemapPage';
 
 // Category Pages
 import FootwearPage from './pages/FootwearPage';
@@ -117,6 +119,8 @@ function App() {
             <Route path="contact" element={<ContactPage />} />
             <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="terms-conditions" element={<TermsConditionsPage />} />
+            <Route path="accessibility" element={<AccessibilityPage />} />
+            <Route path="sitemap" element={<SitemapPage />} />
             
             {/* 404 Route */}
             <Route path="*" element={<NotFoundPage />} />
