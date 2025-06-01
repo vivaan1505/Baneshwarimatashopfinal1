@@ -8,9 +8,9 @@ const NewArrivalsPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
 
-  const { products, loading } = useProducts({ isNew: true });
+  const { products = [], loading } = useProducts({ isNew: true });
 
-  const filteredProducts = products.filter(product => {
+  const filteredProducts = (products || []).filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || product.category.slug === selectedCategory;
     return matchesSearch && matchesCategory;
