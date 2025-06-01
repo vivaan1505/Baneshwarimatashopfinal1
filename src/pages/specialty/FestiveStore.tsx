@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Gift, Star, Clock, Truck } from 'lucide-react';
+import { Gift, Star, Clock, Truck, ArrowRight } from 'lucide-react';
 
 const FestiveStore: React.FC = () => {
   return (
@@ -27,13 +27,14 @@ const FestiveStore: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link 
-                to="#gift-guides" 
+                to="/festive-store/gift-guides" 
                 className="btn bg-white text-accent-900 hover:bg-accent-50"
               >
-                Shop Gift Guides
+                <Gift className="w-5 h-5 mr-2" />
+                Gift Guides
               </Link>
               <Link 
-                to="#special-offers" 
+                to="/festive-store/gift-guides#special-offers" 
                 className="btn bg-accent-700 text-white hover:bg-accent-600"
               >
                 View Special Offers
@@ -166,11 +167,11 @@ const FestiveStore: React.FC = () => {
                   Luxury skincare and makeup collections perfectly packaged for gifting
                 </p>
                 <Link 
-                  to="/beauty" 
+                  to="/festive-store/gift-guides" 
                   className="text-accent-700 hover:text-accent-800 font-medium flex items-center"
                 >
-                  Shop Sets
-                  <span className="ml-2">→</span>
+                  View Gift Guide
+                  <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>
               </div>
             </div>
@@ -185,11 +186,11 @@ const FestiveStore: React.FC = () => {
                   Select luxury perfumes and colognes for everyone on your list
                 </p>
                 <Link 
-                  to="/beauty/fragrances" 
+                  to="/festive-store/gift-guides#special-offers" 
                   className="text-accent-700 hover:text-accent-800 font-medium flex items-center"
                 >
-                  Shop Fragrances
-                  <span className="ml-2">→</span>
+                  View Special Offers
+                  <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>
               </div>
             </div>
@@ -204,11 +205,11 @@ const FestiveStore: React.FC = () => {
                   Receive a complimentary jewelry box with purchases over $200
                 </p>
                 <Link 
-                  to="/jewelry" 
+                  to="/festive-store/gift-guides" 
                   className="text-accent-700 hover:text-accent-800 font-medium flex items-center"
                 >
-                  Shop Jewelry
-                  <span className="ml-2">→</span>
+                  Shop Collections
+                  <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>
               </div>
             </div>
@@ -230,7 +231,7 @@ const FestiveStore: React.FC = () => {
                     Our holiday gift guide makes it easy to find something special for everyone on your list.
                   </p>
                   <Link 
-                    to="/gift-guide" 
+                    to="/festive-store/gift-guides" 
                     className="btn bg-white text-accent-900 hover:bg-accent-50"
                   >
                     View Gift Guide

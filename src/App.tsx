@@ -10,6 +10,7 @@ import NewArrivalsPage from './pages/NewArrivalsPage';
 import CollectionsPage from './pages/CollectionsPage';
 import BridalBoutique from './pages/specialty/BridalBoutique';
 import FestiveStore from './pages/specialty/FestiveStore';
+import FestiveGiftGuidesPage from './pages/specialty/FestiveGiftGuidesPage';
 import BlogPage from './pages/BlogPage';
 import BlogPost from './pages/BlogPost';
 import CareersPage from './pages/CareersPage';
@@ -102,6 +103,7 @@ function App() {
             {/* Specialty Store Routes */}
             <Route path="bridal-boutique" element={<BridalBoutique />} />
             <Route path="festive-store" element={<FestiveStore />} />
+            <Route path="festive-store/gift-guides" element={<FestiveGiftGuidesPage />} />
             
             {/* Information Routes */}
             <Route path="blog" element={<BlogPage />} />
