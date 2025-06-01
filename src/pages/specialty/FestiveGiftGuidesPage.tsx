@@ -11,7 +11,7 @@ interface Product {
   compare_at_price: number | null;
   description: string;
   images: Array<{ url: string }>;
-  brand: {
+  brand?: {
     name: string;
     logo_url: string;
   };
@@ -378,7 +378,7 @@ const FestiveGiftGuidesPage: React.FC = () => {
                               className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden"
                             >
                               <img 
-                                src={product.images[0]?.url} 
+                                src={product.images[0]?.url || '/placeholder-product.jpg'} 
                                 alt={product.name} 
                                 className="w-full h-full object-cover"
                               />
@@ -476,7 +476,7 @@ const FestiveGiftGuidesPage: React.FC = () => {
                   <div className="bg-white rounded-lg shadow-sm overflow-hidden dark:bg-gray-800">
                     <div className="aspect-square relative overflow-hidden">
                       <img
-                        src={product.images[0]?.url}
+                        src={product.images[0]?.url || '/placeholder-product.jpg'}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
@@ -497,14 +497,18 @@ const FestiveGiftGuidesPage: React.FC = () => {
                     </div>
                     
                     <div className="p-4">
-                      <div className="flex items-center mb-2">
-                        <img 
-                          src={product.brand.logo_url} 
-                          alt={product.brand.name} 
-                          className="w-6 h-6 object-contain mr-2"
-                        />
-                        <span className="text-xs text-gray-500 dark:text-gray-400">{product.brand.name}</span>
-                      </div>
+                      {product.brand && (
+                        <div className="flex items-center mb-2">
+                          <img 
+                            src={product.brand.logo_url || '/placeholder-brand.jpg'} 
+                            alt={product.brand.name || 'Brand'} 
+                            className="w-6 h-6 object-contain mr-2"
+                          />
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                            {product.brand.name || 'Brand'}
+                          </span>
+                        </div>
+                      )}
                       
                       <h3 className="font-medium mb-1 group-hover:text-accent-600 dark:text-white dark:group-hover:text-accent-400">
                         {product.name}
@@ -575,7 +579,7 @@ const FestiveGiftGuidesPage: React.FC = () => {
                   <div className="bg-white rounded-lg shadow-sm overflow-hidden border dark:bg-gray-700 dark:border-gray-600">
                     <div className="aspect-square relative overflow-hidden">
                       <img
-                        src={product.images[0]?.url}
+                        src={product.images[0]?.url || '/placeholder-product.jpg'}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
