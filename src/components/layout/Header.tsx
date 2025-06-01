@@ -9,6 +9,7 @@ import { cn } from '../../utils/cn';
 import { scrollToTop } from '../../utils/scroll';
 import ThemeToggle from '../theme/ThemeToggle';
 import ThemeManagerButton from '../theme/ThemeManagerButton';
+import SearchOverlay from '../common/SearchOverlay';
 
 interface HeaderProps {
   toggleMobileMenu: () => void;
@@ -84,7 +85,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
           {/* Right side icons */}
           <div className="flex items-center space-x-4">
             <button 
-              onClick={() => setSearchOpen(!searchOpen)}
+              onClick={() => setSearchOpen(true)}
               className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400 focus:outline-none"
               aria-label="Search"
             >
@@ -204,27 +205,8 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
         </div>
       </div>
       
-      {/* Search overlay */}
-      {searchOpen && (
-        <div className="absolute inset-x-0 top-full bg-white shadow-lg p-4 animate-fade-in dark:bg-gray-800">
-          <div className="container-custom">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search for products, brands, and more..."
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                autoFocus
-              />
-              <button
-                onClick={() => setSearchOpen(false)}
-                className="absolute right-3 top-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-              >
-                <X size={20} />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Search Overlay */}
+      <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
 
       {/* Cart Drawer */}
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />

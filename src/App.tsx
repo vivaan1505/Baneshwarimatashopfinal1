@@ -22,6 +22,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import AccountPage from './pages/AccountPage';
 import BrandPage from './pages/BrandPage';
 import ThemeProvider from './components/theme/ThemeProvider';
+import SearchResultsPage from './pages/SearchResultsPage';
 
 // Category Pages
 import FootwearPage from './pages/FootwearPage';
@@ -89,6 +90,7 @@ function App() {
             <Route path="product/:id" element={<ProductPage />} />
             <Route path="coupons" element={<CouponsPage />} />
             <Route path="brand/:slug" element={<BrandPage />} />
+            <Route path="search" element={<SearchResultsPage />} />
             
             {/* Protected Routes */}
             <Route path="account" element={<AccountPage />} />
