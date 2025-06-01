@@ -203,13 +203,91 @@ const SUBCATEGORIES = {
     { id: 'cufflinks', name: 'Cufflinks', gender: 'men' }
   ],
   beauty: [
-    { id: 'mens-skincare', name: 'Men\'s Skincare', gender: 'men' },
-    { id: 'mens-grooming', name: 'Men\'s Grooming', gender: 'men' },
-    { id: 'mens-fragrance', name: 'Men\'s Fragrance', gender: 'men' },
+    // Women's Beauty
     { id: 'womens-skincare', name: 'Women\'s Skincare', gender: 'women' },
+    { id: 'womens-moisturizers', name: 'Women\'s Moisturizers', gender: 'women' },
+    { id: 'womens-serums-oils', name: 'Women\'s Serums & Oils', gender: 'women' },
+    { id: 'womens-face-masks', name: 'Women\'s Face Masks', gender: 'women' },
+    { id: 'womens-cleansers-toners', name: 'Women\'s Cleansers & Toners', gender: 'women' },
+    { id: 'womens-sunscreen', name: 'Women\'s Sunscreen & SPF', gender: 'women' },
+    
     { id: 'womens-makeup', name: 'Women\'s Makeup', gender: 'women' },
-    { id: 'womens-fragrance', name: 'Women\'s Fragrance', gender: 'women' },
-    { id: 'kids-beauty', name: 'Kids\' Beauty', gender: 'kids' },
+    { id: 'womens-foundation-concealer', name: 'Women\'s Foundation & Concealer', gender: 'women' },
+    { id: 'womens-lipstick-gloss', name: 'Women\'s Lipsticks & Lip Gloss', gender: 'women' },
+    { id: 'womens-eyeshadow-eyeliner', name: 'Women\'s Eyeshadow & Eyeliner', gender: 'women' },
+    { id: 'womens-mascara', name: 'Women\'s Mascara', gender: 'women' },
+    { id: 'womens-blush-highlighter', name: 'Women\'s Blush & Highlighter', gender: 'women' },
+    
+    { id: 'womens-hair-care', name: 'Women\'s Hair Care', gender: 'women' },
+    { id: 'womens-shampoo-conditioner', name: 'Women\'s Shampoos & Conditioners', gender: 'women' },
+    { id: 'womens-hair-oils-serums', name: 'Women\'s Hair Oils & Serums', gender: 'women' },
+    { id: 'womens-hair-masks-treatments', name: 'Women\'s Hair Masks & Treatments', gender: 'women' },
+    { id: 'womens-styling-products', name: 'Women\'s Styling Products', gender: 'women' },
+    
+    { id: 'womens-fragrances', name: 'Women\'s Fragrances', gender: 'women' },
+    { id: 'womens-perfumes', name: 'Women\'s Perfumes', gender: 'women' },
+    { id: 'womens-body-mists', name: 'Women\'s Body Mists', gender: 'women' },
+    
+    { id: 'womens-bath-body', name: 'Women\'s Bath & Body', gender: 'women' },
+    { id: 'womens-body-lotions-creams', name: 'Women\'s Body Lotions & Creams', gender: 'women' },
+    { id: 'womens-body-wash-scrubs', name: 'Women\'s Body Wash & Scrubs', gender: 'women' },
+    { id: 'womens-hand-foot-care', name: 'Women\'s Hand & Foot Care', gender: 'women' },
+    
+    { id: 'womens-nail-care', name: 'Women\'s Nail Care', gender: 'women' },
+    { id: 'womens-nail-polish', name: 'Women\'s Nail Polish', gender: 'women' },
+    { id: 'womens-nail-treatments-tools', name: 'Women\'s Nail Treatments & Tools', gender: 'women' },
+    
+    { id: 'womens-beauty-tools', name: 'Women\'s Beauty Tools & Accessories', gender: 'women' },
+    { id: 'womens-makeup-brushes-sponges', name: 'Women\'s Makeup Brushes & Sponges', gender: 'women' },
+    { id: 'womens-facial-tools', name: 'Women\'s Facial Tools', gender: 'women' },
+    { id: 'womens-hair-tools', name: 'Women\'s Hair Tools', gender: 'women' },
+    
+    // Men's Beauty
+    { id: 'mens-skincare', name: 'Men\'s Skincare', gender: 'men' },
+    { id: 'mens-face-wash-cleansers', name: 'Men\'s Face Wash & Cleansers', gender: 'men' },
+    { id: 'mens-moisturizers-aftershave', name: 'Men\'s Moisturizers & Aftershave Balms', gender: 'men' },
+    { id: 'mens-sunscreen', name: 'Men\'s Sunscreen & SPF', gender: 'men' },
+    { id: 'mens-beard-care', name: 'Men\'s Beard Care', gender: 'men' },
+    
+    { id: 'mens-hair-care', name: 'Men\'s Hair Care', gender: 'men' },
+    { id: 'mens-shampoo-conditioner', name: 'Men\'s Shampoos & Conditioners', gender: 'men' },
+    { id: 'mens-styling-gels-pomades', name: 'Men\'s Styling Gels & Pomades', gender: 'men' },
+    
+    { id: 'mens-fragrances', name: 'Men\'s Fragrances', gender: 'men' },
+    { id: 'mens-cologne-aftershave', name: 'Men\'s Cologne & Aftershave', gender: 'men' },
+    
+    { id: 'mens-grooming', name: 'Men\'s Grooming', gender: 'men' },
+    { id: 'mens-shaving-creams-razors', name: 'Men\'s Shaving Creams & Razors', gender: 'men' },
+    { id: 'mens-trimmers-grooming-kits', name: 'Men\'s Trimmers & Grooming Kits', gender: 'men' },
+    
+    { id: 'mens-bath-body', name: 'Men\'s Bath & Body', gender: 'men' },
+    { id: 'mens-body-wash-scrubs', name: 'Men\'s Body Wash & Scrubs', gender: 'men' },
+    { id: 'mens-deodorants-antiperspirants', name: 'Men\'s Deodorants & Antiperspirants', gender: 'men' },
+    
+    { id: 'mens-nail-care', name: 'Men\'s Nail Care', gender: 'men' },
+    { id: 'mens-nail-grooming-tools', name: 'Men\'s Nail Grooming Tools', gender: 'men' },
+    
+    // Kids' Beauty
+    { id: 'kids-skincare', name: 'Kids\' Skincare', gender: 'kids' },
+    { id: 'kids-gentle-cleansers', name: 'Kids\' Gentle Cleansers', gender: 'kids' },
+    { id: 'kids-lotions-moisturizers', name: 'Kids\' Lotions & Moisturizers', gender: 'kids' },
+    { id: 'kids-diaper-rash-creams', name: 'Kids\' Diaper Rash Creams', gender: 'kids' },
+    
+    { id: 'kids-hair-care', name: 'Kids\' Hair Care', gender: 'kids' },
+    { id: 'kids-shampoos-conditioners', name: 'Kids\' Shampoos & Conditioners', gender: 'kids' },
+    { id: 'kids-detanglers', name: 'Kids\' Detanglers', gender: 'kids' },
+    
+    { id: 'kids-bath-body', name: 'Kids\' Bath & Body', gender: 'kids' },
+    { id: 'kids-bath-wash', name: 'Kids\' Bath Wash', gender: 'kids' },
+    { id: 'kids-body-lotions', name: 'Kids\' Body Lotions', gender: 'kids' },
+    
+    { id: 'kids-fragrances', name: 'Kids\' Fragrances', gender: 'kids' },
+    { id: 'kids-body-sprays', name: 'Kids\' Body Sprays', gender: 'kids' },
+    
+    { id: 'kids-grooming', name: 'Kids\' Grooming', gender: 'kids' },
+    { id: 'kids-nail-clippers-grooming-sets', name: 'Kids\' Nail Clippers & Grooming Sets', gender: 'kids' },
+    
+    // Generic Beauty Categories
     { id: 'skincare', name: 'Skincare', gender: 'unisex' },
     { id: 'makeup', name: 'Makeup', gender: 'unisex' },
     { id: 'fragrances', name: 'Fragrances', gender: 'unisex' },
