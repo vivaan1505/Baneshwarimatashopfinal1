@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { toast } from 'react-hot-toast';
 import { useThemeStore } from '../../stores/themeStore';
-import ThemeManager from '../theme/ThemeManager';
+import ThemeManager from '../../components/theme/ThemeManager';
 import { Percent, Tag, Truck } from 'lucide-react';
 
 interface SiteSettings {
