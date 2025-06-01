@@ -34,7 +34,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
   
   signUp: async (email: string, password: string, metadata?: UserMetadata) => {
-    const { data, error } = await supabase.auth.signUp({
+    const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -42,8 +42,27 @@ export const useAuthStore = create<AuthState>((set) => ({
       }
     });
     
-    if (error) throw error;
-    set({ user: data.user });
+    if (authError) throw authError;
+
+    // Create corresponding entry in public.users table
+    if (authData.user) {
+      const { error: userError } = await supabase
+        .from('users')
+        .insert({
+          id: authData.user.id,
+          email: authData.user.email,
+          first_name: metadata?.first_name,
+          last_name: metadata?.last_name,
+        });
+
+      if (userError) {
+        // If user creation fails, sign out and throw error
+        await supabase.auth.signOut();
+        throw userError;
+      }
+    }
+    
+    set({ user: authData.user });
   },
   
   signOut: async () => {
