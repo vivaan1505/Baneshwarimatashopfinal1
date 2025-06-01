@@ -104,7 +104,7 @@ const FeaturedProducts: React.FC = () => {
             to={activeTab === 'bestsellers' ? '/products?filter=bestsellers' : 
                 activeTab === 'new' ? '/new-arrivals' : 
                 '/products?filter=sale'}
-            className="btn-outline"
+            className="btn-outline dark:border-gray-600 dark:text-gray-300"
           >
             View All {activeTab === 'bestsellers' ? 'Best Sellers' : 
                       activeTab === 'new' ? 'New Arrivals' : 

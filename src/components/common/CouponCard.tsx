@@ -55,7 +55,7 @@ const CouponCard: React.FC<CouponCardProps> = ({ coupon }) => {
   const isExternalLink = shopNowLink.startsWith('http');
 
   return (
-    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-white rounded-lg shadow-sm overflow-hidden dark:bg-gray-800">
       <div className="p-6">
         <div className="flex items-center mb-4">
           {coupon.brand?.logo_url && (
@@ -63,26 +63,27 @@ const CouponCard: React.FC<CouponCardProps> = ({ coupon }) => {
               src={coupon.brand.logo_url}
               alt={coupon.brand.name}
               className="w-12 h-12 object-contain rounded"
+              loading="lazy"
             />
           )}
           <div className="ml-3">
-            <h3 className="font-medium">{coupon.brand?.name}</h3>
-            <p className="text-sm text-gray-500 capitalize">
+            <h3 className="font-medium dark:text-white">{coupon.brand?.name}</h3>
+            <p className="text-sm text-gray-500 capitalize dark:text-gray-400">
               {coupon.brand?.category.replace('-', ' ')}
             </p>
           </div>
         </div>
 
         <div className="mb-4">
-          <div className="text-2xl font-bold text-primary-600 mb-2">
+          <div className="text-2xl font-bold text-primary-600 mb-2 dark:text-primary-400">
             {coupon.discount_type === 'percentage'
               ? `${coupon.discount_value}% OFF`
               : `$${coupon.discount_value} OFF`}
           </div>
-          <p className="text-gray-600">{coupon.description}</p>
+          <p className="text-gray-600 dark:text-gray-300">{coupon.description}</p>
         </div>
 
-        <div className="space-y-2 text-sm text-gray-500 mb-4">
+        <div className="space-y-2 text-sm text-gray-500 mb-4 dark:text-gray-400">
           {coupon.minimum_purchase > 0 && (
             <p>Min. Purchase: ${coupon.minimum_purchase}</p>
           )}
@@ -112,7 +113,7 @@ const CouponCard: React.FC<CouponCardProps> = ({ coupon }) => {
               href={shopNowLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-1 btn-outline"
+              className="flex items-center justify-center gap-1 btn-outline dark:border-gray-600 dark:text-gray-300"
             >
               <ExternalLink size={18} />
               Shop Now
@@ -120,7 +121,7 @@ const CouponCard: React.FC<CouponCardProps> = ({ coupon }) => {
           ) : (
             <Link 
               to={shopNowLink}
-              className="flex items-center justify-center gap-1 btn-outline"
+              className="flex items-center justify-center gap-1 btn-outline dark:border-gray-600 dark:text-gray-300"
             >
               <ExternalLink size={18} />
               Shop Now

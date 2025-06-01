@@ -33,6 +33,25 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close profile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (profileMenuOpen && !target.closest('.profile-menu-container')) {
+        setProfileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [profileMenuOpen]);
+
+  // Close menus when location changes
+  useEffect(() => {
+    setProfileMenuOpen(false);
+    setSearchOpen(false);
+  }, [location]);
+
   const cartItemsCount = items.reduce((total, item) => total + item.quantity, 0);
 
   const handleLogoClick = () => {
@@ -117,10 +136,12 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
             <ThemeManagerButton />
             
             {/* User Profile Menu */}
-            <div className="relative">
+            <div className="relative profile-menu-container">
               <button
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                 className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400 focus:outline-none"
+                aria-label="User menu"
+                aria-expanded={profileMenuOpen}
               >
                 <User size={20} />
               </button>
@@ -200,6 +221,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
             <button
               onClick={() => setCartOpen(true)}
               className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400 relative"
+              aria-label="Shopping cart"
             >
               <ShoppingBag size={20} />
               {cartItemsCount > 0 && (

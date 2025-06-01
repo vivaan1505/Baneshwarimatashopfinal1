@@ -23,6 +23,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           src={imageUrl}
           alt={product.name}
           className="h-full w-full object-cover object-center group-hover:opacity-75 transition-opacity"
+          loading="lazy"
         />
         <div className="absolute top-2 right-2">
           <WishlistButton 

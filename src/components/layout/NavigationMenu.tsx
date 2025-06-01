@@ -109,7 +109,7 @@ const NavigationMenu: React.FC = () => {
         onClick={handleNavClick}
         className="nav-link flex items-center"
       >
-        Bridal Boutique <span className="ml-1 text-xs font-semibold text-secondary-600">NEW</span>
+        Bridal Boutique <span className="ml-1 text-xs font-semibold text-secondary-600 dark:text-secondary-400">NEW</span>
       </Link>
       
       <Link 
@@ -117,7 +117,7 @@ const NavigationMenu: React.FC = () => {
         onClick={handleNavClick}
         className="nav-link flex items-center"
       >
-        Festive Store <span className="ml-1 text-xs font-semibold text-secondary-600">NEW</span>
+        Festive Store <span className="ml-1 text-xs font-semibold text-secondary-600 dark:text-secondary-400">NEW</span>
       </Link>
       
       <Link 
