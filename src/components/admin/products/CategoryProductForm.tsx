@@ -26,7 +26,6 @@ interface Subcategory {
 interface ProductFormData {
   name: string;
   brand_id: string;
-  custom_brand?: string | null;
   gender: 'men' | 'women' | 'unisex' | 'kids';
   description: string;
   price: number;
@@ -445,6 +444,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
     try {
       let brandId = data.brand_id;
 
+      // If custom brand is provided, create a new brand first
       if (data.custom_brand) {
         const brandSlug = data.custom_brand
           .toLowerCase()
@@ -482,6 +482,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '');
 
+      // Remove custom_brand from data before inserting into products table
       const { custom_brand, ...productData } = data;
 
       const { data: product, error: productError } = await supabase
@@ -647,7 +648,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     </div>
                   ) : (
                     <BrandSelect
-                      {...register('brand_id', { required: 'Brand is required' })}
                       options={brands.map(brand => ({
                         value: brand.id,
                         label: brand.name
@@ -658,9 +658,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                       onChange={handleBrandChange}
                       isClearable
                     />
-                  )}
-                  {errors.brand_id && (
-                    <p className="mt-1 text-sm text-red-600">{errors.brand_id.message}</p>
                   )}
                 </div>
 
