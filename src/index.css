@@ -169,7 +169,12 @@
   }
   
   .btn-outline {
-    @apply btn border-2 border-primary-700 text-primary-700 hover:bg-primary-50 focus:ring-primary-500 dark:border-primary-500 dark:text-primary-400 dark:hover:bg-primary-900/20;
+    @apply btn border-2 border-primary-700 text-primary-700 hover:bg-primary-50 focus:ring-primary-500 dark:border-primary-500 dark:text-primary-400;
+  }
+  
+  /* Add dark mode hover styles separately since complex variants don't work with @apply */
+  .dark .btn-outline:hover {
+    background-color: rgba(30, 58, 138, 0.2); /* bg-primary-900/20 equivalent */
   }
   
   .container-custom {
