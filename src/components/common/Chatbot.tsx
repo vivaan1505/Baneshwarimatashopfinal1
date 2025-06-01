@@ -14,6 +14,7 @@ interface ChatbotSettings {
 interface ChatbotScript {
   trigger_keywords: string[];
   response: string;
+  section: string;
 }
 
 interface Message {
@@ -34,6 +35,12 @@ const Chatbot: React.FC = () => {
   const [showHumanOption, setShowHumanOption] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuthStore();
+  const [quickSuggestions, setQuickSuggestions] = useState<string[]>([
+    'Shipping information',
+    'Return policy',
+    'Track my order',
+    'Product availability'
+  ]);
 
   useEffect(() => {
     fetchSettings();
@@ -70,11 +77,21 @@ const Chatbot: React.FC = () => {
     try {
       const { data, error } = await supabase
         .from('chatbot_scripts')
-        .select('trigger_keywords, response')
+        .select('trigger_keywords, response, section')
         .eq('is_active', true);
 
       if (error) throw error;
       setScripts(data || []);
+      
+      // Extract quick suggestions from script sections
+      if (data && data.length > 0) {
+        const sections = [...new Set(data.map(script => script.section))];
+        const randomSections = sections
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 4);
+        
+        setQuickSuggestions(randomSections.map(section => `About ${section.toLowerCase()}`));
+      }
     } catch (error) {
       console.error('Error fetching chatbot scripts:', error);
     }
@@ -120,6 +137,19 @@ const Chatbot: React.FC = () => {
     }, settings?.auto_response_delay || 1000);
   };
 
+  const handleSuggestionClick = (suggestion: string) => {
+    addUserMessage(suggestion);
+    
+    // Simulate bot typing
+    setIsTyping(true);
+    
+    // Process the message after a delay
+    setTimeout(() => {
+      processUserMessage(suggestion);
+      setIsTyping(false);
+    }, settings?.auto_response_delay || 1000);
+  };
+
   const processUserMessage = (message: string) => {
     // Convert message to lowercase for matching
     const lowerMessage = message.toLowerCase();
@@ -135,6 +165,21 @@ const Chatbot: React.FC = () => {
       // Reset failed responses counter
       setFailedResponses(0);
       setShowHumanOption(false);
+      
+      // Generate new suggestions based on the current section
+      const relatedScripts = scripts
+        .filter(s => s.section === matchingScript.section && s !== matchingScript)
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 3);
+      
+      const newSuggestions = relatedScripts.map(script => 
+        script.trigger_keywords[0].charAt(0).toUpperCase() + script.trigger_keywords[0].slice(1)
+      );
+      
+      if (newSuggestions.length > 0) {
+        setQuickSuggestions(newSuggestions);
+      }
+      
       addBotMessage(matchingScript.response);
     } else {
       // Increment failed responses counter
@@ -167,7 +212,7 @@ const Chatbot: React.FC = () => {
       {/* Chat button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-primary-600 text-white rounded-full p-4 shadow-lg hover:bg-primary-700 transition-colors"
+        className="bg-primary-600 text-white rounded-full p-4 shadow-lg hover:bg-primary-700 transition-colors dark:bg-primary-700 dark:hover:bg-primary-800"
         aria-label="Open chat"
       >
         <MessageSquare size={24} />
@@ -175,16 +220,16 @@ const Chatbot: React.FC = () => {
       
       {/* Chat window */}
       {isOpen && (
-        <div className="absolute bottom-16 right-0 w-80 sm:w-96 bg-white rounded-lg shadow-xl overflow-hidden">
+        <div className="absolute bottom-16 right-0 w-80 sm:w-96 bg-white rounded-lg shadow-xl overflow-hidden dark:bg-gray-800">
           {/* Chat header */}
-          <div className="bg-primary-600 text-white p-4 flex justify-between items-center">
+          <div className="bg-primary-600 text-white p-4 flex justify-between items-center dark:bg-primary-700">
             <div className="flex items-center">
               <Bot size={20} className="mr-2" />
               <h3 className="font-medium">MinddShopp Assistant</h3>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-white hover:text-gray-200"
+              className="text-white hover:text-gray-200 dark:hover:text-gray-300"
               aria-label="Close chat"
             >
               <X size={20} />
@@ -192,7 +237,7 @@ const Chatbot: React.FC = () => {
           </div>
           
           {/* Chat messages */}
-          <div className="h-80 overflow-y-auto p-4 bg-gray-50">
+          <div className="h-80 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-900">
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -201,8 +246,8 @@ const Chatbot: React.FC = () => {
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
                     message.sender === 'user'
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-white text-gray-800 border border-gray-200'
+                      ? 'bg-primary-600 text-white dark:bg-primary-700'
+                      : 'bg-white text-gray-800 border border-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700'
                   }`}
                 >
                   <div className="flex items-start">
@@ -216,9 +261,9 @@ const Chatbot: React.FC = () => {
             ))}
             {isTyping && (
               <div className="flex justify-start mb-4">
-                <div className="bg-white text-gray-800 rounded-lg p-3 border border-gray-200">
+                <div className="bg-white text-gray-800 rounded-lg p-3 border border-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700">
                   <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce dark:bg-gray-500"></div>
                     <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                     <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
                   </div>
@@ -229,7 +274,7 @@ const Chatbot: React.FC = () => {
               <div className="flex justify-center mb-4">
                 <button
                   onClick={handleHumanSupport}
-                  className="bg-primary-600 text-white px-4 py-2 rounded-md text-sm hover:bg-primary-700 transition-colors flex items-center"
+                  className="bg-primary-600 text-white px-4 py-2 rounded-md text-sm hover:bg-primary-700 transition-colors flex items-center dark:bg-primary-700 dark:hover:bg-primary-800"
                 >
                   <User size={16} className="mr-2" />
                   Connect with Human Support
@@ -239,8 +284,23 @@ const Chatbot: React.FC = () => {
             <div ref={messagesEndRef} />
           </div>
           
+          {/* Quick suggestions */}
+          {quickSuggestions.length > 0 && messages.length < 3 && (
+            <div className="p-2 border-t border-gray-200 flex flex-wrap gap-2 dark:border-gray-700">
+              {quickSuggestions.map((suggestion, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleSuggestionClick(suggestion)}
+                  className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          )}
+          
           {/* Chat input */}
-          <div className="p-4 border-t">
+          <div className="p-4 border-t dark:border-gray-700">
             <div className="flex">
               <input
                 type="text"
@@ -248,21 +308,21 @@ const Chatbot: React.FC = () => {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                 placeholder="Type your message..."
-                className="flex-1 border border-gray-300 rounded-l-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="flex-1 border border-gray-300 rounded-l-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
               <button
                 onClick={handleSendMessage}
-                className="bg-primary-600 text-white px-4 py-2 rounded-r-md hover:bg-primary-700 transition-colors"
+                className="bg-primary-600 text-white px-4 py-2 rounded-r-md hover:bg-primary-700 transition-colors dark:bg-primary-700 dark:hover:bg-primary-800"
               >
                 <Send size={20} />
               </button>
             </div>
-            <div className="mt-2 text-xs text-gray-500 flex justify-between items-center">
+            <div className="mt-2 text-xs text-gray-500 flex justify-between items-center dark:text-gray-400">
               <span>Powered by MinddShopp AI</span>
               {user ? (
                 <span>Logged in as {user.email}</span>
               ) : (
-                <a href="/auth/signin" className="text-primary-600 hover:underline flex items-center">
+                <a href="/auth/signin" className="text-primary-600 hover:underline flex items-center dark:text-primary-400">
                   <span>Sign in</span>
                   <ExternalLink size={12} className="ml-1" />
                 </a>
