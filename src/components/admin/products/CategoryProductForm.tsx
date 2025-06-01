@@ -1,0 +1,589 @@
+import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { X, Upload, Plus, Minus } from 'lucide-react';
+import { supabase } from '../../../lib/supabase';
+import { useDropzone } from 'react-dropzone';
+import { toast } from 'react-hot-toast';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import Select from 'react-select';
+import CreatableSelect from 'react-select/creatable';
+
+interface Brand {
+  id: string;
+  name: string;
+  slug: string;
+  category: string;
+}
+
+interface ProductFormData {
+  name: string;
+  brand_id: string;
+  custom_brand?: string | null;
+  gender: 'men' | 'women' | 'unisex' | 'kids';
+  description: string;
+  price: number;
+  compare_at_price?: number;
+  sku: string;
+  stock_quantity: number;
+  is_visible: boolean;
+  is_returnable: boolean;
+  meta_title?: string;
+  meta_description?: string;
+  tags: string[];
+  care_instructions?: string;
+  materials?: string[];
+  size_guide?: any;
+  shipping_info?: string;
+  return_policy?: string;
+  type: 'footwear' | 'clothing' | 'jewelry' | 'beauty' | 'accessories' | 'bags';
+}
+
+interface CategoryProductFormProps {
+  category: string;
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+}
+
+const PRODUCT_TAGS = [
+  { value: 'coming-soon', label: 'Coming Soon', color: 'bg-blue-100 text-blue-800' },
+  { value: 'limited-stock', label: 'Limited Stock', color: 'bg-orange-100 text-orange-800' },
+  { value: 'best-seller', label: 'Best Seller', color: 'bg-green-100 text-green-800' },
+  { value: 'sale', label: 'Sale', color: 'bg-red-100 text-red-800' },
+  { value: 'new-arrival', label: 'New Arrival', color: 'bg-purple-100 text-purple-800' },
+  { value: 'pre-order', label: 'Pre-Order', color: 'bg-yellow-100 text-yellow-800' },
+  { value: 'exclusive', label: 'Exclusive', color: 'bg-indigo-100 text-indigo-800' },
+  { value: 'last-piece', label: 'Last Piece', color: 'bg-pink-100 text-pink-800' },
+  { value: 'bridal', label: 'Bridal', color: 'bg-pink-100 text-pink-800' },
+  { value: 'christmas', label: 'Christmas', color: 'bg-red-100 text-red-800' }
+];
+
+const PRODUCT_TYPES = [
+  { value: 'footwear', label: 'Footwear' },
+  { value: 'clothing', label: 'Clothing' },
+  { value: 'jewelry', label: 'Jewelry' },
+  { value: 'beauty', label: 'Beauty' },
+  { value: 'accessories', label: 'Accessories' },
+  { value: 'bags', label: 'Bags' }
+];
+
+const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
+  category,
+  isOpen,
+  onClose,
+  onSuccess
+}) => {
+  const [uploading, setUploading] = useState(false);
+  const [images, setImages] = useState<File[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [loading, setLoading] = useState(false);
+  
+  const { register, handleSubmit, watch, setValue, formState: { errors }, trigger } = useForm<ProductFormData>({
+    defaultValues: {
+      name: '',
+      price: 0,
+      stock_quantity: 0,
+      is_visible: true,
+      is_returnable: true,
+      gender: 'unisex',
+      tags: [],
+      type: mapCategoryToType(category) // Set default type based on category
+    }
+  });
+
+  // Function to map category to product type
+  function mapCategoryToType(category: string): 'footwear' | 'clothing' | 'jewelry' | 'beauty' | 'accessories' | 'bags' {
+    switch (category) {
+      case 'footwear':
+        return 'footwear';
+      case 'clothing':
+        return 'clothing';
+      case 'jewelry':
+        return 'jewelry';
+      case 'beauty':
+        return 'beauty';
+      case 'bridal':
+        return 'clothing'; // Default for bridal, can be changed
+      case 'christmas':
+        return 'clothing'; // Default for christmas, can be changed
+      case 'sale':
+        return 'clothing'; // Default for sale, can be changed
+      default:
+        return 'clothing';
+    }
+  }
+
+  const isSpecialCategory = category === 'bridal' || category === 'christmas' || category === 'sale';
+  const BrandSelect = isSpecialCategory ? CreatableSelect : Select;
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchBrands();
+    }
+    // Add special category to tags by default
+    if (isSpecialCategory) {
+      setValue('tags', [category]);
+    }
+  }, [category, isOpen]);
+
+  const fetchBrands = async () => {
+    try {
+      setLoading(true);
+      let query = supabase
+        .from('brands')
+        .select('*')
+        .eq('is_active', true)
+        .order('name');
+
+      if (category !== 'christmas' && category !== 'sale') {
+        // For regular categories, filter brands by category
+        // For bridal, we'll show all brands
+        if (category !== 'bridal') {
+          query = query.eq('category', category);
+        }
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        throw new Error(`Supabase error: ${error.message}`);
+      }
+      
+      setBrands(data || []);
+    } catch (error) {
+      console.error('Error fetching brands:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to load brands. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBrandChange = (option: any) => {
+    if (option.__isNew__) {
+      setValue('brand_id', option.value);
+      setValue('custom_brand', option.value);
+    } else {
+      setValue('brand_id', option.value);
+      setValue('custom_brand', null);
+    }
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png', '.webp']
+    },
+    onDrop: acceptedFiles => {
+      setImages(prev => [...prev, ...acceptedFiles]);
+    }
+  });
+
+  const onSubmit = async (data: ProductFormData) => {
+    const isValid = await trigger();
+    if (!isValid) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    if (data.compare_at_price && data.compare_at_price < data.price) {
+      toast.error('Compare at price must be greater than regular price');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      // Ensure special category is in tags
+      if (isSpecialCategory && !data.tags.includes(category)) {
+        data.tags = [...data.tags, category];
+      }
+
+      // Make sure type is set correctly based on category
+      if (category === 'footwear' || category === 'clothing' || category === 'jewelry' || category === 'beauty') {
+        data.type = category as any;
+      }
+
+      const { data: product, error: productError } = await supabase
+        .from('products')
+        .insert([{
+          ...data,
+          slug: data.name.toLowerCase().replace(/\s+/g, '-'),
+        }])
+        .select()
+        .single();
+
+      if (productError) throw productError;
+
+      const imagePromises = images.map(async (file, index) => {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}-${index}.${fileExt}`;
+        const filePath = `${product.id}/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('product-images')
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('product-images')
+          .getPublicUrl(filePath);
+
+        return publicUrl;
+      });
+
+      const imageUrls = await Promise.all(imagePromises);
+
+      const { error: imagesError } = await supabase
+        .from('product_images')
+        .insert(
+          imageUrls.map((url, index) => ({
+            product_id: product.id,
+            url,
+            position: index,
+          }))
+        );
+
+      if (imagesError) throw imagesError;
+
+      onSuccess();
+      toast.success('Product added successfully');
+      onClose();
+    } catch (error) {
+      console.error('Error adding product:', error);
+      toast.error('Failed to add product');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div className="flex items-center justify-center min-h-screen px-4">
+        <div className="fixed inset-0 bg-black opacity-30" onClick={onClose}></div>
+        
+        <div className="relative bg-white rounded-lg w-full max-w-4xl">
+          <div className="flex justify-between items-center p-6 border-b">
+            <h2 className="text-xl font-medium">
+              Add New {category.charAt(0).toUpperCase() + category.slice(1)} Product
+            </h2>
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
+              <X size={24} />
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="p-6">
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Product Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    {...register('name', { 
+                      required: 'Product name is required',
+                      minLength: { value: 3, message: 'Name must be at least 3 characters' },
+                      maxLength: { value: 100, message: 'Name cannot exceed 100 characters' }
+                    })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  />
+                  {errors.name && (
+                    <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Product Type <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    {...register('type', { required: 'Product type is required' })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    disabled={!isSpecialCategory} // Disable for regular categories
+                  >
+                    {PRODUCT_TYPES.map(type => (
+                      <option key={type.value} value={type.value}>
+                        {type.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.type && (
+                    <p className="mt-1 text-sm text-red-600">{errors.type.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Brand <span className="text-red-500">*</span>
+                  </label>
+                  {loading ? (
+                    <div className="mt-1 h-10 flex items-center">
+                      <span className="text-sm text-gray-500">Loading brands...</span>
+                    </div>
+                  ) : (
+                    <BrandSelect
+                      {...register('brand_id', { required: 'Brand is required' })}
+                      options={brands.map(brand => ({
+                        value: brand.id,
+                        label: brand.name
+                      }))}
+                      className="mt-1"
+                      classNamePrefix="select"
+                      placeholder={isSpecialCategory ? "Select or enter brand" : "Select brand"}
+                      onChange={handleBrandChange}
+                      isClearable
+                    />
+                  )}
+                  {errors.brand_id && (
+                    <p className="mt-1 text-sm text-red-600">{errors.brand_id.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Gender <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    {...register('gender', { required: 'Gender is required' })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="men">Men</option>
+                    <option value="women">Women</option>
+                    <option value="unisex">Unisex</option>
+                    <option value="kids">Kids</option>
+                  </select>
+                  {errors.gender && (
+                    <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    SKU <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    {...register('sku', { 
+                      required: 'SKU is required',
+                      pattern: {
+                        value: /^[A-Za-z0-9-]+$/,
+                        message: 'SKU can only contain letters, numbers, and hyphens'
+                      }
+                    })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  />
+                  {errors.sku && (
+                    <p className="mt-1 text-sm text-red-600">{errors.sku.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Price <span className="text-red-500">*</span>
+                  </label>
+                  <div className="mt-1 relative rounded-md shadow-sm">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span className="text-gray-500 sm:text-sm">$</span>
+                    </div>
+                    <input
+                      type="number"
+                      step="0.01"
+                      {...register('price', { 
+                        required: 'Price is required',
+                        min: { value: 0, message: 'Price must be greater than 0' }
+                      })}
+                      className="pl-7 block w-full rounded-md border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                    />
+                  </div>
+                  {errors.price && (
+                    <p className="mt-1 text-sm text-red-600">{errors.price.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Compare at Price</label>
+                  <div className="mt-1 relative rounded-md shadow-sm">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span className="text-gray-500 sm:text-sm">$</span>
+                    </div>
+                    <input
+                      type="number"
+                      step="0.01"
+                      {...register('compare_at_price', {
+                        min: { value: 0, message: 'Compare at price must be greater than 0' }
+                      })}
+                      className="pl-7 block w-full rounded-md border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                    />
+                  </div>
+                  {errors.compare_at_price && (
+                    <p className="mt-1 text-sm text-red-600">{errors.compare_at_price.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Stock Quantity <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    {...register('stock_quantity', { 
+                      required: 'Stock quantity is required',
+                      min: { value: 0, message: 'Stock quantity must be greater than or equal to 0' }
+                    })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  />
+                  {errors.stock_quantity && (
+                    <p className="mt-1 text-sm text-red-600">{errors.stock_quantity.message}</p>
+                  )}
+                </div>
+
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700">Description</label>
+                  <ReactQuill
+                    theme="snow"
+                    value={watch('description')}
+                    onChange={(content) => setValue('description', content)}
+                    className="mt-1"
+                  />
+                  {errors.description && (
+                    <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
+                  )}
+                </div>
+
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Product Tags</label>
+                  <Select
+                    isMulti
+                    options={PRODUCT_TAGS}
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    onChange={(selectedOptions) => {
+                      const tags = selectedOptions.map(option => option.value);
+                      // Ensure special category tag remains if applicable
+                      if (isSpecialCategory && !tags.includes(category)) {
+                        tags.push(category);
+                      }
+                      setValue('tags', tags);
+                    }}
+                    defaultValue={isSpecialCategory ? [PRODUCT_TAGS.find(tag => tag.value === category)] : []}
+                    formatOptionLabel={({ label, color }) => (
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${color}`}>
+                        {label}
+                      </span>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-medium mb-4">Product Images</h3>
+                <div {...getRootProps()} className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                  <input {...getInputProps()} />
+                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                  <p className="mt-2 text-sm text-gray-600">
+                    Drag 'n' drop some images here, or click to select files
+                  </p>
+                </div>
+
+                {images.length > 0 && (
+                  <div className="mt-4 grid grid-cols-6 gap-4">
+                    {images.map((file, index) => (
+                      <div key={index} className="relative">
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt={`Preview ${index + 1}`}
+                          className="h-24 w-24 object-cover rounded-lg"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setImages(images.filter((_, i) => i !== index))}
+                          className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow-sm"
+                        >
+                          <X size={16} className="text-gray-500" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-medium mb-4">Additional Information</h3>
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Care Instructions</label>
+                    <textarea
+                      {...register('care_instructions')}
+                      rows={3}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Shipping Information</label>
+                    <textarea
+                      {...register('shipping_info')}
+                      rows={3}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Return Policy</label>
+                    <textarea
+                      {...register('return_policy')}
+                      rows={3}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-medium mb-4">SEO Information</h3>
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Meta Title</label>
+                    <input
+                      type="text"
+                      {...register('meta_title')}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Meta Description</label>
+                    <textarea
+                      {...register('meta_description')}
+                      rows={3}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end gap-4">
+              <button
+                type="button"
+                onClick={onClose}
+                className="btn-outline"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={uploading}
+                className="btn-primary"
+              >
+                {uploading ? 'Adding Product...' : 'Add Product'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CategoryProductForm;

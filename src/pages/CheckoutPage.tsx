@@ -1,0 +1,288 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { useCartStore } from '../stores/cartStore';
+import { useCheckoutStore, ShippingAddress, PaymentMethod } from '../stores/checkoutStore';
+
+const CheckoutPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { items, getTotal, clearCart } = useCartStore();
+  const {
+    shippingAddress,
+    selectedShippingRate,
+    paymentMethod,
+    setShippingAddress,
+    setShippingRate,
+    setPaymentMethod,
+    calculateTax,
+    getShippingRates,
+  } = useCheckoutStore();
+  
+  const [shippingRates, setShippingRates] = useState([]);
+  const [loading, setLoading] = useState(false);
+  
+  const { register, handleSubmit, watch } = useForm<ShippingAddress>({
+    defaultValues: shippingAddress || undefined,
+  });
+  
+  const country = watch('country');
+  const state = watch('state');
+  
+  useEffect(() => {
+    if (country && state) {
+      loadShippingRates();
+    }
+  }, [country, state]);
+  
+  const loadShippingRates = async () => {
+    const rates = await getShippingRates(country, state);
+    setShippingRates(rates);
+  };
+  
+  const subtotal = getTotal();
+  const tax = calculateTax(subtotal);
+  const shipping = selectedShippingRate?.price || 0;
+  const total = subtotal + tax + shipping;
+  
+  const onSubmit = async (data: ShippingAddress) => {
+    setLoading(true);
+    try {
+      setShippingAddress(data);
+      // Process payment and create order
+      // Clear cart on success
+      clearCart();
+      navigate('/order-confirmation');
+    } catch (error) {
+      console.error('Checkout error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  if (items.length === 0) {
+    return (
+      <div className="container-custom py-12 text-center">
+        <h2 className="text-2xl font-medium mb-4">Your cart is empty</h2>
+        <p className="text-gray-600 mb-8">Add some items to your cart to checkout</p>
+        <button
+          onClick={() => navigate('/')}
+          className="btn-primary"
+        >
+          Continue Shopping
+        </button>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="container-custom py-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        {/* Checkout Form */}
+        <div>
+          <h2 className="text-2xl font-medium mb-8">Checkout</h2>
+          
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Shipping Address */}
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <h3 className="text-lg font-medium mb-4">Shipping Address</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">First Name</label>
+                  <input
+                    type="text"
+                    {...register('firstName', { required: true })}
+                    className="w-full border rounded-md p-2"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Last Name</label>
+                  <input
+                    type="text"
+                    {...register('lastName', { required: true })}
+                    className="w-full border rounded-md p-2"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium mb-1">Address</label>
+                  <input
+                    type="text"
+                    {...register('address', { required: true })}
+                    className="w-full border rounded-md p-2"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">City</label>
+                  <input
+                    type="text"
+                    {...register('city', { required: true })}
+                    className="w-full border rounded-md p-2"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">State</label>
+                  <input
+                    type="text"
+                    {...register('state', { required: true })}
+                    className="w-full border rounded-md p-2"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Postal Code</label>
+                  <input
+                    type="text"
+                    {...register('postalCode', { required: true })}
+                    className="w-full border rounded-md p-2"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Country</label>
+                  <select
+                    {...register('country', { required: true })}
+                    className="w-full border rounded-md p-2"
+                  >
+                    <option value="">Select Country</option>
+                    <option value="US">United States</option>
+                    <option value="CA">Canada</option>
+                    <option value="UK">United Kingdom</option>
+                  </select>
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium mb-1">Phone</label>
+                  <input
+                    type="tel"
+                    {...register('phone', { required: true })}
+                    className="w-full border rounded-md p-2"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            {/* Shipping Method */}
+            {shippingRates.length > 0 && (
+              <div className="bg-white p-6 rounded-lg shadow-sm">
+                <h3 className="text-lg font-medium mb-4">Shipping Method</h3>
+                <div className="space-y-4">
+                  {shippingRates.map((rate) => (
+                    <label
+                      key={rate.id}
+                      className="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50"
+                    >
+                      <input
+                        type="radio"
+                        name="shippingRate"
+                        value={rate.id}
+                        checked={selectedShippingRate?.id === rate.id}
+                        onChange={() => setShippingRate(rate)}
+                        className="mr-4"
+                      />
+                      <div className="flex-1">
+                        <div className="flex justify-between">
+                          <span className="font-medium">{rate.name}</span>
+                          <span>${rate.price.toFixed(2)}</span>
+                        </div>
+                        <p className="text-sm text-gray-500">{rate.estimatedDays}</p>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Payment Method */}
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <h3 className="text-lg font-medium mb-4">Payment Method</h3>
+              <div className="space-y-4">
+                <label className="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="cod"
+                    checked={paymentMethod === 'cod'}
+                    onChange={() => setPaymentMethod('cod' as PaymentMethod)}
+                    className="mr-4"
+                  />
+                  <div>
+                    <span className="font-medium">Cash on Delivery</span>
+                    <p className="text-sm text-gray-500">Pay when you receive your order</p>
+                  </div>
+                </label>
+                
+                <label className="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="installment"
+                    checked={paymentMethod === 'installment'}
+                    onChange={() => setPaymentMethod('installment' as PaymentMethod)}
+                    className="mr-4"
+                  />
+                  <div>
+                    <span className="font-medium">Installment Payment</span>
+                    <p className="text-sm text-gray-500">Pay in 3 interest-free installments</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+            
+            <button
+              type="submit"
+              disabled={loading || !selectedShippingRate || !paymentMethod}
+              className="w-full btn-primary"
+            >
+              {loading ? 'Processing...' : 'Place Order'}
+            </button>
+          </form>
+        </div>
+        
+        {/* Order Summary */}
+        <div>
+          <div className="bg-white p-6 rounded-lg shadow-sm sticky top-24">
+            <h3 className="text-lg font-medium mb-4">Order Summary</h3>
+            
+            <div className="space-y-4 mb-6">
+              {items.map((item) => (
+                <div key={item.id} className="flex items-center">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-16 h-16 object-cover rounded"
+                  />
+                  <div className="ml-4 flex-1">
+                    <h4 className="text-sm font-medium">{item.name}</h4>
+                    <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
+                  </div>
+                  <p className="text-sm font-medium">
+                    ${(item.price * item.quantity).toFixed(2)}
+                  </p>
+                </div>
+              ))}
+            </div>
+            
+            <div className="border-t pt-4 space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Subtotal</span>
+                <span>${subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Tax</span>
+                <span>${tax.toFixed(2)}</span>
+              </div>
+              {selectedShippingRate && (
+                <div className="flex justify-between text-sm">
+                  <span>Shipping</span>
+                  <span>${shipping.toFixed(2)}</span>
+                </div>
+              )}
+              <div className="flex justify-between text-base font-medium pt-2 border-t">
+                <span>Total</span>
+                <span>${total.toFixed(2)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CheckoutPage;

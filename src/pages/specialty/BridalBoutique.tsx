@@ -1,0 +1,355 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Heart, ShoppingBag, Calendar, MapPin, Phone, Clock, ExternalLink } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
+import { toast } from 'react-hot-toast';
+
+interface PartnerService {
+  id: string;
+  name: string;
+  description: string;
+  logo_url: string;
+  website: string;
+  booking_url: string;
+  address: string;
+  phone: string;
+  hours: string;
+  service_type: string;
+}
+
+const BridalBoutique: React.FC = () => {
+  const [partnerServices, setPartnerServices] = useState<PartnerService[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPartnerServices();
+  }, []);
+
+  const fetchPartnerServices = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('partner_services')
+        .select('*')
+        .eq('service_type', 'bridal')
+        .eq('is_active', true);
+
+      if (error) throw error;
+      setPartnerServices(data || []);
+    } catch (error) {
+      console.error('Error fetching partner services:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="relative h-[60vh] min-h-[500px] bg-secondary-50">
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+            alt="Bridal Collection"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        </div>
+        
+        <div className="relative container-custom h-full flex items-center">
+          <div className="max-w-2xl text-white">
+            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
+              Bridal Boutique
+            </h1>
+            <p className="text-xl mb-8 text-gray-100">
+              Discover our exquisite collection of bridal wear, accessories, and beauty essentials for your perfect day
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <a href="#collections" className="btn-accent">
+                View Collections
+              </a>
+              <a 
+                href="#partner-services" 
+                className="btn bg-white text-secondary-900 hover:bg-gray-100"
+              >
+                Partner Services
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Categories Grid */}
+      <section className="py-16" id="collections">
+        <div className="container-custom">
+          <h2 className="text-3xl md:text-4xl font-heading text-center mb-12">
+            Complete Your Bridal Look
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Bridal Footwear */}
+            <div className="card group">
+              <div className="relative overflow-hidden">
+                <img 
+                  src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  alt="Bridal Footwear"
+                  className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
+                  <div className="absolute bottom-4 left-4">
+                    <h3 className="text-xl font-heading text-white mb-1">Bridal Footwear</h3>
+                    <p className="text-gray-200 text-sm">Elegant heels & comfortable flats</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bridal Jewelry */}
+            <div className="card group">
+              <div className="relative overflow-hidden">
+                <img 
+                  src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  alt="Bridal Jewelry"
+                  className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
+                  <div className="absolute bottom-4 left-4">
+                    <h3 className="text-xl font-heading text-white mb-1">Bridal Jewelry</h3>
+                    <p className="text-gray-200 text-sm">Stunning sets & accessories</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bridal Accessories */}
+            <div className="card group">
+              <div className="relative overflow-hidden">
+                <img 
+                  src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  alt="Bridal Accessories"
+                  className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
+                  <div className="absolute bottom-4 left-4">
+                    <h3 className="text-xl font-heading text-white mb-1">Bridal Accessories</h3>
+                    <p className="text-gray-200 text-sm">Veils, clutches & more</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Products */}
+      <section className="py-16 bg-white">
+        <div className="container-custom">
+          <h2 className="text-3xl md:text-4xl font-heading text-center mb-12">
+            Trending Bridal Picks
+          </h2>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Product Card 1 */}
+            <div className="card group">
+              <div className="relative overflow-hidden">
+                <img 
+                  src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  alt="Crystal Embellished Heels"
+                  className="w-full h-64 object-cover"
+                />
+                <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600">
+                  <Heart size={20} />
+                </button>
+              </div>
+              <div className="p-4">
+                <h3 className="font-heading text-lg mb-2">Crystal Embellished Heels</h3>
+                <p className="text-gray-600 text-sm mb-2">Perfect for your special day</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-semibold">$299.99</span>
+                  <button className="p-2 text-secondary-600 hover:text-secondary-700">
+                    <ShoppingBag size={20} />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Product Card 2 */}
+            <div className="card group">
+              <div className="relative overflow-hidden">
+                <img 
+                  src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  alt="Pearl Drop Earrings"
+                  className="w-full h-64 object-cover"
+                />
+                <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600">
+                  <Heart size={20} />
+                </button>
+              </div>
+              <div className="p-4">
+                <h3 className="font-heading text-lg mb-2">Pearl Drop Earrings</h3>
+                <p className="text-gray-600 text-sm mb-2">Elegant pearl and crystal design</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-semibold">$199.99</span>
+                  <button className="p-2 text-secondary-600 hover:text-secondary-700">
+                    <ShoppingBag size={20} />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Product Card 3 */}
+            <div className="card group">
+              <div className="relative overflow-hidden">
+                <img 
+                  src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  alt="Lace Trim Veil"
+                  className="w-full h-64 object-cover"
+                />
+                <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600">
+                  <Heart size={20} />
+                </button>
+              </div>
+              <div className="p-4">
+                <h3 className="font-heading text-lg mb-2">Lace Trim Veil</h3>
+                <p className="text-gray-600 text-sm mb-2">Cathedral length with lace detail</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-semibold">$249.99</span>
+                  <button className="p-2 text-secondary-600 hover:text-secondary-700">
+                    <ShoppingBag size={20} />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Product Card 4 */}
+            <div className="card group">
+              <div className="relative overflow-hidden">
+                <img 
+                  src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  alt="Crystal Hair Pins"
+                  className="w-full h-64 object-cover"
+                />
+                <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600">
+                  <Heart size={20} />
+                </button>
+              </div>
+              <div className="p-4">
+                <h3 className="font-heading text-lg mb-2">Crystal Hair Pins</h3>
+                <p className="text-gray-600 text-sm mb-2">Set of 6 decorative pins</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-semibold">$89.99</span>
+                  <button className="p-2 text-secondary-600 hover:text-secondary-700">
+                    <ShoppingBag size={20} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Partner Services Section */}
+      <section className="py-16 bg-secondary-50" id="partner-services">
+        <div className="container-custom">
+          <h2 className="text-3xl md:text-4xl font-heading text-center mb-12">
+            Our Bridal Partners
+          </h2>
+          
+          {loading ? (
+            <div className="text-center py-8">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-secondary-600"></div>
+              <p className="mt-2 text-gray-600">Loading partner services...</p>
+            </div>
+          ) : partnerServices.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-gray-600">No partner services available at this time.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {partnerServices.map(service => (
+                <div key={service.id} className="bg-white rounded-xl overflow-hidden shadow-lg">
+                  <div className="grid grid-cols-1 lg:grid-cols-2">
+                    <div className="p-8 lg:p-12">
+                      <div className="flex items-center gap-2 text-secondary-600 mb-4">
+                        <Calendar className="w-6 h-6" />
+                        <span className="font-medium">Bridal Beauty Partner</span>
+                      </div>
+                      <h2 className="text-3xl font-heading font-bold mb-4">
+                        {service.name}
+                      </h2>
+                      <p className="text-gray-600 mb-6">
+                        {service.description}
+                      </p>
+                      
+                      <div className="space-y-4 mb-8">
+                        <div className="flex items-center gap-3">
+                          <MapPin className="w-5 h-5 text-secondary-600" />
+                          <span>{service.address}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Phone className="w-5 h-5 text-secondary-600" />
+                          <span>{service.phone}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Clock className="w-5 h-5 text-secondary-600" />
+                          <span>{service.hours}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-wrap gap-3">
+                        <a 
+                          href={service.website.startsWith('http') ? service.website : `https://${service.website}`}
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="btn-outline flex items-center"
+                        >
+                          Visit Website
+                          <ExternalLink className="ml-1 h-4 w-4" />
+                        </a>
+                        <a 
+                          href={service.booking_url.startsWith('http') ? service.booking_url : `https://${service.booking_url}`}
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="btn-secondary w-full text-center mt-3"
+                        >
+                          Schedule Your Bridal Appointment
+                        </a>
+                      </div>
+                    </div>
+                    
+                    <div className="relative h-64 lg:h-auto">
+                      <img 
+                        src="https://images.pexels.com/photos/3997391/pexels-photo-3997391.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                        alt={`${service.name} Salon`}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Consultation CTA */}
+      <section className="py-16">
+        <div className="container-custom">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-heading mb-6">
+              Book Your Bridal Consultation
+            </h2>
+            <p className="text-gray-600 mb-8">
+              Our bridal specialists are here to help you find the perfect pieces for your special day. 
+              Schedule a personalized consultation at our boutique.
+            </p>
+            <button className="btn-secondary">
+              Schedule Appointment
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default BridalBoutique;
