@@ -26,6 +26,21 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
   } | null>(null);
   const [templateFields, setTemplateFields] = useState<string[]>([]);
   const [subcategories, setSubcategories] = useState<{id: string, name: string}[]>([]);
+  const [brands, setBrands] = useState<{id: string, name: string}[]>([]);
+  const [genders, setGenders] = useState<{value: string, label: string}[]>([
+    { value: 'men', label: 'Men' },
+    { value: 'women', label: 'Women' },
+    { value: 'kids', label: 'Kids' },
+    { value: 'unisex', label: 'Unisex' }
+  ]);
+  const [productTypes, setProductTypes] = useState<{value: string, label: string}[]>([
+    { value: 'footwear', label: 'Footwear' },
+    { value: 'clothing', label: 'Clothing' },
+    { value: 'jewelry', label: 'Jewelry' },
+    { value: 'beauty', label: 'Beauty' },
+    { value: 'accessories', label: 'Accessories' },
+    { value: 'bags', label: 'Bags' }
+  ]);
 
   useEffect(() => {
     // Set template fields based on category
@@ -55,6 +70,9 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
     if (category) {
       fetchSubcategories(category);
     }
+    
+    // Fetch brands
+    fetchBrands();
   }, [category]);
 
   const fetchSubcategories = async (categoryType: string) => {
@@ -82,6 +100,20 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
       setSubcategories(combinedSubcategories);
     } catch (error) {
       console.error('Error fetching subcategories:', error);
+    }
+  };
+  
+  const fetchBrands = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('brands')
+        .select('id, name')
+        .order('name');
+      
+      if (error) throw error;
+      setBrands(data || []);
+    } catch (error) {
+      console.error('Error fetching brands:', error);
     }
   };
 
@@ -174,6 +206,28 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
           errors.push(`Row ${index + 1}: Invalid subcategory: ${row.subcategory}. Valid options are: ${validSubcategories.join(', ')}`);
         }
       }
+      
+      // Validate gender if present
+      if (row.gender && !['men', 'women', 'kids', 'unisex'].includes(row.gender)) {
+        errors.push(`Row ${index + 1}: Invalid gender. Must be one of: men, women, kids, unisex`);
+      }
+      
+      // Validate brand_id if present
+      if (row.brand_id && brands.length > 0) {
+        const validBrandIds = brands.map(b => b.id);
+        if (!validBrandIds.includes(row.brand_id)) {
+          errors.push(`Row ${index + 1}: Invalid brand_id: ${row.brand_id}`);
+        }
+      }
+      
+      // Validate boolean fields
+      const booleanFields = ['is_visible', 'is_featured', 'is_new', 'is_bestseller', 'is_returnable'];
+      booleanFields.forEach(field => {
+        if (row[field] !== undefined && row[field] !== null && 
+            !['true', 'false', true, false, '0', '1', 0, 1].includes(row[field])) {
+          errors.push(`Row ${index + 1}: ${field} must be true or false`);
+        }
+      });
     });
 
     // Limit the number of displayed errors
@@ -265,9 +319,11 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
           price: item.price ? parseFloat(item.price) : null,
           compare_at_price: item.compare_at_price ? parseFloat(item.compare_at_price) : null,
           stock_quantity: item.stock_quantity ? parseInt(item.stock_quantity) : null,
-          is_visible: item.is_visible === 'true' || item.is_visible === true,
-          is_featured: item.is_featured === 'true' || item.is_featured === true,
-          is_new: item.is_new === 'true' || item.is_new === true,
+          is_visible: item.is_visible === 'true' || item.is_visible === true || item.is_visible === '1' || item.is_visible === 1,
+          is_featured: item.is_featured === 'true' || item.is_featured === true || item.is_featured === '1' || item.is_featured === 1,
+          is_new: item.is_new === 'true' || item.is_new === true || item.is_new === '1' || item.is_new === 1,
+          is_bestseller: item.is_bestseller === 'true' || item.is_bestseller === true || item.is_bestseller === '1' || item.is_bestseller === 1,
+          is_returnable: item.is_returnable === 'true' || item.is_returnable === true || item.is_returnable === '1' || item.is_returnable === 1,
           tags: typeof item.tags === 'string' ? item.tags.split(',').map((tag: string) => tag.trim()) : item.tags,
           materials: typeof item.materials === 'string' ? item.materials.split(',').map((material: string) => material.trim()) : item.materials
         };
@@ -384,7 +440,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
       compare_at_price: '129.99',
       stock_quantity: '10',
       description: 'This is a sample product description',
-      brand_id: '', // Would be a UUID in real data
+      brand_id: brands.length > 0 ? brands[0].id : '', // Use first brand if available
       is_visible: 'true',
       is_featured: 'false',
       is_new: 'true',
@@ -422,12 +478,33 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
       }
     }
     
-    // Add subcategory options as a comment in the CSV
-    let csvContent = '';
+    // Add dropdown options as comments in the CSV
+    let csvContent = '# MinddShopp Product Upload Template\n';
+    csvContent += '# Generated: ' + new Date().toISOString() + '\n\n';
+    
+    // Add subcategory options
     if (subcategories.length > 0) {
-      csvContent += '# Available subcategories:\n';
+      csvContent += '# DROPDOWN VALUES - Subcategories:\n';
       csvContent += '# ' + subcategories.map(s => `${s.id} (${s.name})`).join(', ') + '\n\n';
     }
+    
+    // Add brand options
+    if (brands.length > 0) {
+      csvContent += '# DROPDOWN VALUES - Brands:\n';
+      csvContent += '# ' + brands.map(b => `${b.id} (${b.name})`).join(', ') + '\n\n';
+    }
+    
+    // Add gender options
+    csvContent += '# DROPDOWN VALUES - Gender:\n';
+    csvContent += '# ' + genders.map(g => `${g.value} (${g.label})`).join(', ') + '\n\n';
+    
+    // Add product type options
+    csvContent += '# DROPDOWN VALUES - Product Types:\n';
+    csvContent += '# ' + productTypes.map(t => `${t.value} (${t.label})`).join(', ') + '\n\n';
+    
+    // Add boolean field options
+    csvContent += '# DROPDOWN VALUES - Boolean Fields (is_visible, is_featured, is_new, etc.):\n';
+    csvContent += '# true, false\n\n';
     
     // Generate the CSV with fields and sample data
     csvContent += Papa.unparse({
@@ -501,10 +578,21 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
                   <code className="bg-blue-100 px-2 py-1 rounded dark:bg-blue-800">https://example.com/image1.jpg|https://example.com/image2.jpg</code>
                 </p>
 
-                <h4 className="text-sm font-medium text-blue-800 mt-4 mb-2 dark:text-blue-300">Subcategory Options:</h4>
+                <h4 className="text-sm font-medium text-blue-800 mt-4 mb-2 dark:text-blue-300">Dropdown Fields:</h4>
                 <p className="text-sm text-blue-700 dark:text-blue-400">
-                  The template includes valid subcategory options. Use the exact ID values provided in the template comments.
+                  The template includes valid options for dropdown fields like subcategory, gender, product type, and brands. 
+                  These are provided as comments at the top of the CSV file. In Excel, you can create data validation 
+                  dropdown lists using these values.
                 </p>
+                
+                <h4 className="text-sm font-medium text-blue-800 mt-4 mb-2 dark:text-blue-300">Excel Dropdown Setup:</h4>
+                <ol className="list-decimal list-inside text-sm text-blue-700 space-y-1 dark:text-blue-400">
+                  <li>In Excel, select the cells for the dropdown field (e.g., subcategory column)</li>
+                  <li>Go to Data → Data Validation</li>
+                  <li>Set validation criteria to "List"</li>
+                  <li>In the Source field, enter the values from the CSV comments (e.g., ={"mens-formal","womens-dresses"})</li>
+                  <li>Click OK to create the dropdown</li>
+                </ol>
               </div>
             </div>
 
