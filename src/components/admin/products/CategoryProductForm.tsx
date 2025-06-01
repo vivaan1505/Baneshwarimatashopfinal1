@@ -687,12 +687,12 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
       <div className="flex items-center justify-center min-h-screen px-4">
         <div className="fixed inset-0 bg-black opacity-30" onClick={onClose}></div>
         
-        <div className="relative bg-white rounded-lg w-full max-w-4xl">
-          <div className="flex justify-between items-center p-6 border-b">
-            <h2 className="text-xl font-medium">
+        <div className="relative bg-white rounded-lg w-full max-w-4xl dark:bg-gray-800">
+          <div className="flex justify-between items-center p-6 border-b dark:border-gray-700">
+            <h2 className="text-xl font-medium dark:text-white">
               Add New {category.charAt(0).toUpperCase() + category.slice(1)} Product
             </h2>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
               <X size={24} />
             </button>
           </div>
@@ -701,7 +701,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Product Name <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -711,20 +711,20 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                       minLength: { value: 3, message: 'Name must be at least 3 characters' },
                       maxLength: { value: 100, message: 'Name cannot exceed 100 characters' }
                     })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                   {errors.name && (
-                    <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Product Type <span className="text-red-500">*</span>
                   </label>
                   <select
                     {...register('type', { required: 'Product type is required' })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     disabled={!isSpecialCategory}
                   >
                     {PRODUCT_TYPES.map(type => (
@@ -734,17 +734,17 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     ))}
                   </select>
                   {errors.type && (
-                    <p className="mt-1 text-sm text-red-600">{errors.type.message}</p>
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.type.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Gender <span className="text-red-500">*</span>
                   </label>
                   <select
                     {...register('gender', { required: 'Gender is required' })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   >
                     <option value="">Select Gender</option>
                     <option value="men">Men</option>
@@ -753,17 +753,17 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     <option value="kids">Kids</option>
                   </select>
                   {errors.gender && (
-                    <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.gender.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Subcategory <span className="text-red-500">*</span>
                   </label>
                   <select
                     {...register('subcategory', { required: 'Subcategory is required' })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   >
                     <option value="">Select Subcategory</option>
                     {availableSubcategories.map(subcat => (
@@ -773,20 +773,20 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     ))}
                   </select>
                   {errors.subcategory && (
-                    <p className="mt-1 text-sm text-red-600">{errors.subcategory.message}</p>
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.subcategory.message}</p>
                   )}
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                     Select a subcategory to help customers find your product more easily
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Brand <span className="text-red-500">*</span>
                   </label>
                   {loading ? (
                     <div className="mt-1 h-10 flex items-center">
-                      <span className="text-sm text-gray-500">Loading brands...</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">Loading brands...</span>
                     </div>
                   ) : (
                     <BrandSelect
@@ -804,7 +804,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     SKU <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -816,20 +816,20 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                         message: 'SKU can only contain letters, numbers, and hyphens'
                       }
                     })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                   {errors.sku && (
-                    <p className="mt-1 text-sm text-red-600">{errors.sku.message}</p>
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.sku.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Price <span className="text-red-500">*</span>
                   </label>
                   <div className="mt-1 relative rounded-md shadow-sm">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span className="text-gray-500 sm:text-sm">$</span>
+                      <span className="text-gray-500 sm:text-sm dark:text-gray-400">$</span>
                     </div>
                     <input
                       type="number"
@@ -838,19 +838,19 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                         required: 'Price is required',
                         min: { value: 0, message: 'Price must be greater than 0' }
                       })}
-                      className="pl-7 block w-full rounded-md border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                      className="pl-7 block w-full rounded-md border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     />
                   </div>
                   {errors.price && (
-                    <p className="mt-1 text-sm text-red-600">{errors.price.message}</p>
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.price.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Compare at Price</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Compare at Price</label>
                   <div className="mt-1 relative rounded-md shadow-sm">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span className="text-gray-500 sm:text-sm">$</span>
+                      <span className="text-gray-500 sm:text-sm dark:text-gray-400">$</span>
                     </div>
                     <input
                       type="number"
@@ -858,13 +858,13 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                       {...register('compare_at_price', {
                         min: { value: 0, message: 'Compare at price must be greater than 0' }
                       })}
-                      className="pl-7 block w-full rounded-md border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                      className="pl-7 block w-full rounded-md border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Stock Quantity <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -873,28 +873,37 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                       required: 'Stock quantity is required',
                       min: { value: 0, message: 'Stock quantity must be greater than or equal to 0' }
                     })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                   {errors.stock_quantity && (
-                    <p className="mt-1 text-sm text-red-600">{errors.stock_quantity.message}</p>
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.stock_quantity.message}</p>
                   )}
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-700">Description</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
                   <ReactQuill
                     theme="snow"
                     value={watch('description')}
                     onChange={(content) => setValue('description', content)}
-                    className="mt-1"
+                    className="mt-1 dark:text-white"
+                    modules={{
+                      toolbar: [
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['link', 'image'],
+                        ['clean']
+                      ]
+                    }}
                   />
                   {errors.description && (
-                    <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>
                   )}
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Product Tags</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Product Tags</label>
                   <Select
                     isMulti
                     options={PRODUCT_TAGS}
@@ -911,12 +920,12 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                 </div>
               </div>
 
-              <div className="border-t pt-6">
-                <h3 className="text-lg font-medium mb-4">Product Images</h3>
-                <div {...getRootProps()} className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+              <div className="border-t pt-6 dark:border-gray-700">
+                <h3 className="text-lg font-medium mb-4 dark:text-white">Product Images</h3>
+                <div {...getRootProps()} className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center dark:border-gray-600">
                   <input {...getInputProps()} />
-                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                  <p className="mt-2 text-sm text-gray-600">
+                  <Upload className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
                     Drag 'n' drop some images here, or click to select files
                   </p>
                 </div>
@@ -933,9 +942,9 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                         <button
                           type="button"
                           onClick={() => setImages(images.filter((_, i) => i !== index))}
-                          className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow-sm"
+                          className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow-sm dark:bg-gray-700"
                         >
-                          <X size={16} className="text-gray-500" />
+                          <X size={16} className="text-gray-500 dark:text-gray-400" />
                         </button>
                       </div>
                     ))}
@@ -943,69 +952,69 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                 )}
               </div>
 
-              <div className="border-t pt-6">
-                <h3 className="text-lg font-medium mb-4">Additional Information</h3>
+              <div className="border-t pt-6 dark:border-gray-700">
+                <h3 className="text-lg font-medium mb-4 dark:text-white">Additional Information</h3>
                 <div className="grid grid-cols-1 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Care Instructions</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Care Instructions</label>
                     <textarea
                       {...register('care_instructions')}
                       rows={3}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Shipping Information</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Shipping Information</label>
                     <textarea
                       {...register('shipping_info')}
                       rows={3}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Return Policy</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Return Policy</label>
                     <textarea
                       {...register('return_policy')}
                       rows={3}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="border-t pt-6">
-                <h3 className="text-lg font-medium mb-4">SEO Information</h3>
+              <div className="border-t pt-6 dark:border-gray-700">
+                <h3 className="text-lg font-medium mb-4 dark:text-white">SEO Information</h3>
                 <div className="grid grid-cols-1 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Meta Title</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Meta Title</label>
                     <input
                       type="text"
                       {...register('meta_title')}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Meta Description</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Meta Description</label>
                     <textarea
                       {...register('meta_description')}
                       rows={3}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="border-t pt-6">
-                <h3 className="text-lg font-medium mb-4">Product Settings</h3>
+              <div className="border-t pt-6 dark:border-gray-700">
+                <h3 className="text-lg font-medium mb-4 dark:text-white">Product Settings</h3>
                 <div className="space-y-4">
                   <div className="flex items-center">
                     <input
                       type="checkbox"
                       id="is_visible"
                       {...register('is_visible')}
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded dark:border-gray-600 dark:bg-gray-700"
                     />
-                    <label htmlFor="is_visible" className="ml-2 block text-sm text-gray-900">
+                    <label htmlFor="is_visible" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
                       Make product visible
                     </label>
                   </div>
@@ -1015,9 +1024,9 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                       type="checkbox"
                       id="is_returnable"
                       {...register('is_returnable')}
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded dark:border-gray-600 dark:bg-gray-700"
                     />
-                    <label htmlFor="is_returnable" className="ml-2 block text-sm text-gray-900">
+                    <label htmlFor="is_returnable" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
                       Product is returnable
                     </label>
                   </div>
@@ -1029,7 +1038,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="btn-outline"
+                className="btn-outline dark:border-gray-600 dark:text-gray-300"
               >
                 Cancel
               </button>
