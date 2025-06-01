@@ -44,15 +44,18 @@ export const useAuthStore = create<AuthState>((set) => ({
     
     if (authError) throw authError;
 
-    // Create corresponding entry in public.users table
+    // Create or update corresponding entry in public.users table
     if (authData.user) {
       const { error: userError } = await supabase
         .from('users')
-        .insert({
+        .upsert({
           id: authData.user.id,
           email: authData.user.email,
           first_name: metadata?.first_name,
           last_name: metadata?.last_name,
+        }, {
+          onConflict: 'id',
+          ignoreDuplicates: false
         });
 
       if (userError) {
