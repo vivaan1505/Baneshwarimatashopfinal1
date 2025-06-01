@@ -83,135 +83,174 @@ const PRODUCT_TYPES = [
 const SUBCATEGORIES = {
   footwear: [
     // Men's Footwear
-    { id: 'mens-sneakers', name: 'Men\'s Sneakers' },
-    { id: 'mens-loafers', name: 'Men\'s Loafers' },
-    { id: 'mens-derby-shoes', name: 'Men\'s Derby Shoes' },
-    { id: 'mens-oxford-shoes', name: 'Men\'s Oxford Shoes' },
-    { id: 'mens-brogues', name: 'Men\'s Brogues' },
-    { id: 'mens-chelsea-boots', name: 'Men\'s Chelsea Boots' },
-    { id: 'mens-chukka-boots', name: 'Men\'s Chukka Boots' },
-    { id: 'mens-sandals', name: 'Men\'s Sandals' },
-    { id: 'mens-flip-flops', name: 'Men\'s Flip-Flops' },
-    { id: 'mens-slides', name: 'Men\'s Slides' },
-    { id: 'mens-formal-shoes', name: 'Men\'s Formal Shoes' },
-    { id: 'mens-running-shoes', name: 'Men\'s Running Shoes' },
-    { id: 'mens-training-shoes', name: 'Men\'s Training Shoes' },
-    { id: 'mens-hiking-boots', name: 'Men\'s Hiking Boots' },
-    { id: 'mens-moccasins', name: 'Men\'s Moccasins' },
-    { id: 'mens-espadrilles', name: 'Men\'s Espadrilles' },
-    { id: 'mens-ethnic-footwear', name: 'Men\'s Ethnic Footwear' },
+    { id: 'mens-sneakers', name: 'Men\'s Sneakers', gender: 'men' },
+    { id: 'mens-loafers', name: 'Men\'s Loafers', gender: 'men' },
+    { id: 'mens-derby-shoes', name: 'Men\'s Derby Shoes', gender: 'men' },
+    { id: 'mens-oxford-shoes', name: 'Men\'s Oxford Shoes', gender: 'men' },
+    { id: 'mens-brogues', name: 'Men\'s Brogues', gender: 'men' },
+    { id: 'mens-chelsea-boots', name: 'Men\'s Chelsea Boots', gender: 'men' },
+    { id: 'mens-chukka-boots', name: 'Men\'s Chukka Boots', gender: 'men' },
+    { id: 'mens-sandals', name: 'Men\'s Sandals', gender: 'men' },
+    { id: 'mens-flip-flops', name: 'Men\'s Flip-Flops', gender: 'men' },
+    { id: 'mens-slides', name: 'Men\'s Slides', gender: 'men' },
+    { id: 'mens-formal-shoes', name: 'Men\'s Formal Shoes', gender: 'men' },
+    { id: 'mens-running-shoes', name: 'Men\'s Running Shoes', gender: 'men' },
+    { id: 'mens-training-shoes', name: 'Men\'s Training Shoes', gender: 'men' },
+    { id: 'mens-hiking-boots', name: 'Men\'s Hiking Boots', gender: 'men' },
+    { id: 'mens-moccasins', name: 'Men\'s Moccasins', gender: 'men' },
+    { id: 'mens-espadrilles', name: 'Men\'s Espadrilles', gender: 'men' },
+    { id: 'mens-ethnic-footwear', name: 'Men\'s Ethnic Footwear', gender: 'men' },
     
     // Women's Footwear
-    { id: 'womens-heels', name: 'Women\'s Heels' },
-    { id: 'womens-stilettos', name: 'Women\'s Stilettos' },
-    { id: 'womens-block-heels', name: 'Women\'s Block Heels' },
-    { id: 'womens-kitten-heels', name: 'Women\'s Kitten Heels' },
-    { id: 'womens-wedge-heels', name: 'Women\'s Wedge Heels' },
-    { id: 'womens-flats', name: 'Women\'s Flats' },
-    { id: 'womens-ballerinas', name: 'Women\'s Ballerinas' },
-    { id: 'womens-loafers', name: 'Women\'s Loafers' },
-    { id: 'womens-mules', name: 'Women\'s Mules' },
-    { id: 'womens-boots', name: 'Women\'s Boots' },
-    { id: 'womens-ankle-boots', name: 'Women\'s Ankle Boots' },
-    { id: 'womens-knee-high-boots', name: 'Women\'s Knee-high Boots' },
-    { id: 'womens-over-the-knee-boots', name: 'Women\'s Over-the-knee Boots' },
-    { id: 'womens-sandals', name: 'Women\'s Sandals' },
-    { id: 'womens-gladiator-sandals', name: 'Women\'s Gladiator Sandals' },
-    { id: 'womens-platform-sandals', name: 'Women\'s Platform Sandals' },
-    { id: 'womens-strappy-sandals', name: 'Women\'s Strappy Sandals' },
-    { id: 'womens-sneakers', name: 'Women\'s Sneakers' },
-    { id: 'womens-slip-ons', name: 'Women\'s Slip-ons' },
-    { id: 'womens-ethnic-footwear', name: 'Women\'s Ethnic Footwear' },
+    { id: 'womens-heels', name: 'Women\'s Heels', gender: 'women' },
+    { id: 'womens-stilettos', name: 'Women\'s Stilettos', gender: 'women' },
+    { id: 'womens-block-heels', name: 'Women\'s Block Heels', gender: 'women' },
+    { id: 'womens-kitten-heels', name: 'Women\'s Kitten Heels', gender: 'women' },
+    { id: 'womens-wedge-heels', name: 'Women\'s Wedge Heels', gender: 'women' },
+    { id: 'womens-flats', name: 'Women\'s Flats', gender: 'women' },
+    { id: 'womens-ballerinas', name: 'Women\'s Ballerinas', gender: 'women' },
+    { id: 'womens-loafers', name: 'Women\'s Loafers', gender: 'women' },
+    { id: 'womens-mules', name: 'Women\'s Mules', gender: 'women' },
+    { id: 'womens-boots', name: 'Women\'s Boots', gender: 'women' },
+    { id: 'womens-ankle-boots', name: 'Women\'s Ankle Boots', gender: 'women' },
+    { id: 'womens-knee-high-boots', name: 'Women\'s Knee-high Boots', gender: 'women' },
+    { id: 'womens-over-the-knee-boots', name: 'Women\'s Over-the-knee Boots', gender: 'women' },
+    { id: 'womens-sandals', name: 'Women\'s Sandals', gender: 'women' },
+    { id: 'womens-gladiator-sandals', name: 'Women\'s Gladiator Sandals', gender: 'women' },
+    { id: 'womens-platform-sandals', name: 'Women\'s Platform Sandals', gender: 'women' },
+    { id: 'womens-strappy-sandals', name: 'Women\'s Strappy Sandals', gender: 'women' },
+    { id: 'womens-sneakers', name: 'Women\'s Sneakers', gender: 'women' },
+    { id: 'womens-slip-ons', name: 'Women\'s Slip-ons', gender: 'women' },
+    { id: 'womens-ethnic-footwear', name: 'Women\'s Ethnic Footwear', gender: 'women' },
     
     // Kids' Footwear
-    { id: 'kids-school-shoes', name: 'Kids\' School Shoes' },
-    { id: 'kids-sports-shoes', name: 'Kids\' Sports Shoes' },
-    { id: 'kids-sandals', name: 'Kids\' Sandals' },
-    { id: 'kids-sneakers', name: 'Kids\' Sneakers' },
-    { id: 'kids-boots', name: 'Kids\' Boots' },
-    { id: 'kids-flip-flops', name: 'Kids\' Flip-Flops' },
-    { id: 'kids-ballet-flats', name: 'Kids\' Ballet Flats' },
-    { id: 'kids-velcro-shoes', name: 'Kids\' Velcro Shoes' },
-    { id: 'kids-light-up-shoes', name: 'Kids\' Light-Up Shoes' },
+    { id: 'kids-school-shoes', name: 'Kids\' School Shoes', gender: 'kids' },
+    { id: 'kids-sports-shoes', name: 'Kids\' Sports Shoes', gender: 'kids' },
+    { id: 'kids-sandals', name: 'Kids\' Sandals', gender: 'kids' },
+    { id: 'kids-sneakers', name: 'Kids\' Sneakers', gender: 'kids' },
+    { id: 'kids-boots', name: 'Kids\' Boots', gender: 'kids' },
+    { id: 'kids-flip-flops', name: 'Kids\' Flip-Flops', gender: 'kids' },
+    { id: 'kids-ballet-flats', name: 'Kids\' Ballet Flats', gender: 'kids' },
+    { id: 'kids-velcro-shoes', name: 'Kids\' Velcro Shoes', gender: 'kids' },
+    { id: 'kids-light-up-shoes', name: 'Kids\' Light-Up Shoes', gender: 'kids' },
     
     // Specialty Footwear
-    { id: 'bridal-footwear', name: 'Bridal Footwear' },
-    { id: 'vegan-footwear', name: 'Vegan Footwear' },
-    { id: 'sustainable-shoes', name: 'Sustainable Shoes' },
-    { id: 'designer-footwear', name: 'Designer Footwear' },
-    { id: 'custom-made-shoes', name: 'Custom-Made Shoes' },
+    { id: 'bridal-footwear', name: 'Bridal Footwear', gender: 'women' },
+    { id: 'vegan-footwear', name: 'Vegan Footwear', gender: 'unisex' },
+    { id: 'sustainable-shoes', name: 'Sustainable Shoes', gender: 'unisex' },
+    { id: 'designer-footwear', name: 'Designer Footwear', gender: 'unisex' },
+    { id: 'custom-made-shoes', name: 'Custom-Made Shoes', gender: 'unisex' },
     
     // Sports & Outdoor
-    { id: 'running-shoes', name: 'Running Shoes' },
-    { id: 'training-shoes', name: 'Training Shoes' },
-    { id: 'basketball-shoes', name: 'Basketball Shoes' },
-    { id: 'football-cleats', name: 'Football Cleats' },
-    { id: 'hiking-shoes', name: 'Hiking Shoes' },
-    { id: 'trekking-boots', name: 'Trekking Boots' },
-    { id: 'cycling-shoes', name: 'Cycling Shoes' },
-    { id: 'water-shoes', name: 'Water Shoes' },
+    { id: 'running-shoes', name: 'Running Shoes', gender: 'unisex' },
+    { id: 'training-shoes', name: 'Training Shoes', gender: 'unisex' },
+    { id: 'basketball-shoes', name: 'Basketball Shoes', gender: 'unisex' },
+    { id: 'football-cleats', name: 'Football Cleats', gender: 'unisex' },
+    { id: 'hiking-shoes', name: 'Hiking Shoes', gender: 'unisex' },
+    { id: 'trekking-boots', name: 'Trekking Boots', gender: 'unisex' },
+    { id: 'cycling-shoes', name: 'Cycling Shoes', gender: 'unisex' },
+    { id: 'water-shoes', name: 'Water Shoes', gender: 'unisex' },
     
     // Generic categories
-    { id: 'formal-shoes', name: 'Formal Shoes' },
-    { id: 'casual-shoes', name: 'Casual Shoes' },
-    { id: 'athletic-shoes', name: 'Athletic Shoes' },
-    { id: 'boots', name: 'Boots' },
-    { id: 'sandals', name: 'Sandals' },
-    { id: 'heels', name: 'Heels' },
-    { id: 'flats', name: 'Flats' },
-    { id: 'sneakers', name: 'Sneakers' }
+    { id: 'formal-shoes', name: 'Formal Shoes', gender: 'unisex' },
+    { id: 'casual-shoes', name: 'Casual Shoes', gender: 'unisex' },
+    { id: 'athletic-shoes', name: 'Athletic Shoes', gender: 'unisex' },
+    { id: 'boots', name: 'Boots', gender: 'unisex' },
+    { id: 'sandals', name: 'Sandals', gender: 'unisex' },
+    { id: 'heels', name: 'Heels', gender: 'women' },
+    { id: 'flats', name: 'Flats', gender: 'women' },
+    { id: 'sneakers', name: 'Sneakers', gender: 'unisex' }
   ],
   clothing: [
-    { id: 'mens-formal', name: 'Men\'s Formal' },
-    { id: 'mens-casual', name: 'Men\'s Casual' },
-    { id: 'womens-dresses', name: 'Women\'s Dresses' },
-    { id: 'womens-tops', name: 'Women\'s Tops' },
-    { id: 'womens-bottoms', name: 'Women\'s Bottoms' },
-    { id: 'kids-clothing', name: 'Kids\' Clothing' },
-    { id: 'outerwear', name: 'Outerwear' },
-    { id: 'activewear', name: 'Activewear' },
-    { id: 'swimwear', name: 'Swimwear' },
-    { id: 'underwear', name: 'Underwear' }
+    { id: 'mens-formal', name: 'Men\'s Formal', gender: 'men' },
+    { id: 'mens-casual', name: 'Men\'s Casual', gender: 'men' },
+    { id: 'mens-shirts', name: 'Men\'s Shirts', gender: 'men' },
+    { id: 'mens-pants', name: 'Men\'s Pants', gender: 'men' },
+    { id: 'mens-suits', name: 'Men\'s Suits', gender: 'men' },
+    { id: 'mens-jackets', name: 'Men\'s Jackets', gender: 'men' },
+    { id: 'womens-dresses', name: 'Women\'s Dresses', gender: 'women' },
+    { id: 'womens-tops', name: 'Women\'s Tops', gender: 'women' },
+    { id: 'womens-bottoms', name: 'Women\'s Bottoms', gender: 'women' },
+    { id: 'womens-skirts', name: 'Women\'s Skirts', gender: 'women' },
+    { id: 'womens-blouses', name: 'Women\'s Blouses', gender: 'women' },
+    { id: 'womens-jackets', name: 'Women\'s Jackets', gender: 'women' },
+    { id: 'kids-clothing', name: 'Kids\' Clothing', gender: 'kids' },
+    { id: 'kids-tops', name: 'Kids\' Tops', gender: 'kids' },
+    { id: 'kids-bottoms', name: 'Kids\' Bottoms', gender: 'kids' },
+    { id: 'kids-outerwear', name: 'Kids\' Outerwear', gender: 'kids' },
+    { id: 'outerwear', name: 'Outerwear', gender: 'unisex' },
+    { id: 'activewear', name: 'Activewear', gender: 'unisex' },
+    { id: 'swimwear', name: 'Swimwear', gender: 'unisex' },
+    { id: 'underwear', name: 'Underwear', gender: 'unisex' }
   ],
   jewelry: [
-    { id: 'necklaces', name: 'Necklaces' },
-    { id: 'rings', name: 'Rings' },
-    { id: 'earrings', name: 'Earrings' },
-    { id: 'bracelets', name: 'Bracelets' },
-    { id: 'watches', name: 'Watches' },
-    { id: 'anklets', name: 'Anklets' },
-    { id: 'brooches', name: 'Brooches' },
-    { id: 'cufflinks', name: 'Cufflinks' }
+    { id: 'mens-watches', name: 'Men\'s Watches', gender: 'men' },
+    { id: 'mens-bracelets', name: 'Men\'s Bracelets', gender: 'men' },
+    { id: 'mens-necklaces', name: 'Men\'s Necklaces', gender: 'men' },
+    { id: 'mens-rings', name: 'Men\'s Rings', gender: 'men' },
+    { id: 'womens-necklaces', name: 'Women\'s Necklaces', gender: 'women' },
+    { id: 'womens-rings', name: 'Women\'s Rings', gender: 'women' },
+    { id: 'womens-earrings', name: 'Women\'s Earrings', gender: 'women' },
+    { id: 'womens-bracelets', name: 'Women\'s Bracelets', gender: 'women' },
+    { id: 'womens-watches', name: 'Women\'s Watches', gender: 'women' },
+    { id: 'kids-jewelry', name: 'Kids\' Jewelry', gender: 'kids' },
+    { id: 'necklaces', name: 'Necklaces', gender: 'unisex' },
+    { id: 'rings', name: 'Rings', gender: 'unisex' },
+    { id: 'earrings', name: 'Earrings', gender: 'unisex' },
+    { id: 'bracelets', name: 'Bracelets', gender: 'unisex' },
+    { id: 'watches', name: 'Watches', gender: 'unisex' },
+    { id: 'anklets', name: 'Anklets', gender: 'unisex' },
+    { id: 'brooches', name: 'Brooches', gender: 'unisex' },
+    { id: 'cufflinks', name: 'Cufflinks', gender: 'men' }
   ],
   beauty: [
-    { id: 'skincare', name: 'Skincare' },
-    { id: 'makeup', name: 'Makeup' },
-    { id: 'fragrances', name: 'Fragrances' },
-    { id: 'hair-care', name: 'Hair Care' },
-    { id: 'bath-body', name: 'Bath & Body' },
-    { id: 'tools-accessories', name: 'Tools & Accessories' },
-    { id: 'mens-grooming', name: 'Men\'s Grooming' },
-    { id: 'gift-sets', name: 'Gift Sets' }
+    { id: 'mens-skincare', name: 'Men\'s Skincare', gender: 'men' },
+    { id: 'mens-grooming', name: 'Men\'s Grooming', gender: 'men' },
+    { id: 'mens-fragrance', name: 'Men\'s Fragrance', gender: 'men' },
+    { id: 'womens-skincare', name: 'Women\'s Skincare', gender: 'women' },
+    { id: 'womens-makeup', name: 'Women\'s Makeup', gender: 'women' },
+    { id: 'womens-fragrance', name: 'Women\'s Fragrance', gender: 'women' },
+    { id: 'kids-beauty', name: 'Kids\' Beauty', gender: 'kids' },
+    { id: 'skincare', name: 'Skincare', gender: 'unisex' },
+    { id: 'makeup', name: 'Makeup', gender: 'unisex' },
+    { id: 'fragrances', name: 'Fragrances', gender: 'unisex' },
+    { id: 'hair-care', name: 'Hair Care', gender: 'unisex' },
+    { id: 'bath-body', name: 'Bath & Body', gender: 'unisex' },
+    { id: 'tools-accessories', name: 'Tools & Accessories', gender: 'unisex' },
+    { id: 'gift-sets', name: 'Gift Sets', gender: 'unisex' }
   ],
   accessories: [
-    { id: 'hats', name: 'Hats' },
-    { id: 'scarves', name: 'Scarves' },
-    { id: 'gloves', name: 'Gloves' },
-    { id: 'belts', name: 'Belts' },
-    { id: 'sunglasses', name: 'Sunglasses' },
-    { id: 'hair-accessories', name: 'Hair Accessories' },
-    { id: 'ties', name: 'Ties' },
-    { id: 'wallets', name: 'Wallets' }
+    { id: 'mens-hats', name: 'Men\'s Hats', gender: 'men' },
+    { id: 'mens-ties', name: 'Men\'s Ties', gender: 'men' },
+    { id: 'mens-belts', name: 'Men\'s Belts', gender: 'men' },
+    { id: 'womens-scarves', name: 'Women\'s Scarves', gender: 'women' },
+    { id: 'womens-hair-accessories', name: 'Women\'s Hair Accessories', gender: 'women' },
+    { id: 'kids-accessories', name: 'Kids\' Accessories', gender: 'kids' },
+    { id: 'hats', name: 'Hats', gender: 'unisex' },
+    { id: 'scarves', name: 'Scarves', gender: 'unisex' },
+    { id: 'gloves', name: 'Gloves', gender: 'unisex' },
+    { id: 'belts', name: 'Belts', gender: 'unisex' },
+    { id: 'sunglasses', name: 'Sunglasses', gender: 'unisex' },
+    { id: 'hair-accessories', name: 'Hair Accessories', gender: 'unisex' },
+    { id: 'ties', name: 'Ties', gender: 'men' },
+    { id: 'wallets', name: 'Wallets', gender: 'unisex' }
   ],
   bags: [
-    { id: 'handbags', name: 'Handbags' },
-    { id: 'backpacks', name: 'Backpacks' },
-    { id: 'totes', name: 'Totes' },
-    { id: 'clutches', name: 'Clutches' },
-    { id: 'travel-bags', name: 'Travel Bags' },
-    { id: 'laptop-bags', name: 'Laptop Bags' },
-    { id: 'wallets-purses', name: 'Wallets & Purses' },
-    { id: 'luggage', name: 'Luggage' }
+    { id: 'mens-bags', name: 'Men\'s Bags', gender: 'men' },
+    { id: 'mens-backpacks', name: 'Men\'s Backpacks', gender: 'men' },
+    { id: 'mens-briefcases', name: 'Men\'s Briefcases', gender: 'men' },
+    { id: 'womens-handbags', name: 'Women\'s Handbags', gender: 'women' },
+    { id: 'womens-clutches', name: 'Women\'s Clutches', gender: 'women' },
+    { id: 'womens-totes', name: 'Women\'s Totes', gender: 'women' },
+    { id: 'kids-backpacks', name: 'Kids\' Backpacks', gender: 'kids' },
+    { id: 'handbags', name: 'Handbags', gender: 'unisex' },
+    { id: 'backpacks', name: 'Backpacks', gender: 'unisex' },
+    { id: 'totes', name: 'Totes', gender: 'unisex' },
+    { id: 'clutches', name: 'Clutches', gender: 'unisex' },
+    { id: 'travel-bags', name: 'Travel Bags', gender: 'unisex' },
+    { id: 'laptop-bags', name: 'Laptop Bags', gender: 'unisex' },
+    { id: 'wallets-purses', name: 'Wallets & Purses', gender: 'unisex' },
+    { id: 'luggage', name: 'Luggage', gender: 'unisex' }
   ]
 };
 
@@ -305,17 +344,23 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
       // Filter subcategories based on selected gender if applicable
       let filteredSubcats = mergedSubcats;
       if (selectedGender && selectedGender !== 'unisex') {
-        const genderPrefix = selectedGender === 'men' ? 'mens-' : 
-                            selectedGender === 'women' ? 'womens-' : 
-                            selectedGender === 'kids' ? 'kids-' : '';
-        
-        if (genderPrefix) {
-          // Include both gender-specific and generic subcategories
-          filteredSubcats = mergedSubcats.filter(subcat => 
-            subcat.id.startsWith(genderPrefix) || 
-            (!subcat.id.startsWith('mens-') && !subcat.id.startsWith('womens-') && !subcat.id.startsWith('kids-'))
-          );
-        }
+        // Filter to show gender-specific and unisex subcategories
+        filteredSubcats = mergedSubcats.filter(subcat => {
+          // For predefined subcategories with gender property
+          if ('gender' in subcat) {
+            return subcat.gender === selectedGender || subcat.gender === 'unisex';
+          }
+          
+          // For database subcategories or those without gender property
+          // Use naming convention to determine gender relevance
+          const id = subcat.id.toLowerCase();
+          const genderPrefix = selectedGender === 'men' ? 'mens-' : 
+                              selectedGender === 'women' ? 'womens-' : 
+                              selectedGender === 'kids' ? 'kids-' : '';
+          
+          return id.startsWith(genderPrefix) || 
+                 (!id.startsWith('mens-') && !id.startsWith('womens-') && !id.startsWith('kids-'));
+        });
       }
       
       setAvailableSubcategories(filteredSubcats);
