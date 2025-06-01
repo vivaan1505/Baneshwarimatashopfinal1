@@ -115,6 +115,7 @@ const ClothingPage: React.FC = () => {
     { id: 'activewear', name: 'Activewear' }
   ];
   
+  // Add only unique categories that don't already exist
   predefinedCategories.forEach(cat => {
     if (!categories.some(existing => existing.id === cat.id)) {
       categories.push(cat);

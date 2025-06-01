@@ -48,7 +48,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
       // Combine database subcategories with predefined ones
       const dbSubcategories = data || [];
       
-      // Create a set of all subcategories
+      // Create a set of all subcategories to remove duplicates
       const allSubcategories = new Set([
         { id: 'all', name: 'All Categories' },
         ...dbSubcategories,
