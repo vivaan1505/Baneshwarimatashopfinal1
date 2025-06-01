@@ -145,23 +145,59 @@ const FootwearPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Gender Quick Links */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8 dark:bg-gray-800">
-          <h3 className="text-sm font-medium text-gray-700 mb-4 dark:text-gray-300">Shop by Gender</h3>
-          <div className="flex flex-wrap gap-4">
-            <Link to="/men" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
-              <div className="font-medium text-gray-900 dark:text-white">Men</div>
-              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Formal, Casual & Athletic</p>
-            </Link>
-            <Link to="/women" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
-              <div className="font-medium text-gray-900 dark:text-white">Women</div>
-              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Heels, Flats & Boots</p>
-            </Link>
-            <Link to="/kids" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
-              <div className="font-medium text-gray-900 dark:text-white">Kids</div>
-              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">School, Sports & Casual</p>
-            </Link>
-          </div>
+        {/* Popular Categories */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <Link to="/footwear?category=formal-shoes" className="relative overflow-hidden rounded-lg aspect-square group">
+            <img 
+              src="https://images.pexels.com/photos/1461048/pexels-photo-1461048.jpeg" 
+              alt="Formal Shoes" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Formal Shoes</h3>
+              </div>
+            </div>
+          </Link>
+          
+          <Link to="/footwear?category=sneakers" className="relative overflow-hidden rounded-lg aspect-square group">
+            <img 
+              src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg" 
+              alt="Sneakers" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Sneakers</h3>
+              </div>
+            </div>
+          </Link>
+          
+          <Link to="/footwear?category=heels" className="relative overflow-hidden rounded-lg aspect-square group">
+            <img 
+              src="https://images.pexels.com/photos/3782786/pexels-photo-3782786.jpeg" 
+              alt="Heels" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Heels</h3>
+              </div>
+            </div>
+          </Link>
+          
+          <Link to="/footwear?category=boots" className="relative overflow-hidden rounded-lg aspect-square group">
+            <img 
+              src="https://images.pexels.com/photos/267242/pexels-photo-267242.jpeg" 
+              alt="Boots" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Boots</h3>
+              </div>
+            </div>
+          </Link>
         </div>
 
         {/* Category Filter */}

@@ -145,39 +145,59 @@ const BeautyPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Featured Categories */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8 dark:bg-gray-800">
-          <h3 className="text-sm font-medium text-gray-700 mb-4 dark:text-gray-300">Popular Categories</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {predefinedCategories.slice(0, 4).map(category => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`flex flex-col items-center justify-center p-4 rounded-lg transition-colors ${
-                  selectedCategory === category.id
-                    ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400'
-                    : 'bg-gray-50 text-gray-800 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
-                }`}
-              >
-                <span className="text-sm font-medium">{category.name}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Gender Quick Links */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8 dark:bg-gray-800">
-          <h3 className="text-sm font-medium text-gray-700 mb-4 dark:text-gray-300">Shop by Gender</h3>
-          <div className="flex flex-wrap gap-4">
-            <Link to="/women" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
-              <div className="font-medium text-gray-900 dark:text-white">Women</div>
-              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Skincare, Makeup & More</p>
-            </Link>
-            <Link to="/men" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
-              <div className="font-medium text-gray-900 dark:text-white">Men</div>
-              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Grooming & Skincare</p>
-            </Link>
-          </div>
+        {/* Popular Categories */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <Link to="/beauty?category=skincare" className="relative overflow-hidden rounded-lg aspect-square group">
+            <img 
+              src="https://images.pexels.com/photos/3785147/pexels-photo-3785147.jpeg" 
+              alt="Skincare" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Skincare</h3>
+              </div>
+            </div>
+          </Link>
+          
+          <Link to="/beauty?category=makeup" className="relative overflow-hidden rounded-lg aspect-square group">
+            <img 
+              src="https://images.pexels.com/photos/2693640/pexels-photo-2693640.jpeg" 
+              alt="Makeup" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Makeup</h3>
+              </div>
+            </div>
+          </Link>
+          
+          <Link to="/beauty?category=fragrances" className="relative overflow-hidden rounded-lg aspect-square group">
+            <img 
+              src="https://images.pexels.com/photos/965989/pexels-photo-965989.jpeg" 
+              alt="Fragrances" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Fragrances</h3>
+              </div>
+            </div>
+          </Link>
+          
+          <Link to="/beauty?category=hair-care" className="relative overflow-hidden rounded-lg aspect-square group">
+            <img 
+              src="https://images.pexels.com/photos/3993449/pexels-photo-3993449.jpeg" 
+              alt="Hair Care" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Hair Care</h3>
+              </div>
+            </div>
+          </Link>
         </div>
 
         {/* Category Filter */}

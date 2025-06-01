@@ -145,39 +145,59 @@ const JewelryPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Featured Categories */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8 dark:bg-gray-800">
-          <h3 className="text-sm font-medium text-gray-700 mb-4 dark:text-gray-300">Popular Categories</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {predefinedCategories.slice(0, 4).map(category => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`flex flex-col items-center justify-center p-4 rounded-lg transition-colors ${
-                  selectedCategory === category.id
-                    ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400'
-                    : 'bg-gray-50 text-gray-800 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
-                }`}
-              >
-                <span className="text-sm font-medium">{category.name}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Gender Quick Links */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8 dark:bg-gray-800">
-          <h3 className="text-sm font-medium text-gray-700 mb-4 dark:text-gray-300">Shop by Gender</h3>
-          <div className="flex flex-wrap gap-4">
-            <Link to="/men" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
-              <div className="font-medium text-gray-900 dark:text-white">Men</div>
-              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Watches, Bracelets & More</p>
-            </Link>
-            <Link to="/women" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
-              <div className="font-medium text-gray-900 dark:text-white">Women</div>
-              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Necklaces, Rings & Earrings</p>
-            </Link>
-          </div>
+        {/* Popular Categories */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <Link to="/jewelry?category=necklaces" className="relative overflow-hidden rounded-lg aspect-square group">
+            <img 
+              src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg" 
+              alt="Necklaces" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Necklaces</h3>
+              </div>
+            </div>
+          </Link>
+          
+          <Link to="/jewelry?category=rings" className="relative overflow-hidden rounded-lg aspect-square group">
+            <img 
+              src="https://images.pexels.com/photos/9428800/pexels-photo-9428800.jpeg" 
+              alt="Rings" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Rings</h3>
+              </div>
+            </div>
+          </Link>
+          
+          <Link to="/jewelry?category=earrings" className="relative overflow-hidden rounded-lg aspect-square group">
+            <img 
+              src="https://images.pexels.com/photos/10983783/pexels-photo-10983783.jpeg" 
+              alt="Earrings" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Earrings</h3>
+              </div>
+            </div>
+          </Link>
+          
+          <Link to="/jewelry?category=watches" className="relative overflow-hidden rounded-lg aspect-square group">
+            <img 
+              src="https://images.pexels.com/photos/9981133/pexels-photo-9981133.jpeg" 
+              alt="Watches" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Watches</h3>
+              </div>
+            </div>
+          </Link>
         </div>
 
         {/* Category Filter */}

@@ -140,22 +140,48 @@ const KidsPage: React.FC = () => {
         </div>
 
         {/* Featured Categories */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8 dark:bg-gray-800">
-          <h3 className="text-sm font-medium text-gray-700 mb-4 dark:text-gray-300">Shop by Category</h3>
-          <div className="flex flex-wrap gap-4">
-            <Link to="/clothing?gender=kids" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
-              <div className="font-medium text-gray-900 dark:text-white">Clothing</div>
-              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Tops, Bottoms & Outerwear</p>
-            </Link>
-            <Link to="/footwear?gender=kids" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
-              <div className="font-medium text-gray-900 dark:text-white">Footwear</div>
-              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Shoes, Sneakers & Boots</p>
-            </Link>
-            <Link to="/accessories?gender=kids" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
-              <div className="font-medium text-gray-900 dark:text-white">Accessories</div>
-              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Bags, Hats & More</p>
-            </Link>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <Link to="/clothing?gender=kids" className="relative overflow-hidden rounded-lg aspect-video group">
+            <img 
+              src="https://images.pexels.com/photos/3771583/pexels-photo-3771583.jpeg" 
+              alt="Kids' Clothing" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Clothing</h3>
+                <p className="text-sm text-gray-200">Tops, Bottoms & Outerwear</p>
+              </div>
+            </div>
+          </Link>
+          
+          <Link to="/footwear?gender=kids" className="relative overflow-hidden rounded-lg aspect-video group">
+            <img 
+              src="https://images.pexels.com/photos/36029/aroni-arsa-children-little.jpg" 
+              alt="Kids' Footwear" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Footwear</h3>
+                <p className="text-sm text-gray-200">Shoes, Sneakers & Boots</p>
+              </div>
+            </div>
+          </Link>
+          
+          <Link to="/accessories?gender=kids" className="relative overflow-hidden rounded-lg aspect-video group">
+            <img 
+              src="https://images.pexels.com/photos/3662667/pexels-photo-3662667.jpeg" 
+              alt="Kids' Accessories" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Accessories</h3>
+                <p className="text-sm text-gray-200">Bags, Hats & More</p>
+              </div>
+            </div>
+          </Link>
         </div>
 
         {/* Category Filter */}

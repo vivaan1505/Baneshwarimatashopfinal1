@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Filter, Search } from 'lucide-react';
+import { Filter, Search, ChevronDown } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 interface CategoryFilterProps {
@@ -27,6 +27,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
   const [loading, setLoading] = useState(false);
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [activeGender, setActiveGender] = useState('all');
 
   useEffect(() => {
     if (mainCategory) {
@@ -70,8 +71,60 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
     ? displayCategories 
     : displayCategories.slice(0, 8);
 
+  const handleGenderChange = (gender: string) => {
+    setActiveGender(gender);
+    // Here you would typically filter products by gender
+    // This could be implemented by passing a gender filter up to the parent component
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-sm mb-8 dark:bg-gray-800">
+      {/* Gender Tabs */}
+      <div className="border-b dark:border-gray-700">
+        <div className="flex overflow-x-auto">
+          <button
+            onClick={() => handleGenderChange('all')}
+            className={`px-6 py-3 text-sm font-medium whitespace-nowrap ${
+              activeGender === 'all'
+                ? 'border-b-2 border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+            }`}
+          >
+            All
+          </button>
+          <button
+            onClick={() => handleGenderChange('men')}
+            className={`px-6 py-3 text-sm font-medium whitespace-nowrap ${
+              activeGender === 'men'
+                ? 'border-b-2 border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+            }`}
+          >
+            Men
+          </button>
+          <button
+            onClick={() => handleGenderChange('women')}
+            className={`px-6 py-3 text-sm font-medium whitespace-nowrap ${
+              activeGender === 'women'
+                ? 'border-b-2 border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+            }`}
+          >
+            Women
+          </button>
+          <button
+            onClick={() => handleGenderChange('kids')}
+            className={`px-6 py-3 text-sm font-medium whitespace-nowrap ${
+              activeGender === 'kids'
+                ? 'border-b-2 border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+            }`}
+          >
+            Kids
+          </button>
+        </div>
+      </div>
+
       {/* Search and Sort Bar */}
       <div className="p-6 border-b dark:border-gray-700">
         <div className="flex flex-wrap gap-4">
@@ -111,64 +164,33 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
         </div>
       </div>
 
-      {/* Category Pills - Desktop */}
-      <div className={`hidden md:block p-6 ${mobileFiltersOpen ? 'block' : 'hidden md:block'}`}>
-        <h3 className="text-sm font-medium text-gray-700 mb-3 dark:text-gray-300">Categories</h3>
-        <div className="flex flex-wrap gap-2">
-          {loading ? (
-            <div className="animate-pulse flex space-x-2">
-              {[1, 2, 3, 4].map(i => (
-                <div key={i} className="h-8 w-24 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-              ))}
-            </div>
-          ) : (
-            <>
-              {visibleCategories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    selectedCategory === category.id
-                      ? 'bg-primary-600 text-white dark:bg-primary-700'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                  }`}
-                >
-                  {category.name}
-                </button>
-              ))}
-              
-              {displayCategories.length > 8 && (
-                <button
-                  onClick={() => setShowAllCategories(!showAllCategories)}
-                  className="px-4 py-2 rounded-full text-sm font-medium bg-gray-50 text-gray-600 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
-                >
-                  {showAllCategories ? 'Show Less' : `+${displayCategories.length - 8} More`}
-                </button>
-              )}
-            </>
+      {/* Category Selection */}
+      <div className={`p-6 ${mobileFiltersOpen ? 'block' : 'hidden md:block'}`}>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Categories</h3>
+          {displayCategories.length > 8 && (
+            <button
+              onClick={() => setShowAllCategories(!showAllCategories)}
+              className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
+            >
+              {showAllCategories ? 'Show Less' : 'Show All'}
+            </button>
           )}
         </div>
-      </div>
-
-      {/* Mobile Filters */}
-      <div className={`md:hidden p-6 border-t dark:border-gray-700 ${mobileFiltersOpen ? 'block' : 'hidden'}`}>
-        <h3 className="text-sm font-medium text-gray-700 mb-3 dark:text-gray-300">Categories</h3>
-        <div className="grid grid-cols-2 gap-2">
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {loading ? (
-            <div className="animate-pulse flex space-x-2">
+            <div className="animate-pulse flex space-x-2 col-span-full">
               {[1, 2, 3, 4].map(i => (
-                <div key={i} className="h-8 w-24 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                <div key={i} className="h-10 bg-gray-200 rounded w-full dark:bg-gray-700"></div>
               ))}
             </div>
           ) : (
-            displayCategories.map((category) => (
+            visibleCategories.map((category) => (
               <button
                 key={category.id}
-                onClick={() => {
-                  setSelectedCategory(category.id);
-                  setMobileFiltersOpen(false);
-                }}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                onClick={() => setSelectedCategory(category.id)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                   selectedCategory === category.id
                     ? 'bg-primary-600 text-white dark:bg-primary-700'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
@@ -179,6 +201,17 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
             ))
           )}
         </div>
+      </div>
+
+      {/* Mobile Filters Toggle */}
+      <div className="md:hidden border-t dark:border-gray-700 p-3">
+        <button
+          onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
+          className="w-full flex items-center justify-center text-sm text-gray-600 dark:text-gray-400"
+        >
+          {mobileFiltersOpen ? 'Hide Filters' : 'Show Filters'}
+          <ChevronDown className={`ml-1 w-4 h-4 transition-transform ${mobileFiltersOpen ? 'rotate-180' : ''}`} />
+        </button>
       </div>
     </div>
   );

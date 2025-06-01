@@ -145,23 +145,59 @@ const ClothingPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Gender Quick Links */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8 dark:bg-gray-800">
-          <h3 className="text-sm font-medium text-gray-700 mb-4 dark:text-gray-300">Shop by Gender</h3>
-          <div className="flex flex-wrap gap-4">
-            <Link to="/men" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
-              <div className="font-medium text-gray-900 dark:text-white">Men</div>
-              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Formal, Casual & Activewear</p>
-            </Link>
-            <Link to="/women" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
-              <div className="font-medium text-gray-900 dark:text-white">Women</div>
-              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Dresses, Tops & Bottoms</p>
-            </Link>
-            <Link to="/kids" className="flex-1 min-w-[100px] bg-gray-50 hover:bg-gray-100 rounded-lg p-4 text-center transition-colors dark:bg-gray-700 dark:hover:bg-gray-600">
-              <div className="font-medium text-gray-900 dark:text-white">Kids</div>
-              <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">All Ages & Styles</p>
-            </Link>
-          </div>
+        {/* Popular Categories */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <Link to="/clothing?category=womens-dresses" className="relative overflow-hidden rounded-lg aspect-square group">
+            <img 
+              src="https://images.pexels.com/photos/5709665/pexels-photo-5709665.jpeg" 
+              alt="Women's Dresses" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Dresses</h3>
+              </div>
+            </div>
+          </Link>
+          
+          <Link to="/clothing?category=mens-formal" className="relative overflow-hidden rounded-lg aspect-square group">
+            <img 
+              src="https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg" 
+              alt="Men's Formal" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Formal Wear</h3>
+              </div>
+            </div>
+          </Link>
+          
+          <Link to="/clothing?category=outerwear" className="relative overflow-hidden rounded-lg aspect-square group">
+            <img 
+              src="https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg" 
+              alt="Outerwear" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Outerwear</h3>
+              </div>
+            </div>
+          </Link>
+          
+          <Link to="/clothing?category=activewear" className="relative overflow-hidden rounded-lg aspect-square group">
+            <img 
+              src="https://images.pexels.com/photos/4662356/pexels-photo-4662356.jpeg" 
+              alt="Activewear" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-white">Activewear</h3>
+              </div>
+            </div>
+          </Link>
         </div>
 
         {/* Category Filter */}
