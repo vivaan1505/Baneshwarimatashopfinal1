@@ -44,7 +44,7 @@ interface ProductFormData {
   shipping_info?: string;
   return_policy?: string;
   type: 'footwear' | 'clothing' | 'jewelry' | 'beauty' | 'accessories' | 'bags';
-  subcategory?: string;
+  subcategory: string;
 }
 
 interface CategoryProductFormProps {
@@ -373,15 +373,11 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
       }
 
       const { data, error } = await query;
-
-      if (error) {
-        throw new Error(`Supabase error: ${error.message}`);
-      }
-      
+      if (error) throw error;
       setBrands(data || []);
     } catch (error) {
       console.error('Error fetching brands:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to load brands. Please try again.');
+      toast.error('Failed to load brands');
     } finally {
       setLoading(false);
     }
