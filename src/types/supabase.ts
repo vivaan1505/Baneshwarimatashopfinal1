@@ -104,6 +104,7 @@ export interface Database {
           is_featured: boolean | null
           is_new: boolean | null
           is_bestseller: boolean | null
+          is_returnable: boolean | null
           meta_title: string | null
           meta_description: string | null
           rating: number | null
@@ -139,6 +140,7 @@ export interface Database {
           is_featured?: boolean | null
           is_new?: boolean | null
           is_bestseller?: boolean | null
+          is_returnable?: boolean | null
           meta_title?: string | null
           meta_description?: string | null
           rating?: number | null
@@ -174,6 +176,7 @@ export interface Database {
           is_featured?: boolean | null
           is_new?: boolean | null
           is_bestseller?: boolean | null
+          is_returnable?: boolean | null
           meta_title?: string | null
           meta_description?: string | null
           rating?: number | null
