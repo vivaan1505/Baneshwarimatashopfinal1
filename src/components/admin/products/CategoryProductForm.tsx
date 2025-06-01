@@ -441,6 +441,30 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
       return;
     }
 
+    // Check for duplicate SKU before proceeding
+    try {
+      const { data: existingProduct, error: skuCheckError } = await supabase
+        .from('products')
+        .select('id')
+        .eq('sku', data.sku)
+        .single();
+
+      if (skuCheckError && skuCheckError.code !== 'PGRST116') { // PGRST116 means no rows returned
+        throw skuCheckError;
+      }
+
+      if (existingProduct) {
+        toast.error('A product with this SKU already exists. Please use a unique SKU.');
+        return;
+      }
+    } catch (error) {
+      if (error instanceof Error && error.message !== 'PGRST116') {
+        console.error('Error checking SKU:', error);
+        toast.error('Error checking SKU availability. Please try again.');
+        return;
+      }
+    }
+
     setUploading(true);
     try {
       let brandId = data.brand_id;
@@ -474,7 +498,8 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         data.tags = [...data.tags, category];
       }
 
-      if (category === 'footwear' || category === 'clothing' || category === 'jewelry' || category === 'beauty') {
+      // Map category to correct type if needed
+      if (category === 'footwear' || category === 'clothing' || category === 'jewelry' || category === 'beauty' || category === 'accessories' || category === 'bags') {
         data.type = category as any;
       }
 
@@ -506,6 +531,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
           const filePath = `${product.id}/${fileName}`;
 
           const { error: uploadError } = await supabase.storage
+            
             .from('product-images')
             .upload(filePath, file);
 
@@ -548,7 +574,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      
       <div className="flex items-center justify-center min-h-screen px-4">
         <div className="fixed inset-0 bg-black opacity-30" onClick={onClose}></div>
         
