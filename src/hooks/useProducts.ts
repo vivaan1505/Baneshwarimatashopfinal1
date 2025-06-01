@@ -88,7 +88,12 @@ export const useProducts = ({
       
       // Apply custom filters
       Object.entries(filters).forEach(([key, value]) => {
-        if (typeof value === 'object' && value !== null) {
+        if (key === 'discount') {
+          // Handle discount filter by checking compare_at_price
+          if (value.gt) {
+            query = query.not('compare_at_price', 'is', null);
+          }
+        } else if (typeof value === 'object' && value !== null) {
           // Handle operators like gt, lt, etc.
           const operator = Object.keys(value)[0];
           const operatorValue = value[operator];
