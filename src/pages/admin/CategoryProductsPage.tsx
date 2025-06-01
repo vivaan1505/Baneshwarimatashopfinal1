@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { AdminLayout } from '../../components/admin/AdminLayout';
+import AdminLayout from '../../components/admin/AdminLayout';
 import { ProductGrid } from '../../components/admin/products/ProductGrid';
 
 export default function CategoryProductsPage() {
