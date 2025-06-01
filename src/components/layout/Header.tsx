@@ -10,6 +10,7 @@ import { scrollToTop } from '../../utils/scroll';
 import ThemeToggle from '../theme/ThemeToggle';
 import ThemeManagerButton from '../theme/ThemeManagerButton';
 import SearchOverlay from '../common/SearchOverlay';
+import { supabase } from '../../lib/supabase';
 
 interface HeaderProps {
   toggleMobileMenu: () => void;
@@ -20,6 +21,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [wishlistCount, setWishlistCount] = useState(0);
   const location = useLocation();
   const { items } = useCartStore();
   const { user, signOut } = useAuthStore();
@@ -51,6 +53,29 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
     setProfileMenuOpen(false);
     setSearchOpen(false);
   }, [location]);
+
+  // Fetch wishlist count when user changes or location changes
+  useEffect(() => {
+    if (user) {
+      fetchWishlistCount();
+    } else {
+      setWishlistCount(0);
+    }
+  }, [user, location.pathname]);
+
+  const fetchWishlistCount = async () => {
+    try {
+      const { count, error } = await supabase
+        .from('wishlists')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user?.id);
+
+      if (error) throw error;
+      setWishlistCount(count || 0);
+    } catch (error) {
+      console.error('Error fetching wishlist count:', error);
+    }
+  };
 
   const cartItemsCount = items.reduce((total, item) => total + item.quantity, 0);
 
@@ -123,10 +148,15 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
             <Link 
               to="/wishlist" 
               onClick={scrollToTop}
-              className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400"
+              className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400 relative"
               title="Wishlist"
             >
               <Heart size={20} />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-secondary-600 rounded-full dark:bg-secondary-500">
+                  {wishlistCount}
+                </span>
+              )}
             </Link>
             
             {/* Theme toggle */}

@@ -4,6 +4,7 @@ import { X, ChevronRight, Ticket, Heart } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { cn } from '../../utils/cn';
 import { scrollToTop } from '../../utils/scroll';
+import { supabase } from '../../lib/supabase';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -12,7 +13,30 @@ interface MobileMenuProps {
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
   const [activeSubmenu, setActiveSubmenu] = React.useState<string | null>(null);
+  const [wishlistCount, setWishlistCount] = React.useState(0);
   const { user, signOut } = useAuthStore();
+
+  React.useEffect(() => {
+    if (isOpen && user) {
+      fetchWishlistCount();
+    } else if (!user) {
+      setWishlistCount(0);
+    }
+  }, [isOpen, user]);
+
+  const fetchWishlistCount = async () => {
+    try {
+      const { count, error } = await supabase
+        .from('wishlists')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user?.id);
+
+      if (error) throw error;
+      setWishlistCount(count || 0);
+    } catch (error) {
+      console.error('Error fetching wishlist count:', error);
+    }
+  };
 
   const toggleSubmenu = (menu: string) => {
     setActiveSubmenu(prev => prev === menu ? null : menu);
@@ -193,6 +217,11 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
             >
               <Heart className="mr-3 h-5 w-5" />
               Wishlist
+              {wishlistCount > 0 && (
+                <span className="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold text-white bg-secondary-600 rounded-full dark:bg-secondary-500">
+                  {wishlistCount}
+                </span>
+              )}
             </Link>
             
             {/* Other Pages */}
