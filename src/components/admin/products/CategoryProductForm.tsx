@@ -82,6 +82,76 @@ const PRODUCT_TYPES = [
 // Subcategory definitions by main category
 const SUBCATEGORIES = {
   footwear: [
+    // Men's Footwear
+    { id: 'mens-sneakers', name: 'Men\'s Sneakers' },
+    { id: 'mens-loafers', name: 'Men\'s Loafers' },
+    { id: 'mens-derby-shoes', name: 'Men\'s Derby Shoes' },
+    { id: 'mens-oxford-shoes', name: 'Men\'s Oxford Shoes' },
+    { id: 'mens-brogues', name: 'Men\'s Brogues' },
+    { id: 'mens-chelsea-boots', name: 'Men\'s Chelsea Boots' },
+    { id: 'mens-chukka-boots', name: 'Men\'s Chukka Boots' },
+    { id: 'mens-sandals', name: 'Men\'s Sandals' },
+    { id: 'mens-flip-flops', name: 'Men\'s Flip-Flops' },
+    { id: 'mens-slides', name: 'Men\'s Slides' },
+    { id: 'mens-formal-shoes', name: 'Men\'s Formal Shoes' },
+    { id: 'mens-running-shoes', name: 'Men\'s Running Shoes' },
+    { id: 'mens-training-shoes', name: 'Men\'s Training Shoes' },
+    { id: 'mens-hiking-boots', name: 'Men\'s Hiking Boots' },
+    { id: 'mens-moccasins', name: 'Men\'s Moccasins' },
+    { id: 'mens-espadrilles', name: 'Men\'s Espadrilles' },
+    { id: 'mens-ethnic-footwear', name: 'Men\'s Ethnic Footwear' },
+    
+    // Women's Footwear
+    { id: 'womens-heels', name: 'Women\'s Heels' },
+    { id: 'womens-stilettos', name: 'Women\'s Stilettos' },
+    { id: 'womens-block-heels', name: 'Women\'s Block Heels' },
+    { id: 'womens-kitten-heels', name: 'Women\'s Kitten Heels' },
+    { id: 'womens-wedge-heels', name: 'Women\'s Wedge Heels' },
+    { id: 'womens-flats', name: 'Women\'s Flats' },
+    { id: 'womens-ballerinas', name: 'Women\'s Ballerinas' },
+    { id: 'womens-loafers', name: 'Women\'s Loafers' },
+    { id: 'womens-mules', name: 'Women\'s Mules' },
+    { id: 'womens-boots', name: 'Women\'s Boots' },
+    { id: 'womens-ankle-boots', name: 'Women\'s Ankle Boots' },
+    { id: 'womens-knee-high-boots', name: 'Women\'s Knee-high Boots' },
+    { id: 'womens-over-the-knee-boots', name: 'Women\'s Over-the-knee Boots' },
+    { id: 'womens-sandals', name: 'Women\'s Sandals' },
+    { id: 'womens-gladiator-sandals', name: 'Women\'s Gladiator Sandals' },
+    { id: 'womens-platform-sandals', name: 'Women\'s Platform Sandals' },
+    { id: 'womens-strappy-sandals', name: 'Women\'s Strappy Sandals' },
+    { id: 'womens-sneakers', name: 'Women\'s Sneakers' },
+    { id: 'womens-slip-ons', name: 'Women\'s Slip-ons' },
+    { id: 'womens-ethnic-footwear', name: 'Women\'s Ethnic Footwear' },
+    
+    // Kids' Footwear
+    { id: 'kids-school-shoes', name: 'Kids\' School Shoes' },
+    { id: 'kids-sports-shoes', name: 'Kids\' Sports Shoes' },
+    { id: 'kids-sandals', name: 'Kids\' Sandals' },
+    { id: 'kids-sneakers', name: 'Kids\' Sneakers' },
+    { id: 'kids-boots', name: 'Kids\' Boots' },
+    { id: 'kids-flip-flops', name: 'Kids\' Flip-Flops' },
+    { id: 'kids-ballet-flats', name: 'Kids\' Ballet Flats' },
+    { id: 'kids-velcro-shoes', name: 'Kids\' Velcro Shoes' },
+    { id: 'kids-light-up-shoes', name: 'Kids\' Light-Up Shoes' },
+    
+    // Specialty Footwear
+    { id: 'bridal-footwear', name: 'Bridal Footwear' },
+    { id: 'vegan-footwear', name: 'Vegan Footwear' },
+    { id: 'sustainable-shoes', name: 'Sustainable Shoes' },
+    { id: 'designer-footwear', name: 'Designer Footwear' },
+    { id: 'custom-made-shoes', name: 'Custom-Made Shoes' },
+    
+    // Sports & Outdoor
+    { id: 'running-shoes', name: 'Running Shoes' },
+    { id: 'training-shoes', name: 'Training Shoes' },
+    { id: 'basketball-shoes', name: 'Basketball Shoes' },
+    { id: 'football-cleats', name: 'Football Cleats' },
+    { id: 'hiking-shoes', name: 'Hiking Shoes' },
+    { id: 'trekking-boots', name: 'Trekking Boots' },
+    { id: 'cycling-shoes', name: 'Cycling Shoes' },
+    { id: 'water-shoes', name: 'Water Shoes' },
+    
+    // Generic categories
     { id: 'formal-shoes', name: 'Formal Shoes' },
     { id: 'casual-shoes', name: 'Casual Shoes' },
     { id: 'athletic-shoes', name: 'Athletic Shoes' },
@@ -172,6 +242,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
   });
 
   const selectedType = watch('type');
+  const selectedGender = watch('gender');
 
   // Function to map category to product type
   function mapCategoryToType(category: string): 'footwear' | 'clothing' | 'jewelry' | 'beauty' | 'accessories' | 'bags' {
@@ -231,11 +302,27 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         }
       });
       
-      setAvailableSubcategories(mergedSubcats);
+      // Filter subcategories based on selected gender if applicable
+      let filteredSubcats = mergedSubcats;
+      if (selectedGender && selectedGender !== 'unisex') {
+        const genderPrefix = selectedGender === 'men' ? 'mens-' : 
+                            selectedGender === 'women' ? 'womens-' : 
+                            selectedGender === 'kids' ? 'kids-' : '';
+        
+        if (genderPrefix) {
+          // Include both gender-specific and generic subcategories
+          filteredSubcats = mergedSubcats.filter(subcat => 
+            subcat.id.startsWith(genderPrefix) || 
+            (!subcat.id.startsWith('mens-') && !subcat.id.startsWith('womens-') && !subcat.id.startsWith('kids-'))
+          );
+        }
+      }
+      
+      setAvailableSubcategories(filteredSubcats);
     } else {
       setAvailableSubcategories([]);
     }
-  }, [selectedType, dbSubcategories]);
+  }, [selectedType, dbSubcategories, selectedGender]);
 
   const fetchBrands = async () => {
     try {
@@ -292,6 +379,15 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
       setValue('brand_id', option.value);
       setValue('custom_brand', null);
     }
+  };
+
+  const handleTagsChange = (selectedOptions: any) => {
+    const tags = selectedOptions ? selectedOptions.map((option: any) => option.value) : [];
+    // Ensure special category tag remains if applicable
+    if (isSpecialCategory && !tags.includes(category)) {
+      tags.push(category);
+    }
+    setValue('tags', tags);
   };
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -447,6 +543,25 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
+                    Gender <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    {...register('gender', { required: 'Gender is required' })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="men">Men</option>
+                    <option value="women">Women</option>
+                    <option value="unisex">Unisex</option>
+                    <option value="kids">Kids</option>
+                  </select>
+                  {errors.gender && (
+                    <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
                     Subcategory
                   </label>
                   <select
@@ -489,25 +604,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                   )}
                   {errors.brand_id && (
                     <p className="mt-1 text-sm text-red-600">{errors.brand_id.message}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Gender <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    {...register('gender', { required: 'Gender is required' })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                  >
-                    <option value="">Select Gender</option>
-                    <option value="men">Men</option>
-                    <option value="women">Women</option>
-                    <option value="unisex">Unisex</option>
-                    <option value="kids">Kids</option>
-                  </select>
-                  {errors.gender && (
-                    <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
                   )}
                 </div>
 
@@ -611,14 +707,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     options={PRODUCT_TAGS}
                     className="basic-multi-select"
                     classNamePrefix="select"
-                    onChange={(selectedOptions) => {
-                      const tags = selectedOptions.map(option => option.value);
-                      // Ensure special category tag remains if applicable
-                      if (isSpecialCategory && !tags.includes(category)) {
-                        tags.push(category);
-                      }
-                      setValue('tags', tags);
-                    }}
+                    onChange={handleTagsChange}
                     defaultValue={isSpecialCategory ? [PRODUCT_TAGS.find(tag => tag.value === category)] : []}
                     formatOptionLabel={({ label, color }) => (
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${color}`}>
