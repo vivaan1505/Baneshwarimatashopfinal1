@@ -24,6 +24,7 @@ import AccountPage from './pages/AccountPage';
 import BrandPage from './pages/BrandPage';
 import ThemeProvider from './components/theme/ThemeProvider';
 import SearchResultsPage from './pages/SearchResultsPage';
+import WishlistPage from './pages/WishlistPage';
 
 // Category Pages
 import FootwearPage from './pages/FootwearPage';
@@ -92,6 +93,7 @@ function App() {
             <Route path="coupons" element={<CouponsPage />} />
             <Route path="brand/:slug" element={<BrandPage />} />
             <Route path="search" element={<SearchResultsPage />} />
+            <Route path="wishlist" element={<WishlistPage />} />
             
             {/* Protected Routes */}
             <Route path="account" element={<AccountPage />} />

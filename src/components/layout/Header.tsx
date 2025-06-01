@@ -102,7 +102,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
             </Link>
             
             <Link 
-              to="/favorites" 
+              to="/wishlist" 
               onClick={scrollToTop}
               className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400"
               title="Wishlist"
@@ -160,6 +160,13 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
                       >
                         Recycling
+                      </Link>
+                      <Link
+                        to="/wishlist"
+                        onClick={() => setProfileMenuOpen(false)}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                      >
+                        My Wishlist
                       </Link>
                       <button
                         onClick={handleSignOut}
