@@ -16,6 +16,13 @@ interface Brand {
   category: string;
 }
 
+interface Subcategory {
+  id: string;
+  name: string;
+  slug: string;
+  parent_category: string;
+}
+
 interface ProductFormData {
   name: string;
   brand_id: string;
@@ -37,6 +44,7 @@ interface ProductFormData {
   shipping_info?: string;
   return_policy?: string;
   type: 'footwear' | 'clothing' | 'jewelry' | 'beauty' | 'accessories' | 'bags';
+  subcategory?: string;
 }
 
 interface CategoryProductFormProps {
@@ -56,7 +64,10 @@ const PRODUCT_TAGS = [
   { value: 'exclusive', label: 'Exclusive', color: 'bg-indigo-100 text-indigo-800' },
   { value: 'last-piece', label: 'Last Piece', color: 'bg-pink-100 text-pink-800' },
   { value: 'bridal', label: 'Bridal', color: 'bg-pink-100 text-pink-800' },
-  { value: 'christmas', label: 'Christmas', color: 'bg-red-100 text-red-800' }
+  { value: 'christmas', label: 'Christmas', color: 'bg-red-100 text-red-800' },
+  { value: 'men', label: 'Men', color: 'bg-blue-100 text-blue-800' },
+  { value: 'women', label: 'Women', color: 'bg-pink-100 text-pink-800' },
+  { value: 'kids', label: 'Kids', color: 'bg-green-100 text-green-800' }
 ];
 
 const PRODUCT_TYPES = [
@@ -68,6 +79,72 @@ const PRODUCT_TYPES = [
   { value: 'bags', label: 'Bags' }
 ];
 
+// Subcategory definitions by main category
+const SUBCATEGORIES = {
+  footwear: [
+    { id: 'formal-shoes', name: 'Formal Shoes' },
+    { id: 'casual-shoes', name: 'Casual Shoes' },
+    { id: 'athletic-shoes', name: 'Athletic Shoes' },
+    { id: 'boots', name: 'Boots' },
+    { id: 'sandals', name: 'Sandals' },
+    { id: 'heels', name: 'Heels' },
+    { id: 'flats', name: 'Flats' },
+    { id: 'sneakers', name: 'Sneakers' }
+  ],
+  clothing: [
+    { id: 'mens-formal', name: 'Men\'s Formal' },
+    { id: 'mens-casual', name: 'Men\'s Casual' },
+    { id: 'womens-dresses', name: 'Women\'s Dresses' },
+    { id: 'womens-tops', name: 'Women\'s Tops' },
+    { id: 'womens-bottoms', name: 'Women\'s Bottoms' },
+    { id: 'kids-clothing', name: 'Kids\' Clothing' },
+    { id: 'outerwear', name: 'Outerwear' },
+    { id: 'activewear', name: 'Activewear' },
+    { id: 'swimwear', name: 'Swimwear' },
+    { id: 'underwear', name: 'Underwear' }
+  ],
+  jewelry: [
+    { id: 'necklaces', name: 'Necklaces' },
+    { id: 'rings', name: 'Rings' },
+    { id: 'earrings', name: 'Earrings' },
+    { id: 'bracelets', name: 'Bracelets' },
+    { id: 'watches', name: 'Watches' },
+    { id: 'anklets', name: 'Anklets' },
+    { id: 'brooches', name: 'Brooches' },
+    { id: 'cufflinks', name: 'Cufflinks' }
+  ],
+  beauty: [
+    { id: 'skincare', name: 'Skincare' },
+    { id: 'makeup', name: 'Makeup' },
+    { id: 'fragrances', name: 'Fragrances' },
+    { id: 'hair-care', name: 'Hair Care' },
+    { id: 'bath-body', name: 'Bath & Body' },
+    { id: 'tools-accessories', name: 'Tools & Accessories' },
+    { id: 'mens-grooming', name: 'Men\'s Grooming' },
+    { id: 'gift-sets', name: 'Gift Sets' }
+  ],
+  accessories: [
+    { id: 'hats', name: 'Hats' },
+    { id: 'scarves', name: 'Scarves' },
+    { id: 'gloves', name: 'Gloves' },
+    { id: 'belts', name: 'Belts' },
+    { id: 'sunglasses', name: 'Sunglasses' },
+    { id: 'hair-accessories', name: 'Hair Accessories' },
+    { id: 'ties', name: 'Ties' },
+    { id: 'wallets', name: 'Wallets' }
+  ],
+  bags: [
+    { id: 'handbags', name: 'Handbags' },
+    { id: 'backpacks', name: 'Backpacks' },
+    { id: 'totes', name: 'Totes' },
+    { id: 'clutches', name: 'Clutches' },
+    { id: 'travel-bags', name: 'Travel Bags' },
+    { id: 'laptop-bags', name: 'Laptop Bags' },
+    { id: 'wallets-purses', name: 'Wallets & Purses' },
+    { id: 'luggage', name: 'Luggage' }
+  ]
+};
+
 const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
   category,
   isOpen,
@@ -78,8 +155,10 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
   const [images, setImages] = useState<File[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(false);
+  const [dbSubcategories, setDbSubcategories] = useState<Subcategory[]>([]);
+  const [availableSubcategories, setAvailableSubcategories] = useState<{id: string, name: string}[]>([]);
   
-  const { register, handleSubmit, watch, setValue, formState: { errors }, trigger } = useForm<ProductFormData>({
+  const { register, handleSubmit, watch, setValue, formState: { errors }, trigger, reset } = useForm<ProductFormData>({
     defaultValues: {
       name: '',
       price: 0,
@@ -92,6 +171,8 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
     }
   });
 
+  const selectedType = watch('type');
+
   // Function to map category to product type
   function mapCategoryToType(category: string): 'footwear' | 'clothing' | 'jewelry' | 'beauty' | 'accessories' | 'bags' {
     switch (category) {
@@ -103,6 +184,10 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         return 'jewelry';
       case 'beauty':
         return 'beauty';
+      case 'accessories':
+        return 'accessories';
+      case 'bags':
+        return 'bags';
       case 'bridal':
         return 'clothing'; // Default for bridal, can be changed
       case 'christmas':
@@ -120,12 +205,37 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
   useEffect(() => {
     if (isOpen) {
       fetchBrands();
+      fetchSubcategories();
     }
     // Add special category to tags by default
     if (isSpecialCategory) {
       setValue('tags', [category]);
     }
   }, [category, isOpen]);
+
+  useEffect(() => {
+    // Update available subcategories when type changes
+    const type = selectedType;
+    if (type && SUBCATEGORIES[type]) {
+      // Combine predefined subcategories with those from the database
+      const predefinedSubcats = SUBCATEGORIES[type];
+      const dbSubcats = dbSubcategories.filter(s => s.parent_category === type);
+      
+      // Merge them, prioritizing database entries
+      const mergedSubcats = [...dbSubcats];
+      
+      // Add predefined subcategories that don't exist in the database
+      predefinedSubcats.forEach(predef => {
+        if (!mergedSubcats.some(s => s.id === predef.id)) {
+          mergedSubcats.push(predef);
+        }
+      });
+      
+      setAvailableSubcategories(mergedSubcats);
+    } else {
+      setAvailableSubcategories([]);
+    }
+  }, [selectedType, dbSubcategories]);
 
   const fetchBrands = async () => {
     try {
@@ -156,6 +266,21 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
       toast.error(error instanceof Error ? error.message : 'Failed to load brands. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchSubcategories = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('id, name, slug, parent_category')
+        .not('parent_category', 'is', null);
+
+      if (error) throw error;
+      setDbSubcategories(data || []);
+    } catch (error) {
+      console.error('Error fetching subcategories:', error);
+      toast.error('Failed to load subcategories');
     }
   };
 
@@ -202,11 +327,17 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         data.type = category as any;
       }
 
+      // Generate slug from name
+      const slug = data.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+
       const { data: product, error: productError } = await supabase
         .from('products')
         .insert([{
           ...data,
-          slug: data.name.toLowerCase().replace(/\s+/g, '-'),
+          slug,
         }])
         .select()
         .single();
@@ -312,6 +443,26 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                   {errors.type && (
                     <p className="mt-1 text-sm text-red-600">{errors.type.message}</p>
                   )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Subcategory
+                  </label>
+                  <select
+                    {...register('subcategory')}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  >
+                    <option value="">Select Subcategory</option>
+                    {availableSubcategories.map(subcat => (
+                      <option key={subcat.id} value={subcat.id}>
+                        {subcat.name}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="mt-1 text-xs text-gray-500">
+                    Select a subcategory to help customers find your product more easily
+                  </p>
                 </div>
 
                 <div>

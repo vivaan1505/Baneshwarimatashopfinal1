@@ -108,7 +108,11 @@ const FootwearPage: React.FC = () => {
     { id: 'formal-shoes', name: 'Formal Shoes' },
     { id: 'casual-shoes', name: 'Casual Shoes' },
     { id: 'athletic-shoes', name: 'Athletic Shoes' },
-    { id: 'boots', name: 'Boots' }
+    { id: 'boots', name: 'Boots' },
+    { id: 'sandals', name: 'Sandals' },
+    { id: 'heels', name: 'Heels' },
+    { id: 'flats', name: 'Flats' },
+    { id: 'sneakers', name: 'Sneakers' }
   ];
   
   predefinedCategories.forEach(cat => {
@@ -124,19 +128,19 @@ const FootwearPage: React.FC = () => {
         <nav className="mb-6">
           <ol className="flex text-sm">
             <li className="flex items-center">
-              <Link to="/" className="text-gray-500 hover:text-primary-700">Home</Link>
-              <svg className="mx-2 w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <Link to="/" className="text-gray-500 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-400">Home</Link>
+              <svg className="mx-2 w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
               </svg>
             </li>
-            <li className="text-gray-900 font-medium">Footwear</li>
+            <li className="text-gray-900 font-medium dark:text-white">Footwear</li>
           </ol>
         </nav>
 
         {/* Category Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-heading font-bold mb-4">Footwear Collection</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <h1 className="text-3xl font-heading font-bold mb-4 dark:text-white">Footwear Collection</h1>
+          <p className="text-gray-600 max-w-2xl mx-auto dark:text-gray-300">
             Discover our premium selection of footwear, crafted with the finest materials and attention to detail.
           </p>
         </div>
@@ -144,28 +148,15 @@ const FootwearPage: React.FC = () => {
         {/* Subcategory Navigation */}
         <div className="mb-8">
           <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/men" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors">
+            <Link to="/men" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
               Men
             </Link>
-            <Link to="/women" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors">
+            <Link to="/women" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
               Women
             </Link>
-            <Link to="/kids" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors">
+            <Link to="/kids" className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
               Kids
             </Link>
-            {subcategories.map(subcat => (
-              <button 
-                key={subcat.id}
-                onClick={() => setSelectedCategory(subcat.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  selectedCategory === subcat.id
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {subcat.name}
-              </button>
-            ))}
           </div>
         </div>
 
@@ -178,17 +169,18 @@ const FootwearPage: React.FC = () => {
           sortBy={sortBy}
           setSortBy={setSortBy}
           categories={categories}
+          mainCategory="footwear"
         />
 
         {/* Products Grid */}
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-            <p className="mt-2 text-gray-600">Loading products...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 dark:border-primary-400"></div>
+            <p className="mt-2 text-gray-600 dark:text-gray-400">Loading products...</p>
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No products found matching your criteria</p>
+            <p className="text-gray-500 dark:text-gray-400">No products found matching your criteria</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
