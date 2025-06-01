@@ -57,7 +57,6 @@ const PRODUCT_TYPES = [
   { value: 'bags', label: 'Bags' }
 ];
 
-// Subcategory definitions by main category
 const SUBCATEGORIES = {
   footwear: [
     // Men's Footwear
@@ -252,7 +251,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       brand_id: product.brand?.id || '',
       custom_brand: null,
       tags: product.tags || [],
-      type: product.type || mapCategoryToType(category), // Ensure type is set to a valid value
+      type: product.type || mapCategoryToType(category),
       subcategory: product.subcategory || ''
     }
   });
@@ -263,7 +262,6 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
   const isSpecialCategory = category === 'bridal' || category === 'christmas' || category === 'sale';
   const BrandSelect = isSpecialCategory ? CreatableSelect : Select;
 
-  // Function to map category to product type
   function mapCategoryToType(category: string): 'footwear' | 'clothing' | 'jewelry' | 'beauty' | 'accessories' | 'bags' {
     switch (category) {
       case 'footwear':
@@ -279,11 +277,11 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       case 'bags':
         return 'bags';
       case 'bridal':
-        return 'clothing'; // Default for bridal, can be changed
+        return 'clothing';
       case 'christmas':
-        return 'clothing'; // Default for christmas, can be changed
+        return 'clothing';
       case 'sale':
-        return 'clothing'; // Default for sale, can be changed
+        return 'clothing';
       default:
         return 'clothing';
     }
@@ -297,46 +295,36 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       brand_id: product.brand?.id || '',
       custom_brand: null,
       tags: product.tags || [],
-      type: product.type || mapCategoryToType(category), // Ensure type is set to a valid value
+      type: product.type || mapCategoryToType(category),
       subcategory: product.subcategory || ''
     });
 
-    // Ensure special category is in tags
     if (isSpecialCategory && !product.tags?.includes(category)) {
       setValue('tags', [...(product.tags || []), category]);
     }
   }, [product]);
 
   useEffect(() => {
-    // Update available subcategories when type changes
     const type = selectedType;
     if (type && SUBCATEGORIES[type]) {
-      // Combine predefined subcategories with those from the database
       const predefinedSubcats = SUBCATEGORIES[type];
       const dbSubcats = dbSubcategories.filter(s => s.parent_category === type);
       
-      // Merge them, prioritizing database entries
       const mergedSubcats = [...dbSubcats];
       
-      // Add predefined subcategories that don't exist in the database
       predefinedSubcats.forEach(predef => {
         if (!mergedSubcats.some(s => s.id === predef.id)) {
           mergedSubcats.push(predef);
         }
       });
       
-      // Filter subcategories based on selected gender if applicable
       let filteredSubcats = mergedSubcats;
       if (selectedGender && selectedGender !== 'unisex') {
-        // Filter to show gender-specific and unisex subcategories
         filteredSubcats = mergedSubcats.filter(subcat => {
-          // For predefined subcategories with gender property
           if ('gender' in subcat) {
             return subcat.gender === selectedGender || subcat.gender === 'unisex';
           }
           
-          // For database subcategories or those without gender property
-          // Use naming convention to determine gender relevance
           const id = subcat.id.toLowerCase();
           const genderPrefix = selectedGender === 'men' ? 'mens-' : 
                               selectedGender === 'women' ? 'womens-' : 
@@ -414,19 +402,18 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
     }
   };
 
-  const handleBrandChange = (option: any) => {
-    if (option.__isNew__) {
-      setValue('brand_id', option.value);
+  const handleBrandChange = async (option: any) => {
+    if (option?.__isNew__) {
+      setValue('brand_id', '');
       setValue('custom_brand', option.value);
     } else {
-      setValue('brand_id', option.value);
+      setValue('brand_id', option?.value || '');
       setValue('custom_brand', null);
     }
   };
 
   const handleTagsChange = (selectedOptions: any) => {
     const tags = selectedOptions ? selectedOptions.map((option: any) => option.value) : [];
-    // Ensure special category tag remains if applicable
     if (isSpecialCategory && !tags.includes(category)) {
       tags.push(category);
     }
@@ -436,34 +423,55 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
   const onSubmit = async (formData: any) => {
     setUploading(true);
     try {
-      // Remove nested brand object, images, and other non-column fields
+      let brandId = formData.brand_id;
+
+      if (formData.custom_brand) {
+        const brandSlug = formData.custom_brand
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '');
+
+        const { data: newBrand, error: brandError } = await supabase
+          .from('brands')
+          .insert([{
+            name: formData.custom_brand,
+            slug: brandSlug,
+            category: category,
+            is_active: true
+          }])
+          .select()
+          .single();
+
+        if (brandError) {
+          throw new Error(`Error creating brand: ${brandError.message}`);
+        }
+
+        brandId = newBrand.id;
+      }
+
       const { brand, images: imagesProp, custom_brand, category: categoryObj, ...updateData } = formData;
 
-      // Ensure tags is an array
       updateData.tags = Array.isArray(updateData.tags) ? updateData.tags : [];
 
-      // Ensure special category is in tags
       if (isSpecialCategory && !updateData.tags.includes(category)) {
         updateData.tags.push(category);
       }
 
-      // Make sure type is set correctly based on category
       if (category === 'footwear' || category === 'clothing' || category === 'jewelry' || category === 'beauty') {
         updateData.type = category as any;
       }
 
-      // Update product with clean data
       const { error: updateError } = await supabase
         .from('products')
         .update({
           ...updateData,
+          brand_id: brandId,
           updated_at: new Date().toISOString()
         })
         .eq('id', product.id);
 
       if (updateError) throw updateError;
 
-      // Handle new images
       if (images.length > 0) {
         const imagePromises = images.map(async (file, index) => {
           const fileExt = file.name.split('.').pop();
@@ -503,7 +511,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       onClose();
     } catch (error) {
       console.error('Error updating product:', error);
-      toast.error('Failed to update product');
+      toast.error(error instanceof Error ? error.message : 'Failed to update product');
     } finally {
       setUploading(false);
     }
@@ -543,7 +551,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
                   <select
                     {...register('type', { required: 'Product type is required' })}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                    disabled={!isSpecialCategory} // Disable for regular categories
+                    disabled={!isSpecialCategory}
                   >
                     {PRODUCT_TYPES.map(type => (
                       <option key={type.value} value={type.value}>

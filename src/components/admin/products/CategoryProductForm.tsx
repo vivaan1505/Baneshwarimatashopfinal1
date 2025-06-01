@@ -79,7 +79,6 @@ const PRODUCT_TYPES = [
   { value: 'bags', label: 'Bags' }
 ];
 
-// Subcategory definitions by main category
 const SUBCATEGORIES = {
   footwear: [
     // Men's Footwear
@@ -276,14 +275,13 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
       is_returnable: true,
       gender: 'unisex',
       tags: [],
-      type: mapCategoryToType(category) // Set default type based on category
+      type: mapCategoryToType(category)
     }
   });
 
   const selectedType = watch('type');
   const selectedGender = watch('gender');
 
-  // Function to map category to product type
   function mapCategoryToType(category: string): 'footwear' | 'clothing' | 'jewelry' | 'beauty' | 'accessories' | 'bags' {
     switch (category) {
       case 'footwear':
@@ -299,11 +297,11 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
       case 'bags':
         return 'bags';
       case 'bridal':
-        return 'clothing'; // Default for bridal, can be changed
+        return 'clothing';
       case 'christmas':
-        return 'clothing'; // Default for christmas, can be changed
+        return 'clothing';
       case 'sale':
-        return 'clothing'; // Default for sale, can be changed
+        return 'clothing';
       default:
         return 'clothing';
     }
@@ -317,42 +315,32 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
       fetchBrands();
       fetchSubcategories();
     }
-    // Add special category to tags by default
     if (isSpecialCategory) {
       setValue('tags', [category]);
     }
   }, [category, isOpen]);
 
   useEffect(() => {
-    // Update available subcategories when type changes
     const type = selectedType;
     if (type && SUBCATEGORIES[type]) {
-      // Combine predefined subcategories with those from the database
       const predefinedSubcats = SUBCATEGORIES[type];
       const dbSubcats = dbSubcategories.filter(s => s.parent_category === type);
       
-      // Merge them, prioritizing database entries
       const mergedSubcats = [...dbSubcats];
       
-      // Add predefined subcategories that don't exist in the database
       predefinedSubcats.forEach(predef => {
         if (!mergedSubcats.some(s => s.id === predef.id)) {
           mergedSubcats.push(predef);
         }
       });
       
-      // Filter subcategories based on selected gender if applicable
       let filteredSubcats = mergedSubcats;
       if (selectedGender && selectedGender !== 'unisex') {
-        // Filter to show gender-specific and unisex subcategories
         filteredSubcats = mergedSubcats.filter(subcat => {
-          // For predefined subcategories with gender property
           if ('gender' in subcat) {
             return subcat.gender === selectedGender || subcat.gender === 'unisex';
           }
           
-          // For database subcategories or those without gender property
-          // Use naming convention to determine gender relevance
           const id = subcat.id.toLowerCase();
           const genderPrefix = selectedGender === 'men' ? 'mens-' : 
                               selectedGender === 'women' ? 'womens-' : 
@@ -379,8 +367,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         .order('name');
 
       if (category !== 'christmas' && category !== 'sale') {
-        // For regular categories, filter brands by category
-        // For bridal, we'll show all brands
         if (category !== 'bridal') {
           query = query.eq('category', category);
         }
@@ -416,19 +402,18 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
     }
   };
 
-  const handleBrandChange = (option: any) => {
-    if (option.__isNew__) {
-      setValue('brand_id', option.value);
+  const handleBrandChange = async (option: any) => {
+    if (option?.__isNew__) {
+      setValue('brand_id', '');
       setValue('custom_brand', option.value);
     } else {
-      setValue('brand_id', option.value);
+      setValue('brand_id', option?.value || '');
       setValue('custom_brand', null);
     }
   };
 
   const handleTagsChange = (selectedOptions: any) => {
     const tags = selectedOptions ? selectedOptions.map((option: any) => option.value) : [];
-    // Ensure special category tag remains if applicable
     if (isSpecialCategory && !tags.includes(category)) {
       tags.push(category);
     }
@@ -458,26 +443,52 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
 
     setUploading(true);
     try {
-      // Ensure special category is in tags
+      let brandId = data.brand_id;
+
+      if (data.custom_brand) {
+        const brandSlug = data.custom_brand
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '');
+
+        const { data: newBrand, error: brandError } = await supabase
+          .from('brands')
+          .insert([{
+            name: data.custom_brand,
+            slug: brandSlug,
+            category: category,
+            is_active: true
+          }])
+          .select()
+          .single();
+
+        if (brandError) {
+          throw new Error(`Error creating brand: ${brandError.message}`);
+        }
+
+        brandId = newBrand.id;
+      }
+
       if (isSpecialCategory && !data.tags.includes(category)) {
         data.tags = [...data.tags, category];
       }
 
-      // Make sure type is set correctly based on category
       if (category === 'footwear' || category === 'clothing' || category === 'jewelry' || category === 'beauty') {
         data.type = category as any;
       }
 
-      // Generate slug from name
       const slug = data.name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '');
 
+      const { custom_brand, ...productData } = data;
+
       const { data: product, error: productError } = await supabase
         .from('products')
         .insert([{
-          ...data,
+          ...productData,
+          brand_id: brandId,
           slug,
         }])
         .select()
@@ -522,7 +533,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
       onClose();
     } catch (error) {
       console.error('Error adding product:', error);
-      toast.error('Failed to add product');
+      toast.error(error instanceof Error ? error.message : 'Failed to add product');
     } finally {
       setUploading(false);
     }
@@ -532,6 +543,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
+      
       <div className="flex items-center justify-center min-h-screen px-4">
         <div className="fixed inset-0 bg-black opacity-30" onClick={onClose}></div>
         
@@ -573,7 +585,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                   <select
                     {...register('type', { required: 'Product type is required' })}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                    disabled={!isSpecialCategory} // Disable for regular categories
+                    disabled={!isSpecialCategory}
                   >
                     {PRODUCT_TYPES.map(type => (
                       <option key={type.value} value={type.value}>
