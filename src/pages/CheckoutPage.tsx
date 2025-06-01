@@ -3,10 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useCartStore } from '../stores/cartStore';
 import { useCheckoutStore, ShippingAddress, PaymentMethod } from '../stores/checkoutStore';
+import { supabase } from '../lib/supabase';
+import { useAuthStore } from '../stores/authStore';
 
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
   const { items, getTotal, clearCart } = useCartStore();
+  const { user } = useAuthStore();
   const {
     shippingAddress,
     selectedShippingRate,
@@ -48,6 +51,30 @@ const CheckoutPage: React.FC = () => {
     setLoading(true);
     try {
       setShippingAddress(data);
+      
+      // If user is logged in, remove items from wishlist
+      if (user) {
+        try {
+          // Get product IDs from cart
+          const productIds = items.map(item => item.productId);
+          
+          // Remove these products from the user's wishlist
+          if (productIds.length > 0) {
+            const { error } = await supabase
+              .from('wishlists')
+              .delete()
+              .eq('user_id', user.id)
+              .in('product_id', productIds);
+              
+            if (error) {
+              console.error('Error removing items from wishlist:', error);
+            }
+          }
+        } catch (error) {
+          console.error('Error processing wishlist removal:', error);
+        }
+      }
+      
       // Process payment and create order
       // Clear cart on success
       clearCart();

@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { X, Minus, Plus, ShoppingBag } from 'lucide-react';
 import { useCartStore } from '../../stores/cartStore';
+import { supabase } from '../../lib/supabase';
+import { useAuthStore } from '../../stores/authStore';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -10,8 +12,37 @@ interface CartDrawerProps {
 
 const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
   const { items, removeItem, updateQuantity, getTotal } = useCartStore();
+  const { user } = useAuthStore();
   
   if (!isOpen) return null;
+  
+  const handleCheckout = async () => {
+    // If user is logged in, remove items from wishlist when proceeding to checkout
+    if (user) {
+      try {
+        // Get product IDs from cart
+        const productIds = items.map(item => item.productId);
+        
+        // Remove these products from the user's wishlist
+        if (productIds.length > 0) {
+          const { error } = await supabase
+            .from('wishlists')
+            .delete()
+            .eq('user_id', user.id)
+            .in('product_id', productIds);
+            
+          if (error) {
+            console.error('Error removing items from wishlist:', error);
+          }
+        }
+      } catch (error) {
+        console.error('Error processing wishlist removal:', error);
+      }
+    }
+    
+    // Continue to checkout
+    onClose();
+  };
   
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
@@ -19,7 +50,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
       
       <div className="absolute inset-y-0 right-0 max-w-full flex">
         <div className="relative w-screen max-w-md">
-          <div className="h-full flex flex-col bg-white shadow-xl">
+          <div className="h-full flex flex-col bg-white">
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-6 border-b">
               <h2 className="text-lg font-medium">Shopping Cart</h2>
@@ -95,7 +126,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                 </div>
                 <Link
                   to="/checkout"
-                  onClick={onClose}
+                  onClick={handleCheckout}
                   className="w-full btn-primary text-center"
                 >
                   Checkout
