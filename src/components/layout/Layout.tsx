@@ -24,9 +24,9 @@ const Layout: React.FC = () => {
         .eq('is_active', true)
         .eq('theme', 'default')
         .eq('color_scheme', 'default')
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') {
+      if (error) {
         console.error('Error fetching favicon:', error);
         return;
       }

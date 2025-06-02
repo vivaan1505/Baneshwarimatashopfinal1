@@ -93,9 +93,9 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
         .eq('is_active', true)
         .eq('theme', 'default')
         .eq('color_scheme', 'default')
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') {
+      if (error) {
         console.error('Error fetching logo:', error);
         return;
       }
