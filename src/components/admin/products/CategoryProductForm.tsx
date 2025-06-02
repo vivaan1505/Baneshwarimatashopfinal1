@@ -542,6 +542,29 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
     }
   });
 
+  const generateUniqueSlug = async (baseSlug: string): Promise<string> => {
+    let slug = baseSlug;
+    let counter = 1;
+    let isUnique = false;
+
+    while (!isUnique) {
+      const { data: existingProduct } = await supabase
+        .from('products')
+        .select('id')
+        .eq('slug', slug)
+        .maybeSingle();
+
+      if (!existingProduct) {
+        isUnique = true;
+      } else {
+        slug = `${baseSlug}-${counter}`;
+        counter++;
+      }
+    }
+
+    return slug;
+  };
+
   const onSubmit = async (data: ProductFormData) => {
     const isValid = await trigger();
     if (!isValid) {
@@ -555,9 +578,9 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         .from('products')
         .select('id')
         .eq('sku', data.sku)
-        .single();
+        .maybeSingle();
 
-      if (skuCheckError && skuCheckError.code !== 'PGRST116') { // PGRST116 means no rows returned
+      if (skuCheckError) {
         throw skuCheckError;
       }
 
@@ -566,11 +589,9 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         return;
       }
     } catch (error) {
-      if (error instanceof Error && error.message !== 'PGRST116') {
-        console.error('Error checking SKU:', error);
-        toast.error('Error checking SKU availability. Please try again.');
-        return;
-      }
+      console.error('Error checking SKU:', error);
+      toast.error('Error checking SKU availability. Please try again.');
+      return;
     }
 
     setUploading(true);
@@ -611,10 +632,12 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         data.type = category as any;
       }
 
-      const slug = data.name
+      const baseSlug = data.name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '');
+
+      const uniqueSlug = await generateUniqueSlug(baseSlug);
 
       // Remove custom_brand from data before inserting into products table
       const { custom_brand, ...productData } = data;
@@ -624,7 +647,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         .insert([{
           ...productData,
           brand_id: brandId,
-          slug,
+          slug: uniqueSlug,
         }])
         .select()
         .single();
@@ -639,7 +662,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
           const filePath = `${product.id}/${fileName}`;
 
           const { error: uploadError } = await supabase.storage
-            
             .from('product-images')
             .upload(filePath, file);
 

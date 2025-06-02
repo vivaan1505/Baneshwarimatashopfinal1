@@ -262,16 +262,40 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
     }
   };
 
+  const generateUniqueSlug = async (baseSlug: string): Promise<string> => {
+    let slug = baseSlug;
+    let counter = 1;
+    let isUnique = false;
+
+    while (!isUnique) {
+      const { data: existingProduct } = await supabase
+        .from('products')
+        .select('id')
+        .eq('slug', slug)
+        .maybeSingle();
+
+      if (!existingProduct) {
+        isUnique = true;
+      } else {
+        slug = `${baseSlug}-${counter}`;
+        counter++;
+      }
+    }
+
+    return slug;
+  };
+
   const processBatch = async (batch: any[], stats: any) => {
     for (const item of batch) {
       try {
-        // Generate slug from name if not provided
-        if (!item.slug && item.name) {
-          item.slug = item.name
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/(^-|-$)/g, '');
-        }
+        // Generate base slug from name if not provided
+        const baseSlug = item.slug || item.name
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)/g, '');
+
+        // Generate unique slug
+        const uniqueSlug = await generateUniqueSlug(baseSlug);
 
         // Set type based on category if not provided
         if (!item.type && category) {
@@ -292,6 +316,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
         // Convert string values to appropriate types
         const processedItem = {
           ...item,
+          slug: uniqueSlug,
           price: item.price ? parseFloat(item.price) : null,
           compare_at_price: item.compare_at_price ? parseFloat(item.compare_at_price) : null,
           stock_quantity: item.stock_quantity ? parseInt(item.stock_quantity) : null,
@@ -302,22 +327,13 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
           materials: typeof item.materials === 'string' ? item.materials.split(',').map((material: string) => material.trim()) : item.materials
         };
 
-        // Check if product exists by SKU or slug
+        // Check if product exists by SKU
         let existingProduct = null;
         if (item.sku) {
           const { data } = await supabase
             .from('products')
             .select('id')
             .eq('sku', item.sku)
-            .maybeSingle();
-          existingProduct = data;
-        }
-
-        if (!existingProduct && item.slug) {
-          const { data } = await supabase
-            .from('products')
-            .select('id')
-            .eq('slug', item.slug)
             .maybeSingle();
           existingProduct = data;
         }
@@ -711,6 +727,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
                                 className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
                               >
                                 {header}
+                              
                               </th>
                             ))}
                           </tr>
