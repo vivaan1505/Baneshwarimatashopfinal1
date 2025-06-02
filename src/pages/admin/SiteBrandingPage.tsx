@@ -235,17 +235,25 @@ const SiteBrandingPage: React.FC = () => {
         
       if (deleteError) throw deleteError;
       
-      // 2. Delete from storage (extract path from URL)
-      const path = url.split('/').slice(-3).join('/');
-      if (path) {
-        const { error: storageError } = await supabase.storage
-          .from('site-assets')
-          .remove([path]);
-          
-        if (storageError) {
-          console.error('Error deleting file from storage:', storageError);
-          // Continue anyway as the database record is deleted
+      // 2. Try to extract path from URL and delete from storage
+      try {
+        // Extract the path from the URL - this is a best effort approach
+        // The URL format might be different depending on your storage configuration
+        const urlObj = new URL(url);
+        const pathParts = urlObj.pathname.split('/');
+        // Look for the 'site-assets' part in the path
+        const siteAssetsIndex = pathParts.findIndex(part => part === 'site-assets');
+        if (siteAssetsIndex !== -1 && pathParts.length > siteAssetsIndex + 1) {
+          const storagePath = pathParts.slice(siteAssetsIndex + 1).join('/');
+          if (storagePath) {
+            await supabase.storage
+              .from('site-assets')
+              .remove([storagePath]);
+          }
         }
+      } catch (storageError) {
+        console.error('Error deleting file from storage:', storageError);
+        // Continue anyway as the database record is deleted
       }
       
       toast.success('Asset deleted successfully');
@@ -543,6 +551,11 @@ const SiteBrandingPage: React.FC = () => {
                             src={asset.url}
                             alt={asset.name}
                             className="max-h-full max-w-full object-contain"
+                            onError={(e) => {
+                              // Handle image load error
+                              console.error(`Failed to load image: ${asset.url}`);
+                              (e.target as HTMLImageElement).src = 'https://via.placeholder.com/200x100?text=Image+Not+Found';
+                            }}
                           />
                         </div>
                         <div className="p-4 bg-white">
@@ -597,7 +610,12 @@ const SiteBrandingPage: React.FC = () => {
                           <img
                             src={asset.url}
                             alt={asset.name}
-                            className="max-h-16 max-w-16 object-contain"
+                            className="h-16 w-16 object-contain"
+                            onError={(e) => {
+                              // Handle image load error
+                              console.error(`Failed to load favicon: ${asset.url}`);
+                              (e.target as HTMLImageElement).src = 'https://via.placeholder.com/64?text=Favicon';
+                            }}
                           />
                         </div>
                         <div className="p-4 bg-white">
@@ -617,6 +635,9 @@ const SiteBrandingPage: React.FC = () => {
                                   </span>
                                 )}
                               </div>
+                              <p className="text-xs text-gray-500 mt-1 break-all">
+                                {asset.url}
+                              </p>
                             </div>
                             <div className="flex space-x-2">
                               {!asset.is_active && (
