@@ -216,9 +216,9 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
               onClick={handleNavClick}
             >
               <Heart className="mr-3 h-5 w-5" />
-              Wishlist
+              <span className="flex-1">Wishlist</span>
               {wishlistCount > 0 && (
-                <span className="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold text-white bg-secondary-600 rounded-full dark:bg-secondary-500">
+                <span className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold text-white bg-secondary-600 rounded-full dark:bg-secondary-500">
                   {wishlistCount}
                 </span>
               )}

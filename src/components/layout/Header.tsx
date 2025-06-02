@@ -177,7 +177,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
                   <motion.span 
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-secondary-600 rounded-full dark:bg-secondary-500"
+                    className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-secondary-600 rounded-full dark:bg-secondary-500"
                   >
                     {wishlistCount}
                   </motion.span>
@@ -293,7 +293,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
                 <motion.span 
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-secondary-600 rounded-full dark:bg-secondary-500"
+                  className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-secondary-600 rounded-full dark:bg-secondary-500"
                 >
                   {cartItemsCount}
                 </motion.span>
