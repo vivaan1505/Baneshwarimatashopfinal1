@@ -11,6 +11,7 @@ import ThemeToggle from '../theme/ThemeToggle';
 import ThemeManagerButton from '../theme/ThemeManagerButton';
 import SearchOverlay from '../common/SearchOverlay';
 import { supabase } from '../../lib/supabase';
+import { motion } from 'framer-motion';
 
 interface HeaderProps {
   toggleMobileMenu: () => void;
@@ -89,7 +90,10 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
   };
 
   return (
-    <header 
+    <motion.header 
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-300",
         isScrolled ? "bg-white shadow-md dark:bg-gray-900" : "bg-transparent"
@@ -97,27 +101,39 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
     >
       <div className="container-custom">
         {/* Top announcement bar */}
-        <div className="bg-primary-800 text-white text-center py-2 text-sm dark:bg-primary-900">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="bg-primary-800 text-white text-center py-2 text-sm dark:bg-primary-900"
+        >
           Free shipping on all orders over $75 | Easy returns within 30 days
-        </div>
+        </motion.div>
         
         {/* Main header */}
         <div className="flex items-center justify-between py-4">
           {/* Mobile menu toggle */}
           <div className="lg:hidden">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               onClick={toggleMobileMenu}
               className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400 focus:outline-none"
               aria-label="Toggle mobile menu"
             >
               <MenuIcon size={24} />
-            </button>
+            </motion.button>
           </div>
           
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" onClick={handleLogoClick} className="flex items-center">
-              <span className="font-heading text-2xl font-bold text-primary-800 dark:text-primary-400">MinddShopp</span>
+              <motion.span 
+                whileHover={{ scale: 1.05 }}
+                className="font-heading text-2xl font-bold text-primary-800 dark:text-primary-400"
+              >
+                MinddShopp
+              </motion.span>
             </Link>
           </div>
           
@@ -128,36 +144,46 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
           
           {/* Right side icons */}
           <div className="flex items-center space-x-4">
-            <button 
+            <motion.button 
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setSearchOpen(!searchOpen)}
               className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400 focus:outline-none"
               aria-label="Search"
             >
               <Search size={20} />
-            </button>
+            </motion.button>
             
-            <Link 
-              to="/coupons" 
-              onClick={scrollToTop}
-              className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400"
-              title="Coupons"
-            >
-              <Ticket size={20} />
-            </Link>
+            <motion.div whileHover={{ scale: 1.1 }}>
+              <Link 
+                to="/coupons" 
+                onClick={scrollToTop}
+                className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400"
+                title="Coupons"
+              >
+                <Ticket size={20} />
+              </Link>
+            </motion.div>
             
-            <Link 
-              to="/wishlist" 
-              onClick={scrollToTop}
-              className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400 relative"
-              title="Wishlist"
-            >
-              <Heart size={20} />
-              {wishlistCount > 0 && (
-                <span className="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-secondary-600 rounded-full dark:bg-secondary-500">
-                  {wishlistCount}
-                </span>
-              )}
-            </Link>
+            <motion.div whileHover={{ scale: 1.1 }}>
+              <Link 
+                to="/wishlist" 
+                onClick={scrollToTop}
+                className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400 relative"
+                title="Wishlist"
+              >
+                <Heart size={20} />
+                {wishlistCount > 0 && (
+                  <motion.span 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-secondary-600 rounded-full dark:bg-secondary-500"
+                  >
+                    {wishlistCount}
+                  </motion.span>
+                )}
+              </Link>
+            </motion.div>
             
             {/* Theme toggle */}
             <ThemeToggle />
@@ -167,17 +193,24 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
             
             {/* User Profile Menu */}
             <div className="relative profile-menu-container">
-              <button
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                 className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400 focus:outline-none"
                 aria-label="User menu"
                 aria-expanded={profileMenuOpen}
               >
                 <User size={20} />
-              </button>
+              </motion.button>
 
               {profileMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 dark:bg-gray-800 dark:ring-gray-700">
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 dark:bg-gray-800 dark:ring-gray-700"
+                >
                   {user ? (
                     <>
                       <div className="px-4 py-2 text-sm text-gray-700 border-b dark:text-gray-300 dark:border-gray-700">
@@ -244,22 +277,28 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
                       </Link>
                     </>
                   )}
-                </div>
+                </motion.div>
               )}
             </div>
             
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setCartOpen(true)}
               className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400 relative"
               aria-label="Shopping cart"
             >
               <ShoppingBag size={20} />
               {cartItemsCount > 0 && (
-                <span className="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-secondary-600 rounded-full dark:bg-secondary-500">
+                <motion.span 
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-secondary-600 rounded-full dark:bg-secondary-500"
+                >
                   {cartItemsCount}
-                </span>
+                </motion.span>
               )}
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>
@@ -269,7 +308,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
 
       {/* Cart Drawer */}
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
-    </header>
+    </motion.header>
   );
 };
 

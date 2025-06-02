@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Youtube, Pointer as Pinterest, Mail, Phone, MapPin } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Footer: React.FC = () => {
   return (
@@ -9,91 +10,136 @@ const Footer: React.FC = () => {
       <div className="container-custom py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Column 1: About */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
             <h3 className="text-xl font-heading text-white mb-4">MinddShopp</h3>
             <p className="mb-4 text-sm leading-relaxed">
               Premium destination for footwear, clothing, jewelry, and beauty products. Discover our exclusive bridal boutique and seasonal collections.
             </p>
             <div className="flex space-x-4 mt-4">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors" aria-label="Facebook">
+              <motion.a 
+                href="#" 
+                className="text-gray-400 hover:text-white transition-colors" 
+                aria-label="Facebook"
+                whileHover={{ y: -3 }}
+              >
                 <Facebook size={20} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors" aria-label="Twitter">
+              </motion.a>
+              <motion.a 
+                href="#" 
+                className="text-gray-400 hover:text-white transition-colors" 
+                aria-label="Twitter"
+                whileHover={{ y: -3 }}
+              >
                 <Twitter size={20} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors" aria-label="Instagram">
+              </motion.a>
+              <motion.a 
+                href="#" 
+                className="text-gray-400 hover:text-white transition-colors" 
+                aria-label="Instagram"
+                whileHover={{ y: -3 }}
+              >
                 <Instagram size={20} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors" aria-label="Youtube">
+              </motion.a>
+              <motion.a 
+                href="#" 
+                className="text-gray-400 hover:text-white transition-colors" 
+                aria-label="Youtube"
+                whileHover={{ y: -3 }}
+              >
                 <Youtube size={20} />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors" aria-label="Pinterest">
+              </motion.a>
+              <motion.a 
+                href="#" 
+                className="text-gray-400 hover:text-white transition-colors" 
+                aria-label="Pinterest"
+                whileHover={{ y: -3 }}
+              >
                 <Pinterest size={20} />
-              </a>
+              </motion.a>
             </div>
-          </div>
+          </motion.div>
           
           {/* Column 2: Shopping */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
             <h4 className="text-lg font-heading text-white mb-4">Shopping</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/footwear" className="hover:text-white transition-colors">Footwear</Link>
+                <Link to="/footwear" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Footwear</Link>
               </li>
               <li>
-                <Link to="/clothing" className="hover:text-white transition-colors">Clothing</Link>
+                <Link to="/clothing" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Clothing</Link>
               </li>
               <li>
-                <Link to="/jewelry" className="hover:text-white transition-colors">Jewelry</Link>
+                <Link to="/jewelry" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Jewelry</Link>
               </li>
               <li>
-                <Link to="/beauty" className="hover:text-white transition-colors">Beauty</Link>
+                <Link to="/beauty" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Beauty</Link>
               </li>
               <li>
-                <Link to="/men" className="hover:text-white transition-colors">Men</Link>
+                <Link to="/men" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Men</Link>
               </li>
               <li>
-                <Link to="/women" className="hover:text-white transition-colors">Women</Link>
+                <Link to="/women" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Women</Link>
               </li>
               <li>
-                <Link to="/kids" className="hover:text-white transition-colors">Kids</Link>
+                <Link to="/kids" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Kids</Link>
               </li>
               <li>
-                <Link to="/bridal-boutique" className="hover:text-white transition-colors">Bridal Boutique</Link>
+                <Link to="/bridal-boutique" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Bridal Boutique</Link>
               </li>
               <li>
-                <Link to="/festive-store" className="hover:text-white transition-colors">Festive Store</Link>
+                <Link to="/festive-store" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Festive Store</Link>
               </li>
             </ul>
-          </div>
+          </motion.div>
           
           {/* Column 3: Information */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             <h4 className="text-lg font-heading text-white mb-4">Information</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/about" className="hover:text-white transition-colors">About Us</Link>
+                <Link to="/about" className="hover:text-white transition-colors hover:translate-x-1 inline-block">About Us</Link>
               </li>
               <li>
-                <Link to="/careers" className="hover:text-white transition-colors">Careers</Link>
+                <Link to="/careers" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Careers</Link>
               </li>
               <li>
-                <Link to="/blog" className="hover:text-white transition-colors">Blog</Link>
+                <Link to="/blog" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Blog</Link>
               </li>
               <li>
-                <Link to="/contact" className="hover:text-white transition-colors">Contact Us</Link>
+                <Link to="/contact" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Contact Us</Link>
               </li>
               <li>
-                <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
+                <Link to="/privacy-policy" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Privacy Policy</Link>
               </li>
               <li>
-                <Link to="/terms-conditions" className="hover:text-white transition-colors">Terms & Conditions</Link>
+                <Link to="/terms-conditions" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Terms & Conditions</Link>
               </li>
             </ul>
-          </div>
+          </motion.div>
           
           {/* Column 4: Contact */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
             <h4 className="text-lg font-heading text-white mb-4">Contact Us</h4>
             <ul className="space-y-3 text-sm">
               <li className="flex items-start space-x-3">
@@ -168,7 +214,7 @@ const Footer: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
       

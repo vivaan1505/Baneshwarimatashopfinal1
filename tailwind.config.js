@@ -67,6 +67,12 @@ export default {
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.5s ease-in-out',
+        'slide-right': 'slideInRight 0.5s ease-in-out',
+        'slide-left': 'slideInLeft 0.5s ease-in-out',
+        'pulse-slow': 'pulse 2s ease-in-out infinite',
+        'shimmer': 'shimmer 1.5s infinite',
+        'float': 'float 3s ease-in-out infinite',
+        'spin-slow': 'spin 3s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -77,6 +83,22 @@ export default {
           '0%': { transform: 'translateY(20px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+      },
+      transitionProperty: {
+        'height': 'height',
+        'spacing': 'margin, padding',
+      },
+      transitionDuration: {
+        '400': '400ms',
+        '2000': '2000ms',
+      },
+      transitionTimingFunction: {
+        'bounce-in': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+        'bounce-out': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
       },
     },
   },

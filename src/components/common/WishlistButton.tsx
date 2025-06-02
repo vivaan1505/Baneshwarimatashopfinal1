@@ -3,6 +3,7 @@ import { Heart } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuthStore } from '../../stores/authStore';
 import { toast } from 'react-hot-toast';
+import { motion } from 'framer-motion';
 
 interface WishlistButtonProps {
   productId: string;
@@ -129,9 +130,11 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
   };
 
   return (
-    <button
+    <motion.button
       onClick={toggleWishlist}
       disabled={loading}
+      whileTap={{ scale: 0.9 }}
+      whileHover={{ scale: 1.1 }}
       className={`flex items-center justify-center ${
         isInWishlist 
           ? 'text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300' 
@@ -141,14 +144,14 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
     >
       <Heart 
         size={iconSize} 
-        className={isInWishlist ? 'fill-current' : ''} 
+        className={`${isInWishlist ? 'fill-current' : ''} ${isInWishlist && !loading ? 'animate-pulse-slow' : ''}`} 
       />
       {showText && (
         <span className="ml-2">
           {isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
         </span>
       )}
-    </button>
+    </motion.button>
   );
 };
 

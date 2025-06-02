@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware';
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type SeasonalTheme = 'default' | 'christmas' | 'summer' | 'autumn' | 'spring';
 export type ColorScheme = 'default' | 'blue' | 'green' | 'purple' | 'pink';
-export type FontFamily = 'default' | 'serif' | 'sans-serif' | 'monospace';
+export type FontFamily = 'default' | 'serif' | 'sans-serif' | 'monospace' | 'cormorant' | 'montserrat' | 'poppins' | 'lora';
 export type ViewMode = 'desktop' | 'mobile' | 'tablet';
 export type LayoutType = 'default' | 'featured-collections' | 'hero-centered' | 'minimal';
 

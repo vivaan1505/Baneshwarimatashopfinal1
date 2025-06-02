@@ -36,7 +36,16 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     root.classList.add(`colors-${colorScheme}`);
 
     // Handle font families
-    root.classList.remove('font-default', 'font-serif', 'font-sans-serif', 'font-monospace');
+    root.classList.remove(
+      'font-default', 
+      'font-serif', 
+      'font-sans-serif', 
+      'font-monospace', 
+      'font-cormorant', 
+      'font-montserrat', 
+      'font-poppins', 
+      'font-lora'
+    );
     root.classList.add(`font-${fontFamily}`);
 
     // Handle view mode (for preview purposes)

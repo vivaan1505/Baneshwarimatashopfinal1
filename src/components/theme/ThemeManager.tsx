@@ -60,7 +60,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
         <div className="relative bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl shadow-xl">
           <div className="flex justify-between items-center p-6 border-b dark:border-gray-700">
             <h2 className="text-xl font-medium dark:text-white">Theme & Layout Manager</h2>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 transition-colors">
               <X size={24} />
             </button>
           </div>
@@ -73,7 +73,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                   activeTab === 'theme'
                     ? 'text-primary-600 border-b-2 border-primary-600 dark:text-primary-400 dark:border-primary-400'
                     : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-                }`}
+                } transition-colors`}
                 onClick={() => setActiveTab('theme')}
               >
                 <div className="flex items-center">
@@ -86,7 +86,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                   activeTab === 'layout'
                     ? 'text-primary-600 border-b-2 border-primary-600 dark:text-primary-400 dark:border-primary-400'
                     : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-                }`}
+                } transition-colors`}
                 onClick={() => setActiveTab('layout')}
               >
                 <div className="flex items-center">
@@ -108,7 +108,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         mode === 'light'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <Sun className={`h-6 w-6 mb-2 ${mode === 'light' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span className={`text-sm ${mode === 'light' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Light</span>
@@ -119,7 +119,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         mode === 'dark'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <Moon className={`h-6 w-6 mb-2 ${mode === 'dark' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span className={`text-sm ${mode === 'dark' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Dark</span>
@@ -130,7 +130,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         mode === 'system'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <Monitor className={`h-6 w-6 mb-2 ${mode === 'system' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span className={`text-sm ${mode === 'system' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>System</span>
@@ -148,7 +148,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         seasonalTheme === 'default'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <Palette className={`h-6 w-6 mb-2 ${seasonalTheme === 'default' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span className={`text-sm ${seasonalTheme === 'default' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Default</span>
@@ -159,7 +159,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         seasonalTheme === 'christmas'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <Snowflake className={`h-6 w-6 mb-2 ${seasonalTheme === 'christmas' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span className={`text-sm ${seasonalTheme === 'christmas' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Christmas</span>
@@ -170,7 +170,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         seasonalTheme === 'summer'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <SummerIcon className={`h-6 w-6 mb-2 ${seasonalTheme === 'summer' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span className={`text-sm ${seasonalTheme === 'summer' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Summer</span>
@@ -181,7 +181,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         seasonalTheme === 'autumn'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <Leaf className={`h-6 w-6 mb-2 ${seasonalTheme === 'autumn' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span className={`text-sm ${seasonalTheme === 'autumn' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Autumn</span>
@@ -192,7 +192,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         seasonalTheme === 'spring'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <Flower className={`h-6 w-6 mb-2 ${seasonalTheme === 'spring' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span className={`text-sm ${seasonalTheme === 'spring' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Spring</span>
@@ -210,7 +210,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         colorScheme === 'default'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <div className="w-6 h-6 rounded-full bg-primary-600 mb-2"></div>
                       <span className={`text-sm ${colorScheme === 'default' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Default</span>
@@ -221,7 +221,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         colorScheme === 'blue'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <div className="w-6 h-6 rounded-full bg-blue-600 mb-2"></div>
                       <span className={`text-sm ${colorScheme === 'blue' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Blue</span>
@@ -232,7 +232,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         colorScheme === 'green'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <div className="w-6 h-6 rounded-full bg-green-600 mb-2"></div>
                       <span className={`text-sm ${colorScheme === 'green' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Green</span>
@@ -243,7 +243,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         colorScheme === 'purple'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <div className="w-6 h-6 rounded-full bg-purple-600 mb-2"></div>
                       <span className={`text-sm ${colorScheme === 'purple' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Purple</span>
@@ -254,7 +254,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         colorScheme === 'pink'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <div className="w-6 h-6 rounded-full bg-pink-600 mb-2"></div>
                       <span className={`text-sm ${colorScheme === 'pink' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Pink</span>
@@ -272,7 +272,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         fontFamily === 'default'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <Type className={`h-6 w-6 mb-2 ${fontFamily === 'default' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span className={`text-sm ${fontFamily === 'default' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Default</span>
@@ -283,7 +283,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         fontFamily === 'serif'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <Type className={`h-6 w-6 mb-2 ${fontFamily === 'serif' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span className={`text-sm font-serif ${fontFamily === 'serif' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Serif</span>
@@ -294,7 +294,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         fontFamily === 'sans-serif'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <Type className={`h-6 w-6 mb-2 ${fontFamily === 'sans-serif' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span className={`text-sm font-sans ${fontFamily === 'sans-serif' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Sans-serif</span>
@@ -305,10 +305,61 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         fontFamily === 'monospace'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <Type className={`h-6 w-6 mb-2 ${fontFamily === 'monospace' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span className={`text-sm font-mono ${fontFamily === 'monospace' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Monospace</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Additional Font Options */}
+                <div>
+                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Specialty Fonts</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <button
+                      onClick={() => setFontFamily('cormorant')}
+                      className={`p-4 rounded-lg border ${
+                        fontFamily === 'cormorant'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Type className={`h-6 w-6 mb-2 ${fontFamily === 'cormorant' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span style={{fontFamily: 'Cormorant Garamond'}} className={`text-sm ${fontFamily === 'cormorant' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Cormorant</span>
+                    </button>
+                    <button
+                      onClick={() => setFontFamily('montserrat')}
+                      className={`p-4 rounded-lg border ${
+                        fontFamily === 'montserrat'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Type className={`h-6 w-6 mb-2 ${fontFamily === 'montserrat' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span style={{fontFamily: 'Montserrat'}} className={`text-sm ${fontFamily === 'montserrat' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Montserrat</span>
+                    </button>
+                    <button
+                      onClick={() => setFontFamily('poppins')}
+                      className={`p-4 rounded-lg border ${
+                        fontFamily === 'poppins'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Type className={`h-6 w-6 mb-2 ${fontFamily === 'poppins' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span style={{fontFamily: 'Poppins'}} className={`text-sm ${fontFamily === 'poppins' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Poppins</span>
+                    </button>
+                    <button
+                      onClick={() => setFontFamily('lora')}
+                      className={`p-4 rounded-lg border ${
+                        fontFamily === 'lora'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Type className={`h-6 w-6 mb-2 ${fontFamily === 'lora' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span style={{fontFamily: 'Lora'}} className={`text-sm ${fontFamily === 'lora' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Lora</span>
                     </button>
                   </div>
                 </div>
@@ -327,7 +378,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         viewMode === 'desktop'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <Desktop className={`h-6 w-6 mb-2 ${viewMode === 'desktop' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span className={`text-sm ${viewMode === 'desktop' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Desktop</span>
@@ -338,7 +389,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         viewMode === 'tablet'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <Tablet className={`h-6 w-6 mb-2 ${viewMode === 'tablet' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span className={`text-sm ${viewMode === 'tablet' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Tablet</span>
@@ -349,7 +400,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         viewMode === 'mobile'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center transition-all hover:shadow-md`}
                     >
                       <Smartphone className={`h-6 w-6 mb-2 ${viewMode === 'mobile' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span className={`text-sm ${viewMode === 'mobile' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Mobile</span>
@@ -367,7 +418,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         homeLayout === 'default'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center relative`}
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
                     >
                       <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
                         <div className="absolute top-0 left-0 right-0 h-8 bg-gray-300 dark:bg-gray-600"></div>
@@ -385,7 +436,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         homeLayout === 'featured-collections'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center relative`}
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
                     >
                       <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
                         <div className="absolute top-0 left-0 right-0 h-6 bg-gray-300 dark:bg-gray-600"></div>
@@ -403,7 +454,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         homeLayout === 'hero-centered'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center relative`}
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
                     >
                       <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
                         <div className="absolute inset-0 flex items-center justify-center">
@@ -421,7 +472,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         homeLayout === 'minimal'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center relative`}
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
                     >
                       <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
                         <div className="absolute top-4 left-4 right-4 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
@@ -440,7 +491,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
             <div className="mt-6 flex justify-between">
               <button
                 onClick={resetTheme}
-                className="text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                className="text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
               >
                 Reset to Defaults
               </button>

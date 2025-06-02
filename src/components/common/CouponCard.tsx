@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Copy, Check, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { motion } from 'framer-motion';
 
 interface CouponCardProps {
   coupon: {
@@ -55,7 +56,13 @@ const CouponCard: React.FC<CouponCardProps> = ({ coupon }) => {
   const isExternalLink = shopNowLink.startsWith('http');
 
   return (
-    <div className="bg-white rounded-lg shadow-sm overflow-hidden dark:bg-gray-800">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      whileHover={{ y: -5 }}
+      className="bg-white rounded-lg shadow-sm overflow-hidden dark:bg-gray-800"
+    >
       <div className="p-6">
         <div className="flex items-center mb-4">
           {coupon.brand?.logo_url && (
@@ -67,8 +74,8 @@ const CouponCard: React.FC<CouponCardProps> = ({ coupon }) => {
             />
           )}
           <div className="ml-3">
-            <h3 className="font-medium dark:text-white">{coupon.brand?.name || 'Special Offer'}</h3>
-            <p className="text-sm text-gray-500 capitalize dark:text-gray-400">
+            <h3 className="font-medium text-base dark:text-white">{coupon.brand?.name || 'Special Offer'}</h3>
+            <p className="text-xs text-gray-500 capitalize dark:text-gray-400">
               {coupon.brand?.category ? coupon.brand.category.replace('-', ' ') : 'General'}
             </p>
           </div>
@@ -80,10 +87,10 @@ const CouponCard: React.FC<CouponCardProps> = ({ coupon }) => {
               ? `${coupon.discount_value}% OFF`
               : `$${coupon.discount_value} OFF`}
           </div>
-          <p className="text-gray-600 dark:text-gray-300">{coupon.description}</p>
+          <p className="text-gray-600 text-sm dark:text-gray-300">{coupon.description}</p>
         </div>
 
-        <div className="space-y-2 text-sm text-gray-500 mb-4 dark:text-gray-400">
+        <div className="space-y-2 text-xs text-gray-500 mb-4 dark:text-gray-400">
           {coupon.minimum_purchase > 0 && (
             <p>Min. Purchase: ${coupon.minimum_purchase}</p>
           )}
@@ -97,13 +104,13 @@ const CouponCard: React.FC<CouponCardProps> = ({ coupon }) => {
           >
             {copied ? (
               <>
-                <Check size={18} />
-                Copied!
+                <Check size={18} className="animate-pulse" />
+                <span className="font-mono">Copied!</span>
               </>
             ) : (
               <>
-                <Copy size={18} />
-                {coupon.code}
+                <Copy size={18} className="group-hover:rotate-12 transition-transform" />
+                <span className="font-mono tracking-wide">{coupon.code}</span>
               </>
             )}
           </button>
@@ -113,7 +120,7 @@ const CouponCard: React.FC<CouponCardProps> = ({ coupon }) => {
               href={shopNowLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-1 btn-outline dark:border-gray-600 dark:text-gray-300"
+              className="flex items-center justify-center gap-1 btn-outline hover-lift"
             >
               <ExternalLink size={18} />
               Shop Now
@@ -121,7 +128,7 @@ const CouponCard: React.FC<CouponCardProps> = ({ coupon }) => {
           ) : (
             <Link 
               to={shopNowLink}
-              className="flex items-center justify-center gap-1 btn-outline dark:border-gray-600 dark:text-gray-300"
+              className="flex items-center justify-center gap-1 btn-outline hover-lift"
             >
               <ExternalLink size={18} />
               Shop Now
@@ -129,7 +136,7 @@ const CouponCard: React.FC<CouponCardProps> = ({ coupon }) => {
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -20,27 +20,27 @@
   }
   
   h1 {
-    @apply text-4xl md:text-5xl leading-tight;
-  }
-  
-  h2 {
     @apply text-3xl md:text-4xl leading-tight;
   }
   
+  h2 {
+    @apply text-2xl md:text-3xl leading-tight;
+  }
+  
   h3 {
-    @apply text-2xl md:text-3xl leading-snug;
+    @apply text-xl md:text-2xl leading-snug;
   }
   
   h4 {
-    @apply text-xl md:text-2xl;
-  }
-  
-  h5 {
     @apply text-lg md:text-xl;
   }
   
-  h6 {
+  h5 {
     @apply text-base md:text-lg;
+  }
+  
+  h6 {
+    @apply text-sm md:text-base;
   }
 
   /* Seasonal Theme Variations */
@@ -141,6 +141,27 @@
     --font-family-sans: 'Courier New', monospace;
   }
 
+  /* Additional Font Options */
+  .font-cormorant {
+    --font-family-heading: 'Cormorant Garamond', serif;
+    --font-family-sans: 'Cormorant Garamond', serif;
+  }
+
+  .font-montserrat {
+    --font-family-heading: 'Montserrat', sans-serif;
+    --font-family-sans: 'Montserrat', sans-serif;
+  }
+
+  .font-poppins {
+    --font-family-heading: 'Poppins', sans-serif;
+    --font-family-sans: 'Poppins', sans-serif;
+  }
+
+  .font-lora {
+    --font-family-heading: 'Lora', serif;
+    --font-family-sans: 'Lora', serif;
+  }
+
   /* View Mode Previews */
   .view-mobile #root {
     @apply mx-auto max-w-sm border-x border-gray-200 dark:border-gray-700 min-h-screen;
@@ -153,7 +174,7 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center px-6 py-2 rounded-md font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+    @apply inline-flex items-center justify-center px-6 py-2 rounded-md font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 transform hover:scale-[1.02] active:scale-[0.98];
   }
   
   .btn-primary {
@@ -182,15 +203,15 @@
   }
   
   .nav-link {
-    @apply relative inline-block px-2 py-1 text-gray-700 hover:text-primary-700 transition-colors duration-200 dark:text-gray-300 dark:hover:text-primary-400;
+    @apply relative inline-block px-2 py-1 text-gray-700 hover:text-primary-700 transition-colors duration-300 dark:text-gray-300 dark:hover:text-primary-400 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-primary-600 after:transition-all after:duration-300 hover:after:w-full;
   }
   
   .nav-link-active {
-    @apply text-primary-700 font-medium dark:text-primary-400;
+    @apply text-primary-700 font-medium dark:text-primary-400 after:w-full after:h-0.5 after:bg-primary-600;
   }
   
   .card {
-    @apply bg-white rounded-lg shadow-md overflow-hidden transition-shadow duration-300 hover:shadow-lg dark:bg-gray-800 dark:shadow-gray-900/30;
+    @apply bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg dark:bg-gray-800 dark:shadow-gray-900/30 hover:translate-y-[-3px];
   }
   
   .badge {
@@ -247,6 +268,115 @@ img.lazyloading {
 img.lazyloaded {
   opacity: 1;
   animation: fadeIn 0.5s ease-in;
+}
+
+/* Enhanced animations */
+@keyframes slideInUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Animation classes */
+.animate-slide-up {
+  animation: slideInUp 0.6s ease forwards;
+}
+
+.animate-slide-right {
+  animation: slideInRight 0.6s ease forwards;
+}
+
+.animate-slide-left {
+  animation: slideInLeft 0.6s ease forwards;
+}
+
+.animate-pulse-slow {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Hover effects */
+.hover-lift {
+  transition: transform 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+  transform: translateY(-2px);
+}
+
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.hover-rotate {
+  transition: transform 0.3s ease;
+}
+
+.hover-rotate:hover {
+  transform: rotate(5deg);
 }
 
 /* Optimized scrollbar for dark mode */
