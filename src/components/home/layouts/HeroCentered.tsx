@@ -3,12 +3,18 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import FeaturedProducts from '../FeaturedProducts';
 import BlogPreview from '../BlogPreview';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Autoplay } from 'swiper/modules';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const HeroCentered: React.FC = () => {
   return (
     <div>
       {/* Hero Section with Centered Content */}
-      <section className="relative py-24 md:py-32 bg-gradient-to-r from-primary-900 to-primary-800 text-white">
+      <section className="relative py-24 md:py-32 bg-gradient-to-r from-primary-900 to-primary-800 text-white dark:from-primary-900/90 dark:to-primary-800/90">
         <div className="absolute inset-0 opacity-20">
           <img 
             src="https://images.pexels.com/photos/934070/pexels-photo-934070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
@@ -76,51 +82,112 @@ const HeroCentered: React.FC = () => {
             <h2 className="font-heading text-3xl md:text-4xl font-medium mb-4 dark:text-white">Shop by Category</h2>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <Link to="/footwear" className="group">
-              <div className="aspect-square rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg mx-auto w-40 h-40 md:w-48 md:h-48">
-                <img 
-                  src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                  alt="Footwear" 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-              </div>
-              <h3 className="text-center mt-4 text-lg font-medium dark:text-white">Footwear</h3>
-            </Link>
+          <Swiper
+            modules={[Pagination, Autoplay]}
+            pagination={{ 
+              clickable: true,
+              el: '.category-pagination'
+            }}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+            breakpoints={{
+              640: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+              },
+              768: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+              },
+              1024: {
+                slidesPerView: 4,
+                spaceBetween: 40,
+              },
+            }}
+            className="pb-12"
+          >
+            <SwiperSlide>
+              <Link to="/footwear" className="group block text-center">
+                <div className="aspect-square rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg mx-auto w-40 h-40 md:w-48 md:h-48">
+                  <img 
+                    src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                    alt="Footwear" 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+                <h3 className="text-center mt-4 text-lg font-medium dark:text-white">Footwear</h3>
+              </Link>
+            </SwiperSlide>
             
-            <Link to="/clothing" className="group">
-              <div className="aspect-square rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg mx-auto w-40 h-40 md:w-48 md:h-48">
-                <img 
-                  src="https://images.pexels.com/photos/5709665/pexels-photo-5709665.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                  alt="Clothing" 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-              </div>
-              <h3 className="text-center mt-4 text-lg font-medium dark:text-white">Clothing</h3>
-            </Link>
+            <SwiperSlide>
+              <Link to="/clothing" className="group block text-center">
+                <div className="aspect-square rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg mx-auto w-40 h-40 md:w-48 md:h-48">
+                  <img 
+                    src="https://images.pexels.com/photos/5709665/pexels-photo-5709665.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                    alt="Clothing" 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+                <h3 className="text-center mt-4 text-lg font-medium dark:text-white">Clothing</h3>
+              </Link>
+            </SwiperSlide>
             
-            <Link to="/jewelry" className="group">
-              <div className="aspect-square rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg mx-auto w-40 h-40 md:w-48 md:h-48">
-                <img 
-                  src="https://images.pexels.com/photos/8891959/pexels-photo-8891959.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                  alt="Jewelry" 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-              </div>
-              <h3 className="text-center mt-4 text-lg font-medium dark:text-white">Jewelry</h3>
-            </Link>
+            <SwiperSlide>
+              <Link to="/jewelry" className="group block text-center">
+                <div className="aspect-square rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg mx-auto w-40 h-40 md:w-48 md:h-48">
+                  <img 
+                    src="https://images.pexels.com/photos/8891959/pexels-photo-8891959.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                    alt="Jewelry" 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+                <h3 className="text-center mt-4 text-lg font-medium dark:text-white">Jewelry</h3>
+              </Link>
+            </SwiperSlide>
             
-            <Link to="/beauty" className="group">
-              <div className="aspect-square rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg mx-auto w-40 h-40 md:w-48 md:h-48">
-                <img 
-                  src="https://images.pexels.com/photos/2693640/pexels-photo-2693640.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                  alt="Beauty" 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-              </div>
-              <h3 className="text-center mt-4 text-lg font-medium dark:text-white">Beauty</h3>
-            </Link>
-          </div>
+            <SwiperSlide>
+              <Link to="/beauty" className="group block text-center">
+                <div className="aspect-square rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg mx-auto w-40 h-40 md:w-48 md:h-48">
+                  <img 
+                    src="https://images.pexels.com/photos/2693640/pexels-photo-2693640.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                    alt="Beauty" 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+                <h3 className="text-center mt-4 text-lg font-medium dark:text-white">Beauty</h3>
+              </Link>
+            </SwiperSlide>
+            
+            <SwiperSlide>
+              <Link to="/bridal-boutique" className="group block text-center">
+                <div className="aspect-square rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg mx-auto w-40 h-40 md:w-48 md:h-48">
+                  <img 
+                    src="https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                    alt="Bridal" 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+                <h3 className="text-center mt-4 text-lg font-medium dark:text-white">Bridal</h3>
+              </Link>
+            </SwiperSlide>
+            
+            <SwiperSlide>
+              <Link to="/festive-store" className="group block text-center">
+                <div className="aspect-square rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg mx-auto w-40 h-40 md:w-48 md:h-48">
+                  <img 
+                    src="https://images.pexels.com/photos/717988/pexels-photo-717988.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                    alt="Festive" 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+                <h3 className="text-center mt-4 text-lg font-medium dark:text-white">Festive</h3>
+              </Link>
+            </SwiperSlide>
+          </Swiper>
+          
+          <div className="category-pagination flex justify-center mt-4"></div>
         </div>
       </section>
 

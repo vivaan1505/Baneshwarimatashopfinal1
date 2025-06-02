@@ -4,6 +4,12 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import FeaturedProducts from '../FeaturedProducts';
 import FeaturedCoupons from '../FeaturedCoupons';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Autoplay } from 'swiper/modules';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const FeaturedCollectionsLayout: React.FC = () => {
   return (
@@ -73,7 +79,7 @@ const FeaturedCollectionsLayout: React.FC = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
                     <div className="absolute bottom-0 left-0 right-0 p-8">
                       <span className="inline-block px-4 py-1 bg-white/90 text-accent-800 rounded-full text-sm font-medium mb-4">
-                        HOLIDAY SEASON
+                        FESTIVE COLLECTION
                       </span>
                       <h2 className="text-3xl font-heading font-medium text-white mb-2">
                         Festive Store
@@ -97,75 +103,148 @@ const FeaturedCollectionsLayout: React.FC = () => {
       {/* Category Banners */}
       <section className="py-16">
         <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Link to="/footwear" className="group relative overflow-hidden rounded-lg h-64">
-              <img 
-                src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                alt="Footwear" 
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-                <div className="p-6">
-                  <h3 className="text-xl font-heading text-white mb-2">Footwear</h3>
-                  <span className="text-accent-300 group-hover:text-accent-200 flex items-center text-sm">
-                    Shop Now
-                    <ArrowRight className="ml-1 w-4 h-4" />
-                  </span>
+          <Swiper
+            modules={[Pagination, Autoplay]}
+            pagination={{ 
+              clickable: true,
+              el: '.category-pagination'
+            }}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+            breakpoints={{
+              640: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+              },
+              768: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+              },
+              1024: {
+                slidesPerView: 4,
+                spaceBetween: 30,
+              },
+            }}
+            className="pb-12"
+          >
+            <SwiperSlide>
+              <Link to="/footwear" className="group relative overflow-hidden rounded-lg h-64 block">
+                <img 
+                  src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  alt="Footwear" 
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                  <div className="p-6">
+                    <h3 className="text-xl font-heading text-white mb-2">Footwear</h3>
+                    <span className="text-accent-300 group-hover:text-accent-200 flex items-center text-sm">
+                      Shop Now
+                      <ArrowRight className="ml-1 w-4 h-4" />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </SwiperSlide>
             
-            <Link to="/clothing" className="group relative overflow-hidden rounded-lg h-64">
-              <img 
-                src="https://images.pexels.com/photos/5709665/pexels-photo-5709665.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                alt="Clothing" 
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-                <div className="p-6">
-                  <h3 className="text-xl font-heading text-white mb-2">Clothing</h3>
-                  <span className="text-accent-300 group-hover:text-accent-200 flex items-center text-sm">
-                    Shop Now
-                    <ArrowRight className="ml-1 w-4 h-4" />
-                  </span>
+            <SwiperSlide>
+              <Link to="/clothing" className="group relative overflow-hidden rounded-lg h-64 block">
+                <img 
+                  src="https://images.pexels.com/photos/5709665/pexels-photo-5709665.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  alt="Clothing" 
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                  <div className="p-6">
+                    <h3 className="text-xl font-heading text-white mb-2">Clothing</h3>
+                    <span className="text-accent-300 group-hover:text-accent-200 flex items-center text-sm">
+                      Shop Now
+                      <ArrowRight className="ml-1 w-4 h-4" />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </SwiperSlide>
             
-            <Link to="/jewelry" className="group relative overflow-hidden rounded-lg h-64">
-              <img 
-                src="https://images.pexels.com/photos/8891959/pexels-photo-8891959.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                alt="Jewelry" 
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-                <div className="p-6">
-                  <h3 className="text-xl font-heading text-white mb-2">Jewelry</h3>
-                  <span className="text-accent-300 group-hover:text-accent-200 flex items-center text-sm">
-                    Shop Now
-                    <ArrowRight className="ml-1 w-4 h-4" />
-                  </span>
+            <SwiperSlide>
+              <Link to="/jewelry" className="group relative overflow-hidden rounded-lg h-64 block">
+                <img 
+                  src="https://images.pexels.com/photos/8891959/pexels-photo-8891959.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  alt="Jewelry" 
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                  <div className="p-6">
+                    <h3 className="text-xl font-heading text-white mb-2">Jewelry</h3>
+                    <span className="text-accent-300 group-hover:text-accent-200 flex items-center text-sm">
+                      Shop Now
+                      <ArrowRight className="ml-1 w-4 h-4" />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </SwiperSlide>
             
-            <Link to="/beauty" className="group relative overflow-hidden rounded-lg h-64">
-              <img 
-                src="https://images.pexels.com/photos/2693640/pexels-photo-2693640.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                alt="Beauty" 
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-                <div className="p-6">
-                  <h3 className="text-xl font-heading text-white mb-2">Beauty</h3>
-                  <span className="text-accent-300 group-hover:text-accent-200 flex items-center text-sm">
-                    Shop Now
-                    <ArrowRight className="ml-1 w-4 h-4" />
-                  </span>
+            <SwiperSlide>
+              <Link to="/beauty" className="group relative overflow-hidden rounded-lg h-64 block">
+                <img 
+                  src="https://images.pexels.com/photos/2693640/pexels-photo-2693640.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  alt="Beauty" 
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                  <div className="p-6">
+                    <h3 className="text-xl font-heading text-white mb-2">Beauty</h3>
+                    <span className="text-accent-300 group-hover:text-accent-200 flex items-center text-sm">
+                      Shop Now
+                      <ArrowRight className="ml-1 w-4 h-4" />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          </div>
+              </Link>
+            </SwiperSlide>
+            
+            <SwiperSlide>
+              <Link to="/men" className="group relative overflow-hidden rounded-lg h-64 block">
+                <img 
+                  src="https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  alt="Men" 
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                  <div className="p-6">
+                    <h3 className="text-xl font-heading text-white mb-2">Men</h3>
+                    <span className="text-accent-300 group-hover:text-accent-200 flex items-center text-sm">
+                      Shop Now
+                      <ArrowRight className="ml-1 w-4 h-4" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </SwiperSlide>
+            
+            <SwiperSlide>
+              <Link to="/women" className="group relative overflow-hidden rounded-lg h-64 block">
+                <img 
+                  src="https://images.pexels.com/photos/1619801/pexels-photo-1619801.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                  alt="Women" 
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+                  <div className="p-6">
+                    <h3 className="text-xl font-heading text-white mb-2">Women</h3>
+                    <span className="text-accent-300 group-hover:text-accent-200 flex items-center text-sm">
+                      Shop Now
+                      <ArrowRight className="ml-1 w-4 h-4" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </SwiperSlide>
+          </Swiper>
+          
+          <div className="category-pagination flex justify-center mt-4"></div>
         </div>
       </section>
 

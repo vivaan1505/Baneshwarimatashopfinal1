@@ -367,14 +367,14 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         homeLayout === 'default'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center relative`}
                     >
                       <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
                         <div className="absolute top-0 left-0 right-0 h-8 bg-gray-300 dark:bg-gray-600"></div>
                         <div className="absolute top-10 left-2 right-2 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
                         <div className="absolute top-16 left-2 right-2 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
                       </div>
-                      <span className={`text-sm ${homeLayout === 'default' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Default</span>
+                      <span className={`text-sm ${homeLayout === 'default' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Modern Slider</span>
                       {homeLayout === 'default' && (
                         <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
                       )}
@@ -385,7 +385,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         homeLayout === 'featured-collections'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center relative`}
                     >
                       <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
                         <div className="absolute top-0 left-0 right-0 h-6 bg-gray-300 dark:bg-gray-600"></div>
@@ -403,7 +403,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         homeLayout === 'hero-centered'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center relative`}
                     >
                       <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
                         <div className="absolute inset-0 flex items-center justify-center">
@@ -421,7 +421,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                         homeLayout === 'minimal'
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                           : 'border-gray-200 dark:border-gray-700'
-                      } flex flex-col items-center`}
+                      } flex flex-col items-center relative`}
                     >
                       <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
                         <div className="absolute top-4 left-4 right-4 h-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
