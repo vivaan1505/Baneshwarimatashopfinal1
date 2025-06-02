@@ -1,9 +1,61 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Youtube, Pointer as Pinterest, Mail, Phone, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { supabase } from '../../lib/supabase';
 
 const Footer: React.FC = () => {
+  const [logo, setLogo] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchFooterLogo();
+  }, []);
+
+  const fetchFooterLogo = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('site_branding')
+        .select('url')
+        .eq('type', 'logo')
+        .eq('is_active', true)
+        .eq('theme', 'default')
+        .eq('color_scheme', 'dark')
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching footer logo:', error);
+        return;
+      }
+
+      // If we have a dark theme logo, use it
+      if (data) {
+        setLogo(data.url);
+        return;
+      }
+
+      // Otherwise, fall back to the default logo
+      const { data: defaultLogo, error: defaultError } = await supabase
+        .from('site_branding')
+        .select('url')
+        .eq('type', 'logo')
+        .eq('is_active', true)
+        .eq('theme', 'default')
+        .eq('color_scheme', 'default')
+        .single();
+
+      if (defaultError && defaultError.code !== 'PGRST116') {
+        console.error('Error fetching default logo:', defaultError);
+        return;
+      }
+
+      if (defaultLogo) {
+        setLogo(defaultLogo.url);
+      }
+    } catch (error) {
+      console.error('Error fetching logo:', error);
+    }
+  };
+
   return (
     <footer className="bg-gray-900 text-gray-300 dark:bg-gray-950">
       {/* Main footer content */}
@@ -16,7 +68,13 @@ const Footer: React.FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h3 className="text-xl font-heading text-white mb-4">MinddShopp</h3>
+            <h3 className="text-xl font-heading text-white mb-4">
+              {logo ? (
+                <img src={logo} alt="MinddShopp" className="h-8 w-auto" />
+              ) : (
+                "MinddShopp"
+              )}
+            </h3>
             <p className="mb-4 text-sm leading-relaxed">
               Premium destination for footwear, clothing, jewelry, and beauty products. Discover our exclusive bridal boutique and seasonal collections.
             </p>

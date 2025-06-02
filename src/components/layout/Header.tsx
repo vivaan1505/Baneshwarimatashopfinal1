@@ -23,6 +23,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
   const [cartOpen, setCartOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [wishlistCount, setWishlistCount] = useState(0);
+  const [logo, setLogo] = useState<string | null>(null);
   const location = useLocation();
   const { items } = useCartStore();
   const { user, signOut } = useAuthStore();
@@ -64,6 +65,11 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
     }
   }, [user, location.pathname]);
 
+  // Fetch active logo
+  useEffect(() => {
+    fetchActiveLogo();
+  }, []);
+
   const fetchWishlistCount = async () => {
     try {
       const { count, error } = await supabase
@@ -75,6 +81,30 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
       setWishlistCount(count || 0);
     } catch (error) {
       console.error('Error fetching wishlist count:', error);
+    }
+  };
+
+  const fetchActiveLogo = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('site_branding')
+        .select('url')
+        .eq('type', 'logo')
+        .eq('is_active', true)
+        .eq('theme', 'default')
+        .eq('color_scheme', 'default')
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching logo:', error);
+        return;
+      }
+
+      if (data) {
+        setLogo(data.url);
+      }
+    } catch (error) {
+      console.error('Error fetching logo:', error);
     }
   };
 
@@ -128,12 +158,16 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" onClick={handleLogoClick} className="flex items-center">
-              <motion.span 
-                whileHover={{ scale: 1.05 }}
-                className="font-heading text-2xl font-bold text-primary-800 dark:text-primary-400"
-              >
-                MinddShopp
-              </motion.span>
+              {logo ? (
+                <img src={logo} alt="MinddShopp" className="h-10 w-auto" />
+              ) : (
+                <motion.span 
+                  whileHover={{ scale: 1.05 }}
+                  className="font-heading text-2xl font-bold text-primary-800 dark:text-primary-400"
+                >
+                  MinddShopp
+                </motion.span>
+              )}
             </Link>
           </div>
           

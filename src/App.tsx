@@ -69,6 +69,7 @@ import ChatbotPage from './pages/admin/ChatbotPage';
 import NewsletterPage from './pages/admin/NewsletterPage';
 import CreateAdminPage from './pages/admin/CreateAdminPage';
 import HeroSlidesPage from './pages/admin/HeroSlidesPage';
+import SiteBrandingPage from './pages/admin/SiteBrandingPage';
 
 function App() {
   return (
@@ -150,6 +151,7 @@ function App() {
             <Route path="chatbot" element={<ChatbotPage />} />
             <Route path="newsletter" element={<NewsletterPage />} />
             <Route path="hero-slides" element={<HeroSlidesPage />} />
+            <Route path="site-branding" element={<SiteBrandingPage />} />
           </Route>
         </Routes>
       </Router>
