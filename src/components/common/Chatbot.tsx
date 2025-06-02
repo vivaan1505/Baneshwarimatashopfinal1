@@ -66,8 +66,22 @@ const Chatbot: React.FC = () => {
         .select('*')
         .single();
 
-      if (error) throw error;
-      setSettings(data);
+      if (error) {
+        if (error.code === 'PGRST116') {
+          // No settings found, use defaults
+          setSettings({
+            welcome_message: 'Welcome to MinddShopp! How can I assist you today?',
+            fallback_message: 'I\'m sorry, I don\'t understand. Could you please rephrase your question?',
+            is_enabled: true,
+            auto_response_delay: 1000,
+            human_handoff_threshold: 3
+          });
+        } else {
+          console.error('Error fetching chatbot settings:', error);
+        }
+      } else {
+        setSettings(data);
+      }
     } catch (error) {
       console.error('Error fetching chatbot settings:', error);
     }
@@ -80,7 +94,11 @@ const Chatbot: React.FC = () => {
         .select('trigger_keywords, response, section')
         .eq('is_active', true);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching chatbot scripts:', error);
+        return;
+      }
+      
       setScripts(data || []);
       
       // Extract quick suggestions from script sections

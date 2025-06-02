@@ -13,3 +13,13 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+# Environment variables configuration
+[build.environment]
+  # Add any build-time environment variables here
+  NODE_VERSION = "18"
+
+# This ensures that the Supabase environment variables are available during build
+[template.environment]
+  VITE_SUPABASE_URL = "Set your Supabase URL here"
+  VITE_SUPABASE_ANON_KEY = "Set your Supabase anon key here"

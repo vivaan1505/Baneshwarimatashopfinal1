@@ -1,26 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import CouponCard from '../common/CouponCard';
+import { toast } from 'react-hot-toast';
 import { ArrowRight } from 'lucide-react';
+import CouponCard from '../common/CouponCard';
+
+interface Brand {
+  id: string;
+  name: string;
+  logo_url: string;
+  description: string;
+}
 
 interface Coupon {
   id: string;
   code: string;
+  brand_id: string | null;
   description: string;
   discount_type: 'percentage' | 'fixed_amount';
   discount_value: number;
   minimum_purchase: number;
+  usage_limit: number | null;
+  usage_count: number;
   expires_at: string;
-  brand_link?: string;
+  is_active: boolean;
   brand: {
-    id: string;
     name: string;
     logo_url: string;
-    category: string;
-    slug: string;
-    website?: string;
-  };
+  } | null;
 }
 
 const FeaturedCoupons: React.FC = () => {
@@ -33,6 +40,12 @@ const FeaturedCoupons: React.FC = () => {
 
   const fetchFeaturedCoupons = async () => {
     try {
+      setLoading(true);
+      
+      // Test connection first
+      console.log('Fetching coupons from Supabase...');
+      console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
+      
       const { data, error } = await supabase
         .from('coupons')
         .select(`
@@ -48,13 +61,65 @@ const FeaturedCoupons: React.FC = () => {
         `)
         .eq('is_active', true)
         .gte('expires_at', new Date().toISOString())
-        .order('discount_value', { ascending: false })
+        .order('created_at', { ascending: false })
         .limit(3);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error details:', error);
+        throw error;
+      }
+      
+      console.log('Coupons fetched successfully:', data?.length || 0);
       setCoupons(data || []);
     } catch (error) {
       console.error('Error fetching coupons:', error);
+      // Use a fallback for development/demo purposes
+      if (import.meta.env.DEV) {
+        console.log('Using fallback coupons data for development');
+        setCoupons([
+          {
+            id: 'coupon-1',
+            code: 'WELCOME20',
+            description: 'Get 20% off your first order',
+            discount_type: 'percentage',
+            discount_value: 20,
+            minimum_purchase: 50,
+            expires_at: '2025-12-31',
+            brand: {
+              name: 'MinddShopp',
+              logo_url: 'https://via.placeholder.com/100'
+            }
+          },
+          {
+            id: 'coupon-2',
+            code: 'SUMMER25',
+            description: 'Summer sale - 25% off selected items',
+            discount_type: 'percentage',
+            discount_value: 25,
+            minimum_purchase: 75,
+            expires_at: '2025-08-31',
+            brand: {
+              name: 'Fashion Brand',
+              logo_url: 'https://via.placeholder.com/100'
+            }
+          },
+          {
+            id: 'coupon-3',
+            code: 'FREESHIP',
+            description: 'Free shipping on all orders',
+            discount_type: 'fixed_amount',
+            discount_value: 10,
+            minimum_purchase: 0,
+            expires_at: '2025-12-31',
+            brand: {
+              name: 'Luxury Brand',
+              logo_url: 'https://via.placeholder.com/100'
+            }
+          }
+        ] as any);
+      } else {
+        toast.error('Failed to load coupons');
+      }
     } finally {
       setLoading(false);
     }
@@ -78,8 +143,8 @@ const FeaturedCoupons: React.FC = () => {
                 <div className="flex items-center mb-4">
                   <div className="w-12 h-12 bg-gray-200 rounded-full dark:bg-gray-700"></div>
                   <div className="ml-3">
-                    <div className="h-4 bg-gray-200 rounded w-24 dark:bg-gray-700"></div>
-                    <div className="h-3 bg-gray-200 rounded w-16 mt-2 dark:bg-gray-700"></div>
+                    <div className="h-4 bg-gray-200 rounded w-24 mb-2 dark:bg-gray-700"></div>
+                    <div className="h-3 bg-gray-200 rounded w-16 dark:bg-gray-700"></div>
                   </div>
                 </div>
                 <div className="h-6 bg-gray-200 rounded w-32 mb-2 dark:bg-gray-700"></div>
