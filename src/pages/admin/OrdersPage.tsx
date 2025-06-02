@@ -511,7 +511,7 @@ const OrdersPage: React.FC = () => {
                       <tr className="hover:bg-gray-50 dark:hover:bg-gray-700">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900 dark:text-white">
-                            #{order.id.slice(0, 8)}
+                            #{typeof order.id === 'string' ? order.id.slice(0, 8) : order.id}
                           </div>
                           <div className="text-sm text-gray-500 dark:text-gray-400">
                             {order.items.length} items
