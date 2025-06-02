@@ -32,7 +32,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
     const baseFields = [
       'name', 'slug', 'sku', 'price', 'compare_at_price', 'stock_quantity', 
       'description', 'brand_id', 'is_visible', 'is_featured', 
-      'is_new', 'tags', 'gender', 'images', 'subcategory'
+      'is_new', 'tags', 'gender', 'images', 'subcategory', 'type'
     ];
     
     const categorySpecificFields: Record<string, string[]> = {
@@ -118,7 +118,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
     }
 
     // Check required columns
-    const requiredColumns = ['name', 'price'];
+    const requiredColumns = ['name', 'price', 'type', 'subcategory'];
     const missingColumns = requiredColumns.filter(col => !Object.keys(data[0]).includes(col));
     
     if (missingColumns.length > 0) {
@@ -367,6 +367,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
     // Define sample data based on category
     let sampleData: any = {
       name: 'Sample Product',
+      slug: 'sample-product',
       sku: 'SAMPLE-001',
       price: '99.99',
       compare_at_price: '129.99',
@@ -379,7 +380,8 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
       gender: 'unisex', // Options: men, women, kids, unisex
       tags: 'new,featured,sale',
       images: 'https://example.com/image1.jpg|https://example.com/image2.jpg',
-      subcategory: subcategories.length > 0 ? subcategories[0].id : '' // First subcategory as example
+      subcategory: subcategories.length > 0 ? subcategories[0].id : '', // First subcategory as example
+      type: category || 'clothing' // Default to clothing if no category specified
     };
 
     // Add category-specific fields
@@ -417,8 +419,10 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
         sku: '',
         price: '',
         stock_quantity: '',
+        subcategory: '',
+        type: '',
         // Add other empty fields to match the template
-        ...Object.fromEntries(templateFields.filter(f => !['name', 'sku', 'price', 'stock_quantity'].includes(f)).map(f => [f, '']))
+        ...Object.fromEntries(templateFields.filter(f => !['name', 'sku', 'price', 'stock_quantity', 'subcategory', 'type'].includes(f)).map(f => [f, '']))
       },
       // Add gender options as a comment
       {
@@ -426,8 +430,21 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
         sku: '',
         price: '',
         stock_quantity: '',
+        subcategory: '',
+        type: '',
         // Add other empty fields
-        ...Object.fromEntries(templateFields.filter(f => !['name', 'sku', 'price', 'stock_quantity'].includes(f)).map(f => [f, '']))
+        ...Object.fromEntries(templateFields.filter(f => !['name', 'sku', 'price', 'stock_quantity', 'subcategory', 'type'].includes(f)).map(f => [f, '']))
+      },
+      // Add type options as a comment
+      {
+        name: '# Type options: footwear, clothing, jewelry, beauty, accessories, bags',
+        sku: '',
+        price: '',
+        stock_quantity: '',
+        subcategory: '',
+        type: '',
+        // Add other empty fields
+        ...Object.fromEntries(templateFields.filter(f => !['name', 'sku', 'price', 'stock_quantity', 'subcategory', 'type'].includes(f)).map(f => [f, '']))
       },
       // Add the actual sample data
       sampleData
@@ -494,8 +511,9 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
                 <ul className="list-disc list-inside text-sm text-blue-700 space-y-1 dark:text-blue-400">
                   <li>name - Product name</li>
                   <li>price - Product price (numeric)</li>
-                  {category && <li>type - Product type (automatically set to {category})</li>}
+                  <li>type - Product type (footwear, clothing, jewelry, beauty, accessories, bags)</li>
                   <li>subcategory - Product subcategory (see template for available options)</li>
+                  {category && <li>type - Product type (automatically set to {category})</li>}
                 </ul>
                 
                 <h4 className="text-sm font-medium text-blue-800 mt-4 mb-2 dark:text-blue-300">Image Format:</h4>
