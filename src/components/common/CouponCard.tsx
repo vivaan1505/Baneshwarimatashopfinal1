@@ -20,7 +20,7 @@ interface CouponCardProps {
       category: string;
       slug: string;
       website?: string;
-    };
+    } | null;
   };
 }
 
@@ -48,7 +48,7 @@ const CouponCard: React.FC<CouponCardProps> = ({ coupon }) => {
         ? coupon.brand.website 
         : `https://${coupon.brand.website}`;
     }
-    return `/${coupon.brand.category}/${coupon.brand.slug}`;
+    return coupon.brand ? `/${coupon.brand.category}/${coupon.brand.slug}` : '#';
   };
 
   const shopNowLink = getShopNowLink();
@@ -69,7 +69,7 @@ const CouponCard: React.FC<CouponCardProps> = ({ coupon }) => {
           <div className="ml-3">
             <h3 className="font-medium dark:text-white">{coupon.brand?.name}</h3>
             <p className="text-sm text-gray-500 capitalize dark:text-gray-400">
-              {coupon.brand?.category.replace('-', ' ')}
+              {coupon.brand?.category?.replace('-', ' ') ?? 'General'}
             </p>
           </div>
         </div>

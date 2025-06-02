@@ -9,7 +9,9 @@ interface Brand {
   id: string;
   name: string;
   logo_url: string;
-  description: string;
+  category: string;
+  slug: string;
+  website?: string;
 }
 
 interface Coupon {
@@ -24,10 +26,8 @@ interface Coupon {
   usage_count: number;
   expires_at: string;
   is_active: boolean;
-  brand: {
-    name: string;
-    logo_url: string;
-  } | null;
+  brand_link?: string;
+  brand: Brand | null;
 }
 
 const FeaturedCoupons: React.FC = () => {
@@ -41,10 +41,6 @@ const FeaturedCoupons: React.FC = () => {
   const fetchFeaturedCoupons = async () => {
     try {
       setLoading(true);
-      
-      // Test connection first
-      console.log('Fetching coupons from Supabase...');
-      console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
       
       const { data, error } = await supabase
         .from('coupons')
@@ -69,7 +65,6 @@ const FeaturedCoupons: React.FC = () => {
         throw error;
       }
       
-      console.log('Coupons fetched successfully:', data?.length || 0);
       setCoupons(data || []);
     } catch (error) {
       console.error('Error fetching coupons:', error);
@@ -86,8 +81,12 @@ const FeaturedCoupons: React.FC = () => {
             minimum_purchase: 50,
             expires_at: '2025-12-31',
             brand: {
+              id: 'brand-1',
               name: 'MinddShopp',
-              logo_url: 'https://via.placeholder.com/100'
+              logo_url: 'https://via.placeholder.com/100',
+              category: 'clothing',
+              slug: 'minddshopp',
+              website: 'https://minddshopp.com'
             }
           },
           {
@@ -99,8 +98,12 @@ const FeaturedCoupons: React.FC = () => {
             minimum_purchase: 75,
             expires_at: '2025-08-31',
             brand: {
+              id: 'brand-2',
               name: 'Fashion Brand',
-              logo_url: 'https://via.placeholder.com/100'
+              logo_url: 'https://via.placeholder.com/100',
+              category: 'clothing',
+              slug: 'fashion-brand',
+              website: 'https://fashionbrand.com'
             }
           },
           {
@@ -112,11 +115,15 @@ const FeaturedCoupons: React.FC = () => {
             minimum_purchase: 0,
             expires_at: '2025-12-31',
             brand: {
+              id: 'brand-3',
               name: 'Luxury Brand',
-              logo_url: 'https://via.placeholder.com/100'
+              logo_url: 'https://via.placeholder.com/100',
+              category: 'accessories',
+              slug: 'luxury-brand',
+              website: 'https://luxurybrand.com'
             }
           }
-        ] as any);
+        ] as Coupon[]);
       } else {
         toast.error('Failed to load coupons');
       }
