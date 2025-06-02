@@ -25,6 +25,7 @@ import ThemeProvider from './components/theme/ThemeProvider';
 import WishlistPage from './pages/WishlistPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsConditionsPage from './pages/TermsConditionsPage';
+import DisclaimerPage from './pages/DisclaimerPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import FestiveGiftGuidesPage from './pages/specialty/FestiveGiftGuidesPage';
 import AccessibilityPage from './pages/AccessibilityPage';
@@ -121,6 +122,7 @@ function App() {
             <Route path="contact" element={<ContactPage />} />
             <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="terms-conditions" element={<TermsConditionsPage />} />
+            <Route path="disclaimer" element={<DisclaimerPage />} />
             <Route path="accessibility" element={<AccessibilityPage />} />
             <Route path="sitemap" element={<SitemapPage />} />
             

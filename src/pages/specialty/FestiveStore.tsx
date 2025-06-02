@@ -1,8 +1,91 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Gift, Star, Clock, Truck, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Gift, Star, Clock, Truck, ArrowRight, Heart, ShoppingBag } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
+import { toast } from 'react-hot-toast';
+import { useCartStore } from '../../stores/cartStore';
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  images: Array<{ url: string }>;
+  stock_quantity: number;
+  brand?: {
+    name: string;
+  };
+}
 
 const FestiveStore: React.FC = () => {
+  const [festiveProducts, setFestiveProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const { addItem } = useCartStore();
+
+  useEffect(() => {
+    fetchFestiveProducts();
+  }, []);
+
+  const fetchFestiveProducts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select(`
+          id,
+          name,
+          price,
+          description,
+          images:product_images(url),
+          stock_quantity,
+          brand:brands(name)
+        `)
+        .contains('tags', ['christmas'])
+        .eq('is_visible', true)
+        .limit(4);
+
+      if (error) throw error;
+      setFestiveProducts(data || []);
+    } catch (error) {
+      console.error('Error fetching festive products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleProductClick = (productId: string) => {
+    // Open coupon page in new tab
+    window.open('/coupons', '_blank');
+    
+    // Navigate to product page in current tab
+    navigate(`/product/${productId}`);
+  };
+
+  const handleAddToCart = (product: Product, event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent the product click handler from firing
+    
+    if (product.stock_quantity <= 0) {
+      toast.error('This product is out of stock');
+      return;
+    }
+    
+    addItem({
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      image: product.images?.[0]?.url || ''
+    });
+    
+    toast.success('Added to cart!');
+    
+    // Open coupon page in new tab
+    window.open('/coupons', '_blank');
+    
+    // Navigate to cart page in current tab
+    navigate('/checkout');
+  };
+
   return (
     <div>
       {/* Hero Section */}
@@ -85,7 +168,10 @@ const FestiveStore: React.FC = () => {
         <div className="container-custom">
           <h2 className="text-3xl font-heading font-bold text-center mb-12">Shop by Category</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="group relative overflow-hidden rounded-lg">
+            <div className="group relative overflow-hidden rounded-lg cursor-pointer" onClick={() => {
+              window.open('/coupons', '_blank');
+              navigate('/beauty');
+            }}>
               <img 
                 src="https://images.pexels.com/photos/3782786/pexels-photo-3782786.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                 alt="Luxury Beauty Sets" 
@@ -94,18 +180,18 @@ const FestiveStore: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
                 <div className="p-6">
                   <h3 className="text-xl font-heading text-white mb-2">Luxury Beauty Sets</h3>
-                  <Link 
-                    to="/beauty" 
-                    className="text-accent-300 group-hover:text-accent-200 flex items-center"
-                  >
+                  <span className="text-accent-300 group-hover:text-accent-200 flex items-center">
                     Shop Now
                     <span className="ml-2">→</span>
-                  </Link>
+                  </span>
                 </div>
               </div>
             </div>
             
-            <div className="group relative overflow-hidden rounded-lg">
+            <div className="group relative overflow-hidden rounded-lg cursor-pointer" onClick={() => {
+              window.open('/coupons', '_blank');
+              navigate('/jewelry');
+            }}>
               <img 
                 src="https://images.pexels.com/photos/1927259/pexels-photo-1927259.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                 alt="Festive Jewelry" 
@@ -114,18 +200,18 @@ const FestiveStore: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
                 <div className="p-6">
                   <h3 className="text-xl font-heading text-white mb-2">Festive Jewelry</h3>
-                  <Link 
-                    to="/jewelry" 
-                    className="text-accent-300 group-hover:text-accent-200 flex items-center"
-                  >
+                  <span className="text-accent-300 group-hover:text-accent-200 flex items-center">
                     Shop Now
                     <span className="ml-2">→</span>
-                  </Link>
+                  </span>
                 </div>
               </div>
             </div>
             
-            <div className="group relative overflow-hidden rounded-lg">
+            <div className="group relative overflow-hidden rounded-lg cursor-pointer" onClick={() => {
+              window.open('/coupons', '_blank');
+              navigate('/clothing');
+            }}>
               <img 
                 src="https://images.pexels.com/photos/1619801/pexels-photo-1619801.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                 alt="Winter Fashion" 
@@ -134,13 +220,10 @@ const FestiveStore: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
                 <div className="p-6">
                   <h3 className="text-xl font-heading text-white mb-2">Winter Fashion</h3>
-                  <Link 
-                    to="/clothing" 
-                    className="text-accent-300 group-hover:text-accent-200 flex items-center"
-                  >
+                  <span className="text-accent-300 group-hover:text-accent-200 flex items-center">
                     Shop Now
                     <span className="ml-2">→</span>
-                  </Link>
+                  </span>
                 </div>
               </div>
             </div>
@@ -213,6 +296,187 @@ const FestiveStore: React.FC = () => {
                 </Link>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Products */}
+      <section className="py-16">
+        <div className="container-custom">
+          <h2 className="text-3xl font-heading font-bold text-center mb-12">Featured Products</h2>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {festiveProducts.length > 0 ? (
+              festiveProducts.map((product) => (
+                <div 
+                  key={product.id} 
+                  className="card group cursor-pointer"
+                  onClick={() => handleProductClick(product.id)}
+                >
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src={product.images?.[0]?.url || "https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg"}
+                      alt={product.name}
+                      className="w-full h-64 object-cover"
+                    />
+                    <button 
+                      className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-accent-600"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Heart size={20} />
+                    </button>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-heading text-lg mb-2">{product.name}</h3>
+                    <p className="text-gray-600 text-sm mb-2">{product.brand?.name || 'Festive Collection'}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-semibold">${product.price.toFixed(2)}</span>
+                      <button 
+                        className="p-2 text-accent-600 hover:text-accent-700"
+                        onClick={(e) => handleAddToCart(product, e)}
+                      >
+                        <ShoppingBag size={20} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              // Fallback products if no data from backend
+              <>
+                <div className="card group cursor-pointer" onClick={() => handleProductClick("festive-1")}>
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src="https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg"
+                      alt="Holiday Gift Set"
+                      className="w-full h-64 object-cover"
+                    />
+                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-accent-600" onClick={(e) => e.stopPropagation()}>
+                      <Heart size={20} />
+                    </button>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-heading text-lg mb-2">Holiday Gift Set</h3>
+                    <p className="text-gray-600 text-sm mb-2">Luxury skincare collection</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-semibold">$149.99</span>
+                      <button 
+                        className="p-2 text-accent-600 hover:text-accent-700"
+                        onClick={(e) => handleAddToCart({
+                          id: "festive-1",
+                          name: "Holiday Gift Set",
+                          price: 149.99,
+                          description: "Luxury skincare collection",
+                          images: [{ url: "https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg" }],
+                          stock_quantity: 12
+                        }, e)}
+                      >
+                        <ShoppingBag size={20} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="card group cursor-pointer" onClick={() => handleProductClick("festive-2")}>
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src="https://images.pexels.com/photos/264771/pexels-photo-264771.jpeg"
+                      alt="Festive Watch"
+                      className="w-full h-64 object-cover"
+                    />
+                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-accent-600" onClick={(e) => e.stopPropagation()}>
+                      <Heart size={20} />
+                    </button>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-heading text-lg mb-2">Festive Watch</h3>
+                    <p className="text-gray-600 text-sm mb-2">Limited edition timepiece</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-semibold">$299.99</span>
+                      <button 
+                        className="p-2 text-accent-600 hover:text-accent-700"
+                        onClick={(e) => handleAddToCart({
+                          id: "festive-2",
+                          name: "Festive Watch",
+                          price: 299.99,
+                          description: "Limited edition timepiece",
+                          images: [{ url: "https://images.pexels.com/photos/264771/pexels-photo-264771.jpeg" }],
+                          stock_quantity: 8
+                        }, e)}
+                      >
+                        <ShoppingBag size={20} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="card group cursor-pointer" onClick={() => handleProductClick("festive-3")}>
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src="https://images.pexels.com/photos/1303092/pexels-photo-1303092.jpeg"
+                      alt="Festive Candle Set"
+                      className="w-full h-64 object-cover"
+                    />
+                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-accent-600" onClick={(e) => e.stopPropagation()}>
+                      <Heart size={20} />
+                    </button>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-heading text-lg mb-2">Festive Candle Set</h3>
+                    <p className="text-gray-600 text-sm mb-2">Luxury scented candles</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-semibold">$79.99</span>
+                      <button 
+                        className="p-2 text-accent-600 hover:text-accent-700"
+                        onClick={(e) => handleAddToCart({
+                          id: "festive-3",
+                          name: "Festive Candle Set",
+                          price: 79.99,
+                          description: "Luxury scented candles",
+                          images: [{ url: "https://images.pexels.com/photos/1303092/pexels-photo-1303092.jpeg" }],
+                          stock_quantity: 15
+                        }, e)}
+                      >
+                        <ShoppingBag size={20} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="card group cursor-pointer" onClick={() => handleProductClick("festive-4")}>
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src="https://images.pexels.com/photos/1303086/pexels-photo-1303086.jpeg"
+                      alt="Holiday Sweater"
+                      className="w-full h-64 object-cover"
+                    />
+                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-accent-600" onClick={(e) => e.stopPropagation()}>
+                      <Heart size={20} />
+                    </button>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-heading text-lg mb-2">Holiday Sweater</h3>
+                    <p className="text-gray-600 text-sm mb-2">Premium cashmere blend</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-semibold">$129.99</span>
+                      <button 
+                        className="p-2 text-accent-600 hover:text-accent-700"
+                        onClick={(e) => handleAddToCart({
+                          id: "festive-4",
+                          name: "Holiday Sweater",
+                          price: 129.99,
+                          description: "Premium cashmere blend",
+                          images: [{ url: "https://images.pexels.com/photos/1303086/pexels-photo-1303086.jpeg" }],
+                          stock_quantity: 10
+                        }, e)}
+                      >
+                        <ShoppingBag size={20} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </section>

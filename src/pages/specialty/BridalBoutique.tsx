@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Heart, ShoppingBag, Calendar, MapPin, Phone, Clock, ExternalLink } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { toast } from 'react-hot-toast';
+import { useCartStore } from '../../stores/cartStore';
 
 interface PartnerService {
   id: string;
@@ -17,12 +18,28 @@ interface PartnerService {
   service_type: string;
 }
 
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  images: Array<{ url: string }>;
+  stock_quantity: number;
+  brand?: {
+    name: string;
+  };
+}
+
 const BridalBoutique: React.FC = () => {
   const [partnerServices, setPartnerServices] = useState<PartnerService[]>([]);
+  const [bridalProducts, setBridalProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const { addItem } = useCartStore();
 
   useEffect(() => {
     fetchPartnerServices();
+    fetchBridalProducts();
   }, []);
 
   const fetchPartnerServices = async () => {
@@ -40,6 +57,63 @@ const BridalBoutique: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchBridalProducts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select(`
+          id,
+          name,
+          price,
+          description,
+          images:product_images(url),
+          stock_quantity,
+          brand:brands(name)
+        `)
+        .contains('tags', ['bridal'])
+        .eq('is_visible', true)
+        .limit(4);
+
+      if (error) throw error;
+      setBridalProducts(data || []);
+    } catch (error) {
+      console.error('Error fetching bridal products:', error);
+    }
+  };
+
+  const handleProductClick = (productId: string) => {
+    // Open coupon page in new tab
+    window.open('/coupons', '_blank');
+    
+    // Navigate to product page in current tab
+    navigate(`/product/${productId}`);
+  };
+
+  const handleAddToCart = (product: Product, event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent the product click handler from firing
+    
+    if (product.stock_quantity <= 0) {
+      toast.error('This product is out of stock');
+      return;
+    }
+    
+    addItem({
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      image: product.images?.[0]?.url || ''
+    });
+    
+    toast.success('Added to cart!');
+    
+    // Open coupon page in new tab
+    window.open('/coupons', '_blank');
+    
+    // Navigate to cart page in current tab
+    navigate('/checkout');
   };
 
   return (
@@ -148,101 +222,177 @@ const BridalBoutique: React.FC = () => {
           </h2>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Product Card 1 */}
-            <div className="card group">
-              <div className="relative overflow-hidden">
-                <img 
-                  src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                  alt="Crystal Embellished Heels"
-                  className="w-full h-64 object-cover"
-                />
-                <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600">
-                  <Heart size={20} />
-                </button>
-              </div>
-              <div className="p-4">
-                <h3 className="font-heading text-lg mb-2">Crystal Embellished Heels</h3>
-                <p className="text-gray-600 text-sm mb-2">Perfect for your special day</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-semibold">$299.99</span>
-                  <button className="p-2 text-secondary-600 hover:text-secondary-700">
-                    <ShoppingBag size={20} />
-                  </button>
+            {bridalProducts.length > 0 ? (
+              bridalProducts.map((product) => (
+                <div 
+                  key={product.id} 
+                  className="card group cursor-pointer"
+                  onClick={() => handleProductClick(product.id)}
+                >
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src={product.images?.[0]?.url || "https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
+                      alt={product.name}
+                      className="w-full h-64 object-cover"
+                    />
+                    <button 
+                      className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Heart size={20} />
+                    </button>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-heading text-lg mb-2">{product.name}</h3>
+                    <p className="text-gray-600 text-sm mb-2">{product.brand?.name || 'Luxury Brand'}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-semibold">${product.price.toFixed(2)}</span>
+                      <button 
+                        className="p-2 text-secondary-600 hover:text-secondary-700"
+                        onClick={(e) => handleAddToCart(product, e)}
+                      >
+                        <ShoppingBag size={20} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              ))
+            ) : (
+              // Fallback products if no data from backend
+              <>
+                <div className="card group cursor-pointer" onClick={() => handleProductClick("fallback-1")}>
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                      alt="Crystal Embellished Heels"
+                      className="w-full h-64 object-cover"
+                    />
+                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600" onClick={(e) => e.stopPropagation()}>
+                      <Heart size={20} />
+                    </button>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-heading text-lg mb-2">Crystal Embellished Heels</h3>
+                    <p className="text-gray-600 text-sm mb-2">Perfect for your special day</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-semibold">$299.99</span>
+                      <button 
+                        className="p-2 text-secondary-600 hover:text-secondary-700"
+                        onClick={(e) => handleAddToCart({
+                          id: "fallback-1",
+                          name: "Crystal Embellished Heels",
+                          price: 299.99,
+                          description: "Perfect for your special day",
+                          images: [{ url: "https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" }],
+                          stock_quantity: 10
+                        }, e)}
+                      >
+                        <ShoppingBag size={20} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
-            {/* Product Card 2 */}
-            <div className="card group">
-              <div className="relative overflow-hidden">
-                <img 
-                  src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                  alt="Pearl Drop Earrings"
-                  className="w-full h-64 object-cover"
-                />
-                <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600">
-                  <Heart size={20} />
-                </button>
-              </div>
-              <div className="p-4">
-                <h3 className="font-heading text-lg mb-2">Pearl Drop Earrings</h3>
-                <p className="text-gray-600 text-sm mb-2">Elegant pearl and crystal design</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-semibold">$199.99</span>
-                  <button className="p-2 text-secondary-600 hover:text-secondary-700">
-                    <ShoppingBag size={20} />
-                  </button>
+                <div className="card group cursor-pointer" onClick={() => handleProductClick("fallback-2")}>
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                      alt="Pearl Drop Earrings"
+                      className="w-full h-64 object-cover"
+                    />
+                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600" onClick={(e) => e.stopPropagation()}>
+                      <Heart size={20} />
+                    </button>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-heading text-lg mb-2">Pearl Drop Earrings</h3>
+                    <p className="text-gray-600 text-sm mb-2">Elegant pearl and crystal design</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-semibold">$199.99</span>
+                      <button 
+                        className="p-2 text-secondary-600 hover:text-secondary-700"
+                        onClick={(e) => handleAddToCart({
+                          id: "fallback-2",
+                          name: "Pearl Drop Earrings",
+                          price: 199.99,
+                          description: "Elegant pearl and crystal design",
+                          images: [{ url: "https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" }],
+                          stock_quantity: 15
+                        }, e)}
+                      >
+                        <ShoppingBag size={20} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            {/* Product Card 3 */}
-            <div className="card group">
-              <div className="relative overflow-hidden">
-                <img 
-                  src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                  alt="Lace Trim Veil"
-                  className="w-full h-64 object-cover"
-                />
-                <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600">
-                  <Heart size={20} />
-                </button>
-              </div>
-              <div className="p-4">
-                <h3 className="font-heading text-lg mb-2">Lace Trim Veil</h3>
-                <p className="text-gray-600 text-sm mb-2">Cathedral length with lace detail</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-semibold">$249.99</span>
-                  <button className="p-2 text-secondary-600 hover:text-secondary-700">
-                    <ShoppingBag size={20} />
-                  </button>
+                <div className="card group cursor-pointer" onClick={() => handleProductClick("fallback-3")}>
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                      alt="Lace Trim Veil"
+                      className="w-full h-64 object-cover"
+                    />
+                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600" onClick={(e) => e.stopPropagation()}>
+                      <Heart size={20} />
+                    </button>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-heading text-lg mb-2">Lace Trim Veil</h3>
+                    <p className="text-gray-600 text-sm mb-2">Cathedral length with lace detail</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-semibold">$249.99</span>
+                      <button 
+                        className="p-2 text-secondary-600 hover:text-secondary-700"
+                        onClick={(e) => handleAddToCart({
+                          id: "fallback-3",
+                          name: "Lace Trim Veil",
+                          price: 249.99,
+                          description: "Cathedral length with lace detail",
+                          images: [{ url: "https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" }],
+                          stock_quantity: 8
+                        }, e)}
+                      >
+                        <ShoppingBag size={20} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            {/* Product Card 4 */}
-            <div className="card group">
-              <div className="relative overflow-hidden">
-                <img 
-                  src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                  alt="Crystal Hair Pins"
-                  className="w-full h-64 object-cover"
-                />
-                <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600">
-                  <Heart size={20} />
-                </button>
-              </div>
-              <div className="p-4">
-                <h3 className="font-heading text-lg mb-2">Crystal Hair Pins</h3>
-                <p className="text-gray-600 text-sm mb-2">Set of 6 decorative pins</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-semibold">$89.99</span>
-                  <button className="p-2 text-secondary-600 hover:text-secondary-700">
-                    <ShoppingBag size={20} />
-                  </button>
+                <div className="card group cursor-pointer" onClick={() => handleProductClick("fallback-4")}>
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                      alt="Crystal Hair Pins"
+                      className="w-full h-64 object-cover"
+                    />
+                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600" onClick={(e) => e.stopPropagation()}>
+                      <Heart size={20} />
+                    </button>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-heading text-lg mb-2">Crystal Hair Pins</h3>
+                    <p className="text-gray-600 text-sm mb-2">Set of 6 decorative pins</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-semibold">$89.99</span>
+                      <button 
+                        className="p-2 text-secondary-600 hover:text-secondary-700"
+                        onClick={(e) => handleAddToCart({
+                          id: "fallback-4",
+                          name: "Crystal Hair Pins",
+                          price: 89.99,
+                          description: "Set of 6 decorative pins",
+                          images: [{ url: "https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" }],
+                          stock_quantity: 20
+                        }, e)}
+                      >
+                        <ShoppingBag size={20} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -342,7 +492,13 @@ const BridalBoutique: React.FC = () => {
               Our bridal specialists are here to help you find the perfect pieces for your special day. 
               Schedule a personalized consultation at our boutique.
             </p>
-            <button className="btn-secondary">
+            <button 
+              className="btn-secondary"
+              onClick={() => {
+                window.open('/coupons', '_blank');
+                navigate('/contact');
+              }}
+            >
               Schedule Appointment
             </button>
           </div>

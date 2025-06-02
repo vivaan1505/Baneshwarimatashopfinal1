@@ -6,6 +6,8 @@ import MobileMenu from './MobileMenu';
 import NewsletterSignup from '../common/NewsletterSignup';
 import Chatbot from '../common/Chatbot';
 import { supabase } from '../../lib/supabase';
+import CookieConsent from '../common/CookieConsent';
+import { initializeConsentServices } from '../../utils/cookieManager';
 
 const Layout: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
@@ -13,6 +15,12 @@ const Layout: React.FC = () => {
 
   useEffect(() => {
     fetchFavicon();
+    
+    // Initialize consent-based services if consent already given
+    const hasConsent = localStorage.getItem('cookie-consent') === 'accepted';
+    if (hasConsent) {
+      initializeConsentServices();
+    }
   }, []);
 
   const fetchFavicon = async () => {
@@ -58,6 +66,20 @@ const Layout: React.FC = () => {
     setMobileMenuOpen(false);
   };
 
+  const handleCookieAccept = () => {
+    initializeConsentServices();
+  };
+
+  const handleCookieDecline = () => {
+    // No services to initialize when cookies are declined
+    console.log('Cookies declined');
+  };
+
+  const handleCookieCustomize = () => {
+    // This is called when the user clicks the customize button
+    console.log('Customize cookies');
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header toggleMobileMenu={toggleMobileMenu} />
@@ -71,6 +93,11 @@ const Layout: React.FC = () => {
       <NewsletterSignup />
       <Footer />
       <Chatbot />
+      <CookieConsent 
+        onAccept={handleCookieAccept}
+        onDecline={handleCookieDecline}
+        onCustomize={handleCookieCustomize}
+      />
     </div>
   );
 };
