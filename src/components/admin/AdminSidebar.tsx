@@ -25,7 +25,8 @@ import {
   HelpCircle,
   UserPlus,
   User,
-  Handshake
+  Handshake,
+  Image
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { cn } from '../../utils/cn';
@@ -60,6 +61,7 @@ const AdminSidebar: React.FC = () => {
     { name: 'Recycling', href: '/admin/recycling', icon: Recycle },
     { name: 'Brand Links', href: '/admin/update-brand-links', icon: LinkIcon },
     { name: 'Partner Services', href: '/admin/partner-services', icon: Handshake },
+    { name: 'Hero Slides', href: '/admin/hero-slides', icon: Image },
     {
       name: 'Content',
       href: '/admin/blog-posts',

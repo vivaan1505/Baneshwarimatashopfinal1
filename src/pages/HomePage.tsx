@@ -9,6 +9,7 @@ import MinimalLayout from '../components/home/layouts/MinimalLayout';
 import { useProducts } from '../hooks/useProducts';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import HeroSlider from '../components/home/HeroSlider';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -29,37 +30,6 @@ const HomePage: React.FC = () => {
   
   const [activeSlide, setActiveSlide] = useState(0);
 
-  // Hero slider content
-  const heroSlides = [
-    {
-      title: "Summer Collection 2025",
-      subtitle: "Elevate Your Style",
-      description: "Discover our premium selection of summer essentials",
-      image: "https://images.pexels.com/photos/5709661/pexels-photo-5709661.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      cta: "/new-arrivals",
-      ctaText: "Shop Now",
-      accent: "primary"
-    },
-    {
-      title: "Bridal Boutique",
-      subtitle: "Your Perfect Day",
-      description: "Everything you need for your special occasion",
-      image: "https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      cta: "/bridal-boutique",
-      ctaText: "Explore Collection",
-      accent: "secondary"
-    },
-    {
-      title: "Festive Collection",
-      subtitle: "Celebrate in Style",
-      description: "Discover perfect gifts and festive fashion",
-      image: "https://images.pexels.com/photos/717988/pexels-photo-717988.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      cta: "/festive-store",
-      ctaText: "Shop Collection",
-      accent: "accent"
-    }
-  ];
-
   // Render different layouts based on the selected layout type
   switch (homeLayout) {
     case 'hero-centered':
@@ -72,89 +42,7 @@ const HomePage: React.FC = () => {
       return (
         <div>
           {/* Modern Hero Slider Section */}
-          <section className="relative">
-            <Swiper
-              modules={[Navigation, Pagination, Autoplay]}
-              navigation={{
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-              }}
-              pagination={{ 
-                clickable: true,
-                el: '.swiper-pagination'
-              }}
-              autoplay={{
-                delay: 5000,
-                disableOnInteraction: false,
-              }}
-              loop={true}
-              onSlideChange={(swiper) => setActiveSlide(swiper.realIndex)}
-              className="h-[90vh] min-h-[600px]"
-            >
-              {heroSlides.map((slide, index) => (
-                <SwiperSlide key={index}>
-                  <div className="relative h-full w-full">
-                    <div className="absolute inset-0">
-                      <div className={`absolute inset-0 bg-gradient-to-r from-${slide.accent}-900/90 to-${slide.accent}-800/80 dark:from-${slide.accent}-900/95 dark:to-${slide.accent}-800/85`}></div>
-                      <img 
-                        src={slide.image} 
-                        alt={slide.title} 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    
-                    <div className="container-custom relative z-10 h-full flex items-center">
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center h-full">
-                        <motion.div
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.6 }}
-                          className="py-12"
-                        >
-                          <span className="inline-block px-4 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium mb-6 text-white">
-                            {slide.subtitle}
-                          </span>
-                          <h1 className="font-heading text-4xl md:text-6xl font-bold mb-6 text-white leading-tight">
-                            {slide.title}
-                          </h1>
-                          <p className="text-lg md:text-xl mb-8 text-gray-200 max-w-lg">
-                            {slide.description}
-                          </p>
-                          <div className="flex flex-wrap gap-4">
-                            <Link 
-                              to={slide.cta} 
-                              className={`btn-${slide.accent} text-base`}
-                            >
-                              {slide.ctaText}
-                            </Link>
-                            <Link 
-                              to="/collections" 
-                              className="btn bg-white/10 text-white border border-white/30 backdrop-blur-sm hover:bg-white/20 text-base"
-                            >
-                              View All Collections
-                            </Link>
-                          </div>
-                        </motion.div>
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-              ))}
-              
-              <div className="swiper-button-prev !text-white !w-12 !h-12 !bg-black/20 backdrop-blur-sm !rounded-full flex items-center justify-center after:!text-lg">
-                <ChevronLeft className="w-6 h-6" />
-              </div>
-              <div className="swiper-button-next !text-white !w-12 !h-12 !bg-black/20 backdrop-blur-sm !rounded-full flex items-center justify-center after:!text-lg">
-                <ChevronRight className="w-6 h-6" />
-              </div>
-              
-              <div className="absolute bottom-6 left-0 right-0 z-10">
-                <div className="container-custom">
-                  <div className="swiper-pagination !relative !bottom-0"></div>
-                </div>
-              </div>
-            </Swiper>
-          </section>
+          <HeroSlider />
 
           {/* Featured Categories with Modern Design */}
           <section className="py-20 bg-gray-50 dark:bg-gray-900">
@@ -166,75 +54,141 @@ const HomePage: React.FC = () => {
                 </p>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <Link to="/footwear" className="group relative overflow-hidden rounded-xl h-80 shadow-md">
-                  <img 
-                    src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                    alt="Footwear" 
-                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end">
-                    <div className="p-6">
-                      <h3 className="text-xl font-heading text-white mb-2">Footwear</h3>
-                      <span className="text-accent-300 group-hover:text-accent-200 flex items-center text-sm">
-                        Shop Now
-                        <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </span>
+              <motion.div 
+                variants={{
+                  hidden: { opacity: 0 },
+                  show: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.1
+                    }
+                  }
+                }}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: "-100px" }}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+              >
+                <motion.div 
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+                  }}
+                  className="card group"
+                >
+                  <Link to="/footwear" className="block h-full">
+                    <div className="relative overflow-hidden h-80">
+                      <img 
+                        src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                        alt="Footwear" 
+                        className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
+                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                          <h3 className="text-xl font-heading font-medium mb-2">Footwear</h3>
+                          <p className="text-sm text-gray-200 mb-4">Step into style with our premium footwear collection</p>
+                          <span className="inline-flex items-center text-sm font-medium text-accent-300 group-hover:text-accent-400 transition-colors">
+                            Shop Now
+                            <svg className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </motion.div>
                 
-                <Link to="/clothing" className="group relative overflow-hidden rounded-xl h-80 shadow-md">
-                  <img 
-                    src="https://images.pexels.com/photos/5709665/pexels-photo-5709665.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                    alt="Clothing" 
-                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end">
-                    <div className="p-6">
-                      <h3 className="text-xl font-heading text-white mb-2">Clothing</h3>
-                      <span className="text-accent-300 group-hover:text-accent-200 flex items-center text-sm">
-                        Shop Now
-                        <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </span>
+                <motion.div 
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    show: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.1 } }
+                  }}
+                  className="card group"
+                >
+                  <Link to="/clothing" className="block h-full">
+                    <div className="relative overflow-hidden h-80">
+                      <img 
+                        src="https://images.pexels.com/photos/5709665/pexels-photo-5709665.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                        alt="Clothing" 
+                        className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
+                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                          <h3 className="text-xl font-heading font-medium mb-2">Clothing</h3>
+                          <p className="text-sm text-gray-200 mb-4">Elevate your wardrobe with the latest fashion trends</p>
+                          <span className="inline-flex items-center text-sm font-medium text-accent-300 group-hover:text-accent-400 transition-colors">
+                            Shop Now
+                            <svg className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </motion.div>
                 
-                <Link to="/jewelry" className="group relative overflow-hidden rounded-xl h-80 shadow-md">
-                  <img 
-                    src="https://images.pexels.com/photos/8891959/pexels-photo-8891959.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                    alt="Jewelry" 
-                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end">
-                    <div className="p-6">
-                      <h3 className="text-xl font-heading text-white mb-2">Jewelry</h3>
-                      <span className="text-accent-300 group-hover:text-accent-200 flex items-center text-sm">
-                        Shop Now
-                        <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </span>
+                <motion.div 
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    show: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.2 } }
+                  }}
+                  className="card group"
+                >
+                  <Link to="/jewelry" className="block h-full">
+                    <div className="relative overflow-hidden h-80">
+                      <img 
+                        src="https://images.pexels.com/photos/8891959/pexels-photo-8891959.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                        alt="Jewelry" 
+                        className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
+                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                          <h3 className="text-xl font-heading font-medium mb-2">Jewelry</h3>
+                          <p className="text-sm text-gray-200 mb-4">Elegant pieces to complete your perfect look</p>
+                          <span className="inline-flex items-center text-sm font-medium text-accent-300 group-hover:text-accent-400 transition-colors">
+                            Shop Now
+                            <svg className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </motion.div>
                 
-                <Link to="/beauty" className="group relative overflow-hidden rounded-xl h-80 shadow-md">
-                  <img 
-                    src="https://images.pexels.com/photos/2693640/pexels-photo-2693640.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                    alt="Beauty" 
-                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end">
-                    <div className="p-6">
-                      <h3 className="text-xl font-heading text-white mb-2">Beauty</h3>
-                      <span className="text-accent-300 group-hover:text-accent-200 flex items-center text-sm">
-                        Shop Now
-                        <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </span>
+                <motion.div 
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    show: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.3 } }
+                  }}
+                  className="card group"
+                >
+                  <Link to="/beauty" className="block h-full">
+                    <div className="relative overflow-hidden h-80">
+                      <img 
+                        src="https://images.pexels.com/photos/2693640/pexels-photo-2693640.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                        alt="Beauty" 
+                        className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
+                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                          <h3 className="text-xl font-heading font-medium mb-2">Beauty</h3>
+                          <p className="text-sm text-gray-200 mb-4">Premium skincare and makeup for your beauty routine</p>
+                          <span className="inline-flex items-center text-sm font-medium text-accent-300 group-hover:text-accent-400 transition-colors">
+                            Shop Now
+                            <svg className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              </div>
+                  </Link>
+                </motion.div>
+              </motion.div>
             </div>
           </section>
 
@@ -312,7 +266,7 @@ const HomePage: React.FC = () => {
                             </div>
                             
                             <div className="p-4">
-                              <h3 className="font-medium mb-1 group-hover:text-primary-600 transition-colors dark:text-white dark:group-hover:text-primary-400">
+                              <h3 className="font-medium mb-1 group-hover:text-primary-600 transition-colors dark:text-white dark:group-hover:text-primary-400 line-clamp-1">
                                 {product.name}
                               </h3>
                               <p className="text-sm text-gray-500 mb-2 dark:text-gray-300">{product.brand?.name || 'Brand'}</p>
@@ -491,7 +445,7 @@ const HomePage: React.FC = () => {
                             </div>
                             
                             <div className="p-4">
-                              <h3 className="font-medium mb-1 group-hover:text-primary-600 transition-colors dark:text-white dark:group-hover:text-primary-400">
+                              <h3 className="font-medium mb-1 group-hover:text-primary-600 transition-colors dark:text-white dark:group-hover:text-primary-400 line-clamp-1">
                                 {product.name}
                               </h3>
                               <p className="text-sm text-gray-500 mb-2 dark:text-gray-300">{product.brand?.name || 'Brand'}</p>
