@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, User, Tag, Share } from 'lucide-react';
+import { ArrowLeft, Calendar, User, Tag, Share, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
 import { toast } from 'react-hot-toast';
@@ -36,6 +36,7 @@ const BlogPost: React.FC = () => {
   const [post, setPost] = useState<BlogPostData | null>(null);
   const [loading, setLoading] = useState(true);
   const [relatedPosts, setRelatedPosts] = useState<BlogPostData[]>([]);
+  const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -176,6 +177,11 @@ const BlogPost: React.FC = () => {
     }
   };
 
+  // Toggle expanded view
+  const toggleExpanded = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   if (loading) {
     return (
       <div className="container-custom py-12">
@@ -202,6 +208,85 @@ const BlogPost: React.FC = () => {
           <Link to="/blog" className="text-primary-700 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300">
             Return to Blog
           </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // If expanded view is active, render a modal-like view
+  if (isExpanded) {
+    return (
+      <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="relative">
+            {post.featured_image && (
+              <div className="h-64 md:h-80">
+                <img 
+                  src={post.featured_image} 
+                  alt={post.title} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+            <button 
+              onClick={toggleExpanded}
+              className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md text-gray-700 hover:text-gray-900 dark:bg-gray-700 dark:text-gray-300 dark:hover:text-white"
+            >
+              <X size={20} />
+            </button>
+          </div>
+          
+          <div className="p-6 md:p-8">
+            <div className="flex items-center text-sm text-gray-500 mb-4 dark:text-gray-400">
+              <div className="flex items-center">
+                <User size={14} className="mr-1" />
+                <span>{getAuthorName(post)}</span>
+              </div>
+              <span className="mx-2">•</span>
+              <div className="flex items-center">
+                <Calendar size={14} className="mr-1" />
+                <span>{getFormattedDate(post.published_at || post.created_at)}</span>
+              </div>
+              {post.categories.length > 0 && (
+                <>
+                  <span className="mx-2">•</span>
+                  <span className={`badge-primary`}>
+                    {post.categories[0].category.name}
+                  </span>
+                </>
+              )}
+            </div>
+            
+            <h2 className="text-2xl md:text-3xl font-heading font-bold mb-4 dark:text-white">
+              {post.title}
+            </h2>
+            
+            <p className="text-gray-600 text-lg mb-6 dark:text-gray-300">
+              {post.excerpt}
+            </p>
+            
+            <div 
+              className="prose max-w-none dark:prose-invert prose-img:rounded-lg prose-headings:font-heading"
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
+            
+            <div className="mt-8 pt-6 border-t dark:border-gray-700 flex justify-between">
+              <button
+                onClick={toggleExpanded}
+                className="btn-outline"
+              >
+                Close
+              </button>
+              
+              <button 
+                onClick={sharePost}
+                className="btn-primary flex items-center"
+              >
+                <Share className="mr-2 h-4 w-4" />
+                Share
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -278,7 +363,16 @@ const BlogPost: React.FC = () => {
 
         {/* Article Content */}
         <div className="max-w-3xl mx-auto prose prose-lg dark:prose-invert prose-headings:font-heading prose-headings:font-medium prose-a:text-primary-600 dark:prose-a:text-primary-400">
-          <div dangerouslySetInnerHTML={{ __html: post.content }} />
+          <div dangerouslySetInnerHTML={{ __html: post.content.substring(0, 1000) + '...' }} />
+          
+          <div className="mt-8 text-center">
+            <button
+              onClick={toggleExpanded}
+              className="btn-primary"
+            >
+              Read Full Article
+            </button>
+          </div>
         </div>
 
         {/* Tags */}
@@ -308,6 +402,13 @@ const BlogPost: React.FC = () => {
             <Share className="mr-2 h-4 w-4" />
             Share This Post
           </button>
+          
+          <button
+            onClick={toggleExpanded}
+            className="btn-primary px-4 py-2 text-sm"
+          >
+            Read Full Article
+          </button>
         </div>
 
         {/* Related Posts */}
@@ -317,33 +418,31 @@ const BlogPost: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {relatedPosts.map(relatedPost => (
                 <article key={relatedPost.id} className="card group dark:bg-gray-800">
-                  <Link to={`/blog/${relatedPost.slug}`} className="block">
-                    <div className="relative overflow-hidden h-48">
-                      <img 
-                        src={relatedPost.featured_image || 'https://via.placeholder.com/600x400?text=No+Image'} 
-                        alt={relatedPost.title} 
-                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
-                  </Link>
+                  <div className="relative overflow-hidden h-48">
+                    <img 
+                      src={relatedPost.featured_image || 'https://via.placeholder.com/600x400?text=No+Image'} 
+                      alt={relatedPost.title} 
+                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
                   
                   <div className="p-4">
-                    <Link to={`/blog/${relatedPost.slug}`} className="block group">
-                      <h3 className="text-lg font-heading font-medium mb-2 group-hover:text-primary-700 transition-colors dark:text-white dark:group-hover:text-primary-400">
-                        {relatedPost.title}
-                      </h3>
-                    </Link>
+                    <h3 className="text-lg font-heading font-medium mb-2 group-hover:text-primary-700 transition-colors dark:text-white dark:group-hover:text-primary-400">
+                      {relatedPost.title}
+                    </h3>
                     
                     <p className="text-gray-600 mb-4 line-clamp-2 text-sm dark:text-gray-300">
                       {relatedPost.excerpt}
                     </p>
                     
-                    <Link 
-                      to={`/blog/${relatedPost.slug}`}
+                    <button 
+                      onClick={() => {
+                        navigate(`/blog/${relatedPost.slug}`);
+                      }}
                       className="text-primary-700 hover:text-primary-800 text-sm font-medium dark:text-primary-400 dark:hover:text-primary-300"
                     >
                       Read More →
-                    </Link>
+                    </button>
                   </div>
                 </article>
               ))}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Calendar, User } from 'lucide-react';
+import { Search, Calendar, User, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
 
@@ -36,6 +36,7 @@ const BlogPage: React.FC = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [categories, setCategories] = useState<{id: string, name: string, slug: string}[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedPost, setExpandedPost] = useState<string | null>(null);
 
   useEffect(() => {
     fetchBlogPosts();
@@ -168,6 +169,15 @@ const BlogPage: React.FC = () => {
     return colorMap[categoryName] || 'primary';
   };
 
+  // Toggle expanded post
+  const toggleExpandPost = (postId: string) => {
+    if (expandedPost === postId) {
+      setExpandedPost(null);
+    } else {
+      setExpandedPost(postId);
+    }
+  };
+
   return (
     <div className="py-12">
       <div className="container-custom">
@@ -243,7 +253,7 @@ const BlogPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPosts.map((post) => (
               <article key={post.id} className="card group dark:bg-gray-800">
-                <Link to={`/blog/${post.slug}`} className="block">
+                <div className="relative">
                   <div className="relative overflow-hidden h-56">
                     <img 
                       src={post.featured_image || 'https://via.placeholder.com/600x400?text=No+Image'} 
@@ -258,41 +268,105 @@ const BlogPage: React.FC = () => {
                       </div>
                     )}
                   </div>
-                </Link>
-                
-                <div className="p-6">
-                  <div className="flex items-center text-sm text-gray-500 mb-3 dark:text-gray-400">
-                    <div className="flex items-center">
-                      <User size={14} className="mr-1" />
-                      <span>{getAuthorName(post)}</span>
-                    </div>
-                    <span className="mx-2">•</span>
-                    <div className="flex items-center">
-                      <Calendar size={14} className="mr-1" />
-                      <span>{getFormattedDate(post.published_at || post.created_at)}</span>
-                    </div>
-                  </div>
                   
-                  <Link to={`/blog/${post.slug}`} className="block group">
+                  <div className="p-6">
+                    <div className="flex items-center text-sm text-gray-500 mb-3 dark:text-gray-400">
+                      <div className="flex items-center">
+                        <User size={14} className="mr-1" />
+                        <span>{getAuthorName(post)}</span>
+                      </div>
+                      <span className="mx-2">•</span>
+                      <div className="flex items-center">
+                        <Calendar size={14} className="mr-1" />
+                        <span>{getFormattedDate(post.published_at || post.created_at)}</span>
+                      </div>
+                    </div>
+                    
                     <h2 className="text-xl font-heading font-medium mb-2 group-hover:text-primary-700 transition-colors dark:text-white dark:group-hover:text-primary-400">
                       {post.title}
                     </h2>
-                  </Link>
-                  
-                  <p className="text-gray-600 mb-4 line-clamp-2 dark:text-gray-300">
-                    {post.excerpt}
-                  </p>
-                  
-                  <Link 
-                    to={`/blog/${post.slug}`}
-                    className="inline-flex items-center text-primary-700 hover:text-primary-800 font-medium text-sm transition-colors dark:text-primary-400 dark:hover:text-primary-300"
-                  >
-                    Read More
-                    <svg className="ml-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </Link>
+                    
+                    <p className="text-gray-600 mb-4 line-clamp-2 dark:text-gray-300">
+                      {post.excerpt}
+                    </p>
+                    
+                    <button 
+                      onClick={() => toggleExpandPost(post.id)}
+                      className="inline-flex items-center text-primary-700 hover:text-primary-800 font-medium text-sm transition-colors dark:text-primary-400 dark:hover:text-primary-300"
+                    >
+                      {expandedPost === post.id ? 'Close' : 'Read More'}
+                    </button>
+                  </div>
                 </div>
+
+                {/* Expanded Post Modal */}
+                {expandedPost === post.id && (
+                  <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                      <div className="relative">
+                        {post.featured_image && (
+                          <div className="h-64 md:h-80">
+                            <img 
+                              src={post.featured_image} 
+                              alt={post.title} 
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        )}
+                        <button 
+                          onClick={() => setExpandedPost(null)}
+                          className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md text-gray-700 hover:text-gray-900 dark:bg-gray-700 dark:text-gray-300 dark:hover:text-white"
+                        >
+                          <X size={20} />
+                        </button>
+                      </div>
+                      
+                      <div className="p-6 md:p-8">
+                        <div className="flex items-center text-sm text-gray-500 mb-4 dark:text-gray-400">
+                          <div className="flex items-center">
+                            <User size={14} className="mr-1" />
+                            <span>{getAuthorName(post)}</span>
+                          </div>
+                          <span className="mx-2">•</span>
+                          <div className="flex items-center">
+                            <Calendar size={14} className="mr-1" />
+                            <span>{getFormattedDate(post.published_at || post.created_at)}</span>
+                          </div>
+                          {post.categories.length > 0 && (
+                            <>
+                              <span className="mx-2">•</span>
+                              <span className={`badge-${getCategoryColorClass(post.categories[0].category.name)}`}>
+                                {post.categories[0].category.name}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                        
+                        <h2 className="text-2xl md:text-3xl font-heading font-bold mb-4 dark:text-white">
+                          {post.title}
+                        </h2>
+                        
+                        <p className="text-gray-600 text-lg mb-6 dark:text-gray-300">
+                          {post.excerpt}
+                        </p>
+                        
+                        <div 
+                          className="prose max-w-none dark:prose-invert prose-img:rounded-lg prose-headings:font-heading"
+                          dangerouslySetInnerHTML={{ __html: post.content }}
+                        />
+                        
+                        <div className="mt-8 pt-6 border-t dark:border-gray-700">
+                          <Link 
+                            to={`/blog/${post.slug}`}
+                            className="btn-primary"
+                          >
+                            View Full Article
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </article>
             ))}
           </div>

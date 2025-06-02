@@ -54,10 +54,6 @@ const FestiveStore: React.FC = () => {
   };
 
   const handleProductClick = (productId: string) => {
-    // Open coupon page in new tab
-    window.open('/coupons', '_blank');
-    
-    // Navigate to product page in current tab
     navigate(`/product/${productId}`);
   };
 
@@ -78,12 +74,6 @@ const FestiveStore: React.FC = () => {
     });
     
     toast.success('Added to cart!');
-    
-    // Open coupon page in new tab
-    window.open('/coupons', '_blank');
-    
-    // Navigate to cart page in current tab
-    navigate('/checkout');
   };
 
   return (
@@ -168,10 +158,7 @@ const FestiveStore: React.FC = () => {
         <div className="container-custom">
           <h2 className="text-3xl font-heading font-bold text-center mb-12">Shop by Category</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="group relative overflow-hidden rounded-lg cursor-pointer" onClick={() => {
-              window.open('/coupons', '_blank');
-              navigate('/beauty');
-            }}>
+            <div className="group relative overflow-hidden rounded-lg cursor-pointer" onClick={() => navigate('/beauty')}>
               <img 
                 src="https://images.pexels.com/photos/3782786/pexels-photo-3782786.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                 alt="Luxury Beauty Sets" 
@@ -188,10 +175,7 @@ const FestiveStore: React.FC = () => {
               </div>
             </div>
             
-            <div className="group relative overflow-hidden rounded-lg cursor-pointer" onClick={() => {
-              window.open('/coupons', '_blank');
-              navigate('/jewelry');
-            }}>
+            <div className="group relative overflow-hidden rounded-lg cursor-pointer" onClick={() => navigate('/jewelry')}>
               <img 
                 src="https://images.pexels.com/photos/1927259/pexels-photo-1927259.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                 alt="Festive Jewelry" 
@@ -208,10 +192,7 @@ const FestiveStore: React.FC = () => {
               </div>
             </div>
             
-            <div className="group relative overflow-hidden rounded-lg cursor-pointer" onClick={() => {
-              window.open('/coupons', '_blank');
-              navigate('/clothing');
-            }}>
+            <div className="group relative overflow-hidden rounded-lg cursor-pointer" onClick={() => navigate('/clothing')}>
               <img 
                 src="https://images.pexels.com/photos/1619801/pexels-photo-1619801.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                 alt="Winter Fashion" 

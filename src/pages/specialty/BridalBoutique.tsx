@@ -84,10 +84,6 @@ const BridalBoutique: React.FC = () => {
   };
 
   const handleProductClick = (productId: string) => {
-    // Open coupon page in new tab
-    window.open('/coupons', '_blank');
-    
-    // Navigate to product page in current tab
     navigate(`/product/${productId}`);
   };
 
@@ -108,12 +104,6 @@ const BridalBoutique: React.FC = () => {
     });
     
     toast.success('Added to cart!');
-    
-    // Open coupon page in new tab
-    window.open('/coupons', '_blank');
-    
-    // Navigate to cart page in current tab
-    navigate('/checkout');
   };
 
   return (
@@ -492,15 +482,12 @@ const BridalBoutique: React.FC = () => {
               Our bridal specialists are here to help you find the perfect pieces for your special day. 
               Schedule a personalized consultation at our boutique.
             </p>
-            <button 
+            <Link 
+              to="/contact"
               className="btn-secondary"
-              onClick={() => {
-                window.open('/coupons', '_blank');
-                navigate('/contact');
-              }}
             >
               Schedule Appointment
-            </button>
+            </Link>
           </div>
         </div>
       </section>
