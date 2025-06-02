@@ -14,7 +14,30 @@ import {
   Flower,
   Leaf,
   Sun as SummerIcon,
-  Check
+  Check,
+  Ghost,
+  Heart,
+  Egg,
+  Sparkles,
+  Flame,
+  Clover,
+  Flag,
+  GraduationCap,
+  ShoppingCart,
+  Grid,
+  Columns,
+  Layers,
+  Video,
+  Split,
+  Slideshow,
+  LayoutGrid,
+  Maximize,
+  BookOpen,
+  Store,
+  Feather,
+  Minimize2,
+  BoldIcon,
+  Crown
 } from 'lucide-react';
 import { 
   useThemeStore, 
@@ -57,7 +80,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
       <div className="flex items-center justify-center min-h-screen px-4">
         <div className="fixed inset-0 bg-black opacity-30" onClick={onClose}></div>
         
-        <div className="relative bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl shadow-xl">
+        <div className="relative bg-white dark:bg-gray-800 rounded-lg w-full max-w-4xl shadow-xl">
           <div className="flex justify-between items-center p-6 border-b dark:border-gray-700">
             <h2 className="text-xl font-medium dark:text-white">Theme & Layout Manager</h2>
             <button onClick={onClose} className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 transition-colors">
@@ -65,7 +88,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
             </button>
           </div>
 
-          <div className="p-6">
+          <div className="p-6 max-h-[80vh] overflow-y-auto">
             {/* Tabs */}
             <div className="flex border-b dark:border-gray-700 mb-6">
               <button
@@ -141,7 +164,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                 {/* Seasonal Themes */}
                 <div>
                   <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Seasonal Theme</h3>
-                  <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <button
                       onClick={() => setSeasonalTheme('default')}
                       className={`p-4 rounded-lg border ${
@@ -197,13 +220,134 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                       <Flower className={`h-6 w-6 mb-2 ${seasonalTheme === 'spring' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span className={`text-sm ${seasonalTheme === 'spring' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Spring</span>
                     </button>
+                    <button
+                      onClick={() => setSeasonalTheme('winter')}
+                      className={`p-4 rounded-lg border ${
+                        seasonalTheme === 'winter'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Snowflake className={`h-6 w-6 mb-2 ${seasonalTheme === 'winter' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${seasonalTheme === 'winter' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Winter</span>
+                    </button>
+                    <button
+                      onClick={() => setSeasonalTheme('halloween')}
+                      className={`p-4 rounded-lg border ${
+                        seasonalTheme === 'halloween'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Ghost className={`h-6 w-6 mb-2 ${seasonalTheme === 'halloween' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${seasonalTheme === 'halloween' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Halloween</span>
+                    </button>
+                    <button
+                      onClick={() => setSeasonalTheme('valentine')}
+                      className={`p-4 rounded-lg border ${
+                        seasonalTheme === 'valentine'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Heart className={`h-6 w-6 mb-2 ${seasonalTheme === 'valentine' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${seasonalTheme === 'valentine' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Valentine</span>
+                    </button>
+                    <button
+                      onClick={() => setSeasonalTheme('easter')}
+                      className={`p-4 rounded-lg border ${
+                        seasonalTheme === 'easter'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Egg className={`h-6 w-6 mb-2 ${seasonalTheme === 'easter' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${seasonalTheme === 'easter' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Easter</span>
+                    </button>
+                    <button
+                      onClick={() => setSeasonalTheme('diwali')}
+                      className={`p-4 rounded-lg border ${
+                        seasonalTheme === 'diwali'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Sparkles className={`h-6 w-6 mb-2 ${seasonalTheme === 'diwali' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${seasonalTheme === 'diwali' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Diwali</span>
+                    </button>
+                    <button
+                      onClick={() => setSeasonalTheme('lunar-new-year')}
+                      className={`p-4 rounded-lg border ${
+                        seasonalTheme === 'lunar-new-year'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Sparkles className={`h-6 w-6 mb-2 ${seasonalTheme === 'lunar-new-year' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${seasonalTheme === 'lunar-new-year' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Lunar New Year</span>
+                    </button>
+                    <button
+                      onClick={() => setSeasonalTheme('thanksgiving')}
+                      className={`p-4 rounded-lg border ${
+                        seasonalTheme === 'thanksgiving'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Flame className={`h-6 w-6 mb-2 ${seasonalTheme === 'thanksgiving' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${seasonalTheme === 'thanksgiving' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Thanksgiving</span>
+                    </button>
+                    <button
+                      onClick={() => setSeasonalTheme('st-patricks')}
+                      className={`p-4 rounded-lg border ${
+                        seasonalTheme === 'st-patricks'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Clover className={`h-6 w-6 mb-2 ${seasonalTheme === 'st-patricks' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${seasonalTheme === 'st-patricks' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>St. Patrick's</span>
+                    </button>
+                    <button
+                      onClick={() => setSeasonalTheme('independence')}
+                      className={`p-4 rounded-lg border ${
+                        seasonalTheme === 'independence'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Flag className={`h-6 w-6 mb-2 ${seasonalTheme === 'independence' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${seasonalTheme === 'independence' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Independence</span>
+                    </button>
+                    <button
+                      onClick={() => setSeasonalTheme('back-to-school')}
+                      className={`p-4 rounded-lg border ${
+                        seasonalTheme === 'back-to-school'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <GraduationCap className={`h-6 w-6 mb-2 ${seasonalTheme === 'back-to-school' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${seasonalTheme === 'back-to-school' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Back to School</span>
+                    </button>
+                    <button
+                      onClick={() => setSeasonalTheme('cyber-monday')}
+                      className={`p-4 rounded-lg border ${
+                        seasonalTheme === 'cyber-monday'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <ShoppingCart className={`h-6 w-6 mb-2 ${seasonalTheme === 'cyber-monday' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${seasonalTheme === 'cyber-monday' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Cyber Monday</span>
+                    </button>
                   </div>
                 </div>
 
                 {/* Color Schemes */}
                 <div>
                   <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Color Scheme</h3>
-                  <div className="grid grid-cols-5 gap-4">
+                  <div className="grid grid-cols-4 md:grid-cols-5 gap-4">
                     <button
                       onClick={() => setColorScheme('default')}
                       className={`p-4 rounded-lg border ${
@@ -258,6 +402,171 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                     >
                       <div className="w-6 h-6 rounded-full bg-pink-600 mb-2"></div>
                       <span className={`text-sm ${colorScheme === 'pink' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Pink</span>
+                    </button>
+                    <button
+                      onClick={() => setColorScheme('teal')}
+                      className={`p-4 rounded-lg border ${
+                        colorScheme === 'teal'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <div className="w-6 h-6 rounded-full bg-teal-600 mb-2"></div>
+                      <span className={`text-sm ${colorScheme === 'teal' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Teal</span>
+                    </button>
+                    <button
+                      onClick={() => setColorScheme('amber')}
+                      className={`p-4 rounded-lg border ${
+                        colorScheme === 'amber'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <div className="w-6 h-6 rounded-full bg-amber-600 mb-2"></div>
+                      <span className={`text-sm ${colorScheme === 'amber' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Amber</span>
+                    </button>
+                    <button
+                      onClick={() => setColorScheme('rose')}
+                      className={`p-4 rounded-lg border ${
+                        colorScheme === 'rose'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <div className="w-6 h-6 rounded-full bg-rose-600 mb-2"></div>
+                      <span className={`text-sm ${colorScheme === 'rose' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Rose</span>
+                    </button>
+                    <button
+                      onClick={() => setColorScheme('emerald')}
+                      className={`p-4 rounded-lg border ${
+                        colorScheme === 'emerald'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <div className="w-6 h-6 rounded-full bg-emerald-600 mb-2"></div>
+                      <span className={`text-sm ${colorScheme === 'emerald' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Emerald</span>
+                    </button>
+                    <button
+                      onClick={() => setColorScheme('indigo')}
+                      className={`p-4 rounded-lg border ${
+                        colorScheme === 'indigo'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <div className="w-6 h-6 rounded-full bg-indigo-600 mb-2"></div>
+                      <span className={`text-sm ${colorScheme === 'indigo' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Indigo</span>
+                    </button>
+                    <button
+                      onClick={() => setColorScheme('sky')}
+                      className={`p-4 rounded-lg border ${
+                        colorScheme === 'sky'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <div className="w-6 h-6 rounded-full bg-sky-600 mb-2"></div>
+                      <span className={`text-sm ${colorScheme === 'sky' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Sky</span>
+                    </button>
+                    <button
+                      onClick={() => setColorScheme('lime')}
+                      className={`p-4 rounded-lg border ${
+                        colorScheme === 'lime'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <div className="w-6 h-6 rounded-full bg-lime-600 mb-2"></div>
+                      <span className={`text-sm ${colorScheme === 'lime' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Lime</span>
+                    </button>
+                    <button
+                      onClick={() => setColorScheme('slate')}
+                      className={`p-4 rounded-lg border ${
+                        colorScheme === 'slate'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <div className="w-6 h-6 rounded-full bg-slate-600 mb-2"></div>
+                      <span className={`text-sm ${colorScheme === 'slate' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Slate</span>
+                    </button>
+                    <button
+                      onClick={() => setColorScheme('neutral')}
+                      className={`p-4 rounded-lg border ${
+                        colorScheme === 'neutral'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <div className="w-6 h-6 rounded-full bg-neutral-600 mb-2"></div>
+                      <span className={`text-sm ${colorScheme === 'neutral' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Neutral</span>
+                    </button>
+                    <button
+                      onClick={() => setColorScheme('red')}
+                      className={`p-4 rounded-lg border ${
+                        colorScheme === 'red'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <div className="w-6 h-6 rounded-full bg-red-600 mb-2"></div>
+                      <span className={`text-sm ${colorScheme === 'red' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Red</span>
+                    </button>
+                    <button
+                      onClick={() => setColorScheme('orange')}
+                      className={`p-4 rounded-lg border ${
+                        colorScheme === 'orange'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <div className="w-6 h-6 rounded-full bg-orange-600 mb-2"></div>
+                      <span className={`text-sm ${colorScheme === 'orange' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Orange</span>
+                    </button>
+                    <button
+                      onClick={() => setColorScheme('yellow')}
+                      className={`p-4 rounded-lg border ${
+                        colorScheme === 'yellow'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <div className="w-6 h-6 rounded-full bg-yellow-500 mb-2"></div>
+                      <span className={`text-sm ${colorScheme === 'yellow' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Yellow</span>
+                    </button>
+                    <button
+                      onClick={() => setColorScheme('cyan')}
+                      className={`p-4 rounded-lg border ${
+                        colorScheme === 'cyan'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <div className="w-6 h-6 rounded-full bg-cyan-600 mb-2"></div>
+                      <span className={`text-sm ${colorScheme === 'cyan' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Cyan</span>
+                    </button>
+                    <button
+                      onClick={() => setColorScheme('fuchsia')}
+                      className={`p-4 rounded-lg border ${
+                        colorScheme === 'fuchsia'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <div className="w-6 h-6 rounded-full bg-fuchsia-600 mb-2"></div>
+                      <span className={`text-sm ${colorScheme === 'fuchsia' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Fuchsia</span>
+                    </button>
+                    <button
+                      onClick={() => setColorScheme('violet')}
+                      className={`p-4 rounded-lg border ${
+                        colorScheme === 'violet'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <div className="w-6 h-6 rounded-full bg-violet-600 mb-2"></div>
+                      <span className={`text-sm ${colorScheme === 'violet' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Violet</span>
                     </button>
                   </div>
                 </div>
@@ -361,6 +670,138 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                       <Type className={`h-6 w-6 mb-2 ${fontFamily === 'lora' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
                       <span style={{fontFamily: 'Lora'}} className={`text-sm ${fontFamily === 'lora' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Lora</span>
                     </button>
+                    <button
+                      onClick={() => setFontFamily('playfair')}
+                      className={`p-4 rounded-lg border ${
+                        fontFamily === 'playfair'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Type className={`h-6 w-6 mb-2 ${fontFamily === 'playfair' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span style={{fontFamily: 'Playfair Display'}} className={`text-sm ${fontFamily === 'playfair' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Playfair</span>
+                    </button>
+                    <button
+                      onClick={() => setFontFamily('roboto')}
+                      className={`p-4 rounded-lg border ${
+                        fontFamily === 'roboto'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Type className={`h-6 w-6 mb-2 ${fontFamily === 'roboto' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${fontFamily === 'roboto' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Roboto</span>
+                    </button>
+                    <button
+                      onClick={() => setFontFamily('oswald')}
+                      className={`p-4 rounded-lg border ${
+                        fontFamily === 'oswald'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Type className={`h-6 w-6 mb-2 ${fontFamily === 'oswald' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${fontFamily === 'oswald' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Oswald</span>
+                    </button>
+                    <button
+                      onClick={() => setFontFamily('raleway')}
+                      className={`p-4 rounded-lg border ${
+                        fontFamily === 'raleway'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Type className={`h-6 w-6 mb-2 ${fontFamily === 'raleway' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${fontFamily === 'raleway' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Raleway</span>
+                    </button>
+                    <button
+                      onClick={() => setFontFamily('merriweather')}
+                      className={`p-4 rounded-lg border ${
+                        fontFamily === 'merriweather'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Type className={`h-6 w-6 mb-2 ${fontFamily === 'merriweather' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${fontFamily === 'merriweather' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Merriweather</span>
+                    </button>
+                    <button
+                      onClick={() => setFontFamily('nunito')}
+                      className={`p-4 rounded-lg border ${
+                        fontFamily === 'nunito'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Type className={`h-6 w-6 mb-2 ${fontFamily === 'nunito' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${fontFamily === 'nunito' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Nunito</span>
+                    </button>
+                    <button
+                      onClick={() => setFontFamily('quicksand')}
+                      className={`p-4 rounded-lg border ${
+                        fontFamily === 'quicksand'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Type className={`h-6 w-6 mb-2 ${fontFamily === 'quicksand' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${fontFamily === 'quicksand' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Quicksand</span>
+                    </button>
+                    <button
+                      onClick={() => setFontFamily('josefin')}
+                      className={`p-4 rounded-lg border ${
+                        fontFamily === 'josefin'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Type className={`h-6 w-6 mb-2 ${fontFamily === 'josefin' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${fontFamily === 'josefin' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Josefin</span>
+                    </button>
+                    <button
+                      onClick={() => setFontFamily('crimson')}
+                      className={`p-4 rounded-lg border ${
+                        fontFamily === 'crimson'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Type className={`h-6 w-6 mb-2 ${fontFamily === 'crimson' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${fontFamily === 'crimson' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Crimson</span>
+                    </button>
+                    <button
+                      onClick={() => setFontFamily('mulish')}
+                      className={`p-4 rounded-lg border ${
+                        fontFamily === 'mulish'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Type className={`h-6 w-6 mb-2 ${fontFamily === 'mulish' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${fontFamily === 'mulish' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Mulish</span>
+                    </button>
+                    <button
+                      onClick={() => setFontFamily('karla')}
+                      className={`p-4 rounded-lg border ${
+                        fontFamily === 'karla'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Type className={`h-6 w-6 mb-2 ${fontFamily === 'karla' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${fontFamily === 'karla' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Karla</span>
+                    </button>
+                    <button
+                      onClick={() => setFontFamily('inter')}
+                      className={`p-4 rounded-lg border ${
+                        fontFamily === 'inter'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center transition-all hover:shadow-md`}
+                    >
+                      <Type className={`h-6 w-6 mb-2 ${fontFamily === 'inter' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <span className={`text-sm ${fontFamily === 'inter' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Inter</span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -411,7 +852,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                 {/* Home Layout */}
                 <div>
                   <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Homepage Layout</h3>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <button
                       onClick={() => setHomeLayout('default')}
                       className={`p-4 rounded-lg border ${
@@ -480,6 +921,262 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({ isOpen, onClose }) => {
                       </div>
                       <span className={`text-sm ${homeLayout === 'minimal' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Minimal</span>
                       {homeLayout === 'minimal' && (
+                        <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setHomeLayout('modern-grid')}
+                      className={`p-4 rounded-lg border ${
+                        homeLayout === 'modern-grid'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
+                    >
+                      <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
+                        <Grid className="absolute inset-0 m-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <span className={`text-sm ${homeLayout === 'modern-grid' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Modern Grid</span>
+                      {homeLayout === 'modern-grid' && (
+                        <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setHomeLayout('magazine')}
+                      className={`p-4 rounded-lg border ${
+                        homeLayout === 'magazine'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
+                    >
+                      <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
+                        <Columns className="absolute inset-0 m-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <span className={`text-sm ${homeLayout === 'magazine' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Magazine</span>
+                      {homeLayout === 'magazine' && (
+                        <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setHomeLayout('lookbook')}
+                      className={`p-4 rounded-lg border ${
+                        homeLayout === 'lookbook'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
+                    >
+                      <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
+                        <Layers className="absolute inset-0 m-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <span className={`text-sm ${homeLayout === 'lookbook' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Lookbook</span>
+                      {homeLayout === 'lookbook' && (
+                        <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setHomeLayout('parallax')}
+                      className={`p-4 rounded-lg border ${
+                        homeLayout === 'parallax'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
+                    >
+                      <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
+                        <Layers className="absolute inset-0 m-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <span className={`text-sm ${homeLayout === 'parallax' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Parallax</span>
+                      {homeLayout === 'parallax' && (
+                        <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setHomeLayout('video-hero')}
+                      className={`p-4 rounded-lg border ${
+                        homeLayout === 'video-hero'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
+                    >
+                      <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
+                        <Video className="absolute inset-0 m-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <span className={`text-sm ${homeLayout === 'video-hero' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Video Hero</span>
+                      {homeLayout === 'video-hero' && (
+                        <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setHomeLayout('split-screen')}
+                      className={`p-4 rounded-lg border ${
+                        homeLayout === 'split-screen'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
+                    >
+                      <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
+                        <Split className="absolute inset-0 m-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <span className={`text-sm ${homeLayout === 'split-screen' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Split Screen</span>
+                      {homeLayout === 'split-screen' && (
+                        <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setHomeLayout('carousel')}
+                      className={`p-4 rounded-lg border ${
+                        homeLayout === 'carousel'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
+                    >
+                      <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
+                        <Slideshow className="absolute inset-0 m-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <span className={`text-sm ${homeLayout === 'carousel' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Carousel</span>
+                      {homeLayout === 'carousel' && (
+                        <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setHomeLayout('masonry')}
+                      className={`p-4 rounded-lg border ${
+                        homeLayout === 'masonry'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
+                    >
+                      <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
+                        <LayoutGrid className="absolute inset-0 m-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <span className={`text-sm ${homeLayout === 'masonry' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Masonry</span>
+                      {homeLayout === 'masonry' && (
+                        <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setHomeLayout('fullscreen-slider')}
+                      className={`p-4 rounded-lg border ${
+                        homeLayout === 'fullscreen-slider'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
+                    >
+                      <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
+                        <Maximize className="absolute inset-0 m-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <span className={`text-sm ${homeLayout === 'fullscreen-slider' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Fullscreen</span>
+                      {homeLayout === 'fullscreen-slider' && (
+                        <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setHomeLayout('editorial')}
+                      className={`p-4 rounded-lg border ${
+                        homeLayout === 'editorial'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
+                    >
+                      <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
+                        <BookOpen className="absolute inset-0 m-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <span className={`text-sm ${homeLayout === 'editorial' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Editorial</span>
+                      {homeLayout === 'editorial' && (
+                        <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setHomeLayout('boutique')}
+                      className={`p-4 rounded-lg border ${
+                        homeLayout === 'boutique'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
+                    >
+                      <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
+                        <Store className="absolute inset-0 m-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <span className={`text-sm ${homeLayout === 'boutique' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Boutique</span>
+                      {homeLayout === 'boutique' && (
+                        <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setHomeLayout('elegant')}
+                      className={`p-4 rounded-lg border ${
+                        homeLayout === 'elegant'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
+                    >
+                      <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
+                        <Feather className="absolute inset-0 m-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <span className={`text-sm ${homeLayout === 'elegant' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Elegant</span>
+                      {homeLayout === 'elegant' && (
+                        <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setHomeLayout('minimalist')}
+                      className={`p-4 rounded-lg border ${
+                        homeLayout === 'minimalist'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
+                    >
+                      <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
+                        <Minimize2 className="absolute inset-0 m-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <span className={`text-sm ${homeLayout === 'minimalist' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Minimalist</span>
+                      {homeLayout === 'minimalist' && (
+                        <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setHomeLayout('bold')}
+                      className={`p-4 rounded-lg border ${
+                        homeLayout === 'bold'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
+                    >
+                      <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
+                        <BoldIcon className="absolute inset-0 m-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <span className={`text-sm ${homeLayout === 'bold' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Bold</span>
+                      {homeLayout === 'bold' && (
+                        <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setHomeLayout('luxury')}
+                      className={`p-4 rounded-lg border ${
+                        homeLayout === 'luxury'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
+                    >
+                      <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
+                        <Crown className="absolute inset-0 m-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <span className={`text-sm ${homeLayout === 'luxury' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Luxury</span>
+                      {homeLayout === 'luxury' && (
+                        <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setHomeLayout('contemporary')}
+                      className={`p-4 rounded-lg border ${
+                        homeLayout === 'contemporary'
+                          ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                          : 'border-gray-200 dark:border-gray-700'
+                      } flex flex-col items-center relative transition-all hover:shadow-md`}
+                    >
+                      <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded mb-2 relative overflow-hidden">
+                        <Grid className="absolute inset-0 m-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <span className={`text-sm ${homeLayout === 'contemporary' ? 'font-medium text-primary-700 dark:text-primary-300' : 'text-gray-700 dark:text-gray-300'}`}>Contemporary</span>
+                      {homeLayout === 'contemporary' && (
                         <Check className="absolute top-2 right-2 h-4 w-4 text-primary-600 dark:text-primary-400" />
                       )}
                     </button>

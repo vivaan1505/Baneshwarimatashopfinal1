@@ -2,11 +2,90 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
-export type SeasonalTheme = 'default' | 'christmas' | 'summer' | 'autumn' | 'spring';
-export type ColorScheme = 'default' | 'blue' | 'green' | 'purple' | 'pink';
-export type FontFamily = 'default' | 'serif' | 'sans-serif' | 'monospace' | 'cormorant' | 'montserrat' | 'poppins' | 'lora';
+export type SeasonalTheme = 
+  'default' | 
+  'christmas' | 
+  'summer' | 
+  'autumn' | 
+  'spring' | 
+  'winter' | 
+  'halloween' | 
+  'valentine' | 
+  'easter' | 
+  'diwali' | 
+  'lunar-new-year' | 
+  'thanksgiving' | 
+  'st-patricks' | 
+  'independence' | 
+  'back-to-school' | 
+  'cyber-monday';
+
+export type ColorScheme = 
+  'default' | 
+  'blue' | 
+  'green' | 
+  'purple' | 
+  'pink' | 
+  'teal' | 
+  'amber' | 
+  'rose' | 
+  'emerald' | 
+  'indigo' | 
+  'sky' | 
+  'lime' | 
+  'slate' | 
+  'neutral' | 
+  'red' | 
+  'orange' | 
+  'yellow' | 
+  'cyan' | 
+  'fuchsia' | 
+  'violet';
+
+export type FontFamily = 
+  'default' | 
+  'serif' | 
+  'sans-serif' | 
+  'monospace' | 
+  'cormorant' | 
+  'montserrat' | 
+  'poppins' | 
+  'lora' | 
+  'playfair' | 
+  'roboto' | 
+  'oswald' | 
+  'raleway' | 
+  'merriweather' | 
+  'nunito' | 
+  'quicksand' | 
+  'josefin' | 
+  'crimson' | 
+  'mulish' | 
+  'karla' | 
+  'inter';
+
 export type ViewMode = 'desktop' | 'mobile' | 'tablet';
-export type LayoutType = 'default' | 'featured-collections' | 'hero-centered' | 'minimal';
+export type LayoutType = 
+  'default' | 
+  'featured-collections' | 
+  'hero-centered' | 
+  'minimal' | 
+  'modern-grid' | 
+  'magazine' | 
+  'lookbook' | 
+  'parallax' | 
+  'video-hero' | 
+  'split-screen' | 
+  'carousel' | 
+  'masonry' | 
+  'fullscreen-slider' | 
+  'editorial' | 
+  'boutique' | 
+  'elegant' | 
+  'minimalist' | 
+  'bold' | 
+  'luxury' | 
+  'contemporary';
 
 interface ThemeState {
   mode: ThemeMode;
