@@ -338,6 +338,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
   const selectedType = watch('type');
   const selectedGender = watch('gender');
   const selectedTags = watch('tags') || [];
+  const selectedSubcategory = watch('subcategory');
   const isSpecialCategory = category === 'bridal' || category === 'christmas' || category === 'sale';
   const BrandSelect = isSpecialCategory ? CreatableSelect : Select;
 
@@ -672,6 +673,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
                   <select
                     {...register('subcategory', { required: 'Subcategory is required' })}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    value={selectedSubcategory || ""}
                   >
                     <option value="">Select Subcategory</option>
                     {availableSubcategories.map(subcat => (

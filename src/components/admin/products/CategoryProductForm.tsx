@@ -400,6 +400,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
 
   const selectedType = watch('type');
   const selectedGender = watch('gender');
+  const selectedSubcategory = watch('subcategory');
 
   function mapCategoryToType(category: string): 'footwear' | 'clothing' | 'jewelry' | 'beauty' | 'accessories' | 'bags' {
     switch (category) {
@@ -433,9 +434,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
     if (isOpen) {
       fetchBrands();
       fetchSubcategories();
-    }
-    if (isSpecialCategory) {
-      setValue('tags', [category]);
     }
   }, [category, isOpen]);
 
@@ -764,6 +762,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                   <select
                     {...register('subcategory', { required: 'Subcategory is required' })}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    value={selectedSubcategory || ""}
                   >
                     <option value="">Select Subcategory</option>
                     {availableSubcategories.map(subcat => (
