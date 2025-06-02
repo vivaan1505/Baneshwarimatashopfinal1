@@ -5,7 +5,8 @@ import ProductList from '../../components/admin/products/ProductList';
 import ProductGrid from '../../components/admin/products/ProductGrid';
 import BulkUploadModal from '../../components/admin/products/BulkUploadModal';
 import { toast } from 'react-hot-toast';
-import Papa from 'papaparse';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 interface ProductsPageProps {
   category?: string;
@@ -165,6 +166,9 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
         productsToExport = sortedProducts.filter(p => selectedProducts.includes(p.id));
       }
 
+      // Create a new workbook
+      const workbook = XLSX.utils.book_new();
+      
       // Prepare data for export
       const exportData = productsToExport.map(product => {
         // Base fields for all products
@@ -189,6 +193,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
           tags: Array.isArray(product.tags) ? product.tags.join(',') : '',
           materials: Array.isArray(product.materials) ? product.materials.join(',') : '',
           care_instructions: product.care_instructions || '',
+          subcategory: product.subcategory || '',
           created_at: product.created_at || '',
           updated_at: product.updated_at || ''
         };
@@ -215,18 +220,18 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
         return baseData;
       });
 
-      // Convert to CSV
-      const csv = Papa.unparse(exportData);
+      // Create a worksheet
+      const worksheet = XLSX.utils.json_to_sheet(exportData);
       
-      // Create and download file
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `${category || 'products'}_export_${new Date().toISOString().split('T')[0]}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Add the worksheet to the workbook
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Products');
+      
+      // Generate Excel file
+      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      
+      // Save the file
+      saveAs(blob, `${category || 'products'}_export_${new Date().toISOString().split('T')[0]}.xlsx`);
       
       toast.success(`Exported ${exportData.length} products`);
     } catch (error) {
@@ -264,7 +269,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
   if (error) {
     return (
       <div className="text-center py-12">
-        <p className="text-red-600 mb-4">{error}</p>
+        <p className="text-red-600 mb-4 dark:text-red-400">{error}</p>
         <button onClick={fetchProducts} className="btn-primary">
           Retry
         </button>
@@ -275,7 +280,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">
+        <h1 className="text-2xl font-semibold dark:text-white">
           {category 
             ? `${category.charAt(0).toUpperCase() + category.slice(1)} Products`
             : 'All Products'
@@ -286,19 +291,19 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
             <>
               <button
                 onClick={() => handleToggleVisibility(selectedProducts, true)}
-                className="btn-outline"
+                className="btn-outline dark:border-gray-600 dark:text-gray-300"
               >
                 Enable Selected
               </button>
               <button
                 onClick={() => handleToggleVisibility(selectedProducts, false)}
-                className="btn-outline"
+                className="btn-outline dark:border-gray-600 dark:text-gray-300"
               >
                 Disable Selected
               </button>
               <button
                 onClick={handleDeleteSelected}
-                className="btn bg-red-600 text-white hover:bg-red-700 flex items-center"
+                className="btn bg-red-600 text-white hover:bg-red-700 flex items-center dark:bg-red-700 dark:hover:bg-red-800"
               >
                 <Trash2 className="w-4 h-4 mr-2" />
                 Delete Selected
@@ -308,14 +313,14 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
             <>
               <button
                 onClick={() => setIsBulkUploadModalOpen(true)}
-                className="btn-outline flex items-center"
+                className="btn-outline flex items-center dark:border-gray-600 dark:text-gray-300"
               >
                 <Upload className="w-4 h-4 mr-2" />
                 Bulk Upload
               </button>
               <button
                 onClick={handleExportProducts}
-                className="btn-outline flex items-center"
+                className="btn-outline flex items-center dark:border-gray-600 dark:text-gray-300"
               >
                 <Download className="w-4 h-4 mr-2" />
                 Export
@@ -326,7 +331,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
+      <div className="bg-white p-4 rounded-lg shadow-sm mb-6 dark:bg-gray-800">
         <div className="flex flex-wrap gap-4">
           <div className="flex-1 min-w-[240px]">
             <div className="relative">
@@ -336,7 +341,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="pl-10 pr-4 py-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
             </div>
           </div>
@@ -346,7 +351,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               >
                 <option value="all">All Categories</option>
                 <option value="clothing">Clothing</option>
@@ -359,17 +364,17 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
               </select>
             )}
 
-            <div className="flex items-center border rounded-md">
+            <div className="flex items-center border rounded-md dark:border-gray-600">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-2 ${viewMode === 'grid' ? 'text-primary-600' : 'text-gray-400'}`}
+                className={`p-2 ${viewMode === 'grid' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500'}`}
                 title="Grid view"
               >
                 <Grid size={20} />
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-2 ${viewMode === 'list' ? 'text-primary-600' : 'text-gray-400'}`}
+                className={`p-2 ${viewMode === 'list' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500'}`}
                 title="List view"
               >
                 <List size={20} />
@@ -381,7 +386,10 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
 
       {/* Products Display */}
       {loading ? (
-        <div className="text-center py-12">Loading...</div>
+        <div className="text-center py-12 dark:text-white">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 dark:border-primary-400"></div>
+          <p className="mt-2">Loading...</p>
+        </div>
       ) : viewMode === 'grid' ? (
         <ProductGrid 
           products={sortedProducts}

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { X, Upload, Download, AlertCircle, CheckCircle, FileText } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 import { toast } from 'react-hot-toast';
-import Papa from 'papaparse';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import ExcelJS from 'exceljs';
 
 interface BulkUploadModalProps {
   isOpen: boolean;
@@ -26,6 +28,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
   } | null>(null);
   const [templateFields, setTemplateFields] = useState<string[]>([]);
   const [subcategories, setSubcategories] = useState<{id: string, name: string}[]>([]);
+  const [brands, setBrands] = useState<{id: string, name: string}[]>([]);
 
   useEffect(() => {
     // Set template fields based on category
@@ -54,6 +57,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
     // Fetch subcategories for the selected category
     if (category) {
       fetchSubcategories(category);
+      fetchBrands();
     }
   }, [category]);
 
@@ -71,13 +75,34 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
     }
   };
 
+  const fetchBrands = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('brands')
+        .select('id, name')
+        .eq('is_active', true)
+        .order('name');
+      
+      if (error) throw error;
+      setBrands(data || []);
+    } catch (error) {
+      console.error('Error fetching brands:', error);
+    }
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
 
     // Check file type
-    if (!['text/csv', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'].includes(selectedFile.type)) {
-      toast.error('Please upload a CSV or Excel file');
+    const validTypes = [
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-excel.sheet.macroEnabled.12'
+    ];
+    
+    if (!validTypes.includes(selectedFile.type)) {
+      toast.error('Please upload an Excel file (.xlsx or .xls)');
       return;
     }
 
@@ -86,25 +111,29 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
     setValidationSuccess(false);
     setPreviewData([]);
 
-    // Parse CSV for preview and validation
-    if (selectedFile.type === 'text/csv') {
-      Papa.parse(selectedFile, {
-        header: true,
-        skipEmptyLines: true,
-        complete: (results) => {
-          validateData(results.data);
-          setPreviewData(results.data.slice(0, 5)); // Show first 5 rows
-        },
-        error: (error) => {
-          setValidationErrors([`Error parsing file: ${error.message}`]);
-        }
-      });
-    } else {
-      // For Excel files, we'll need to use a library like xlsx
-      // This is a simplified version that just acknowledges the file
-      setValidationErrors(['Excel validation will be performed during upload']);
-      setPreviewData([{ message: 'Excel preview not available' }]);
-    }
+    // Parse Excel for preview and validation
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = e.target?.result;
+        const workbook = XLSX.read(data, { type: 'binary' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        
+        validateData(jsonData);
+        setPreviewData(jsonData.slice(0, 5)); // Show first 5 rows
+      } catch (error) {
+        console.error('Error parsing Excel file:', error);
+        setValidationErrors(['Error parsing Excel file. Please ensure it is a valid Excel document.']);
+      }
+    };
+    
+    reader.onerror = () => {
+      setValidationErrors(['Error reading file']);
+    };
+    
+    reader.readAsBinaryString(selectedFile);
   };
 
   const validateData = (data: any[]) => {
@@ -160,6 +189,14 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
           errors.push(`Row ${index + 1}: Invalid subcategory: ${row.subcategory}. Valid options are: ${validSubcategories.join(', ')}`);
         }
       }
+      
+      // Validate brand_id if present
+      if (row.brand_id && brands.length > 0) {
+        const validBrandIds = brands.map(b => b.id);
+        if (!validBrandIds.includes(row.brand_id)) {
+          errors.push(`Row ${index + 1}: Invalid brand_id: ${row.brand_id}`);
+        }
+      }
     });
 
     // Limit the number of displayed errors
@@ -174,43 +211,50 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
     const stats = { total: 0, success: 0, failed: 0, updated: 0, created: 0 };
 
     try {
-      if (file.type === 'text/csv') {
-        Papa.parse(file, {
-          header: true,
-          skipEmptyLines: true,
-          complete: async (results) => {
-            const data = results.data;
-            stats.total = data.length;
-            
-            // Process in batches to avoid overwhelming the database
-            const batchSize = 10;
-            for (let i = 0; i < data.length; i += batchSize) {
-              const batch = data.slice(i, i + batchSize);
-              await processBatch(batch, stats);
-            }
-
-            setUploadStats(stats);
-            if (stats.failed === 0) {
-              toast.success(`Successfully processed ${stats.total} products (${stats.created} created, ${stats.updated} updated)`);
-              setTimeout(() => {
-                onSuccess();
-                onClose();
-              }, 3000);
-            } else {
-              toast.error(`Processed with errors: ${stats.success} succeeded, ${stats.failed} failed`);
-            }
-            setUploading(false);
-          },
-          error: (error) => {
-            toast.error(`Error parsing file: ${error.message}`);
-            setUploading(false);
+      // Read the Excel file
+      const reader = new FileReader();
+      
+      reader.onload = async (e) => {
+        try {
+          const data = e.target?.result;
+          const workbook = XLSX.read(data, { type: 'binary' });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          const jsonData = XLSX.utils.sheet_to_json(worksheet);
+          
+          stats.total = jsonData.length;
+          
+          // Process in batches to avoid overwhelming the database
+          const batchSize = 10;
+          for (let i = 0; i < jsonData.length; i += batchSize) {
+            const batch = jsonData.slice(i, i + batchSize);
+            await processBatch(batch, stats);
           }
-        });
-      } else {
-        // For Excel files, we would use a library like xlsx
-        toast.error('Excel file processing is not implemented in this demo');
+
+          setUploadStats(stats);
+          if (stats.failed === 0) {
+            toast.success(`Successfully processed ${stats.total} products (${stats.created} created, ${stats.updated} updated)`);
+            setTimeout(() => {
+              onSuccess();
+              onClose();
+            }, 3000);
+          } else {
+            toast.error(`Processed with errors: ${stats.success} succeeded, ${stats.failed} failed`);
+          }
+        } catch (error) {
+          console.error('Error processing Excel data:', error);
+          toast.error('Failed to process Excel data');
+        } finally {
+          setUploading(false);
+        }
+      };
+      
+      reader.onerror = () => {
+        toast.error('Error reading file');
         setUploading(false);
-      }
+      };
+      
+      reader.readAsBinaryString(file);
     } catch (error) {
       console.error('Error processing upload:', error);
       toast.error('Failed to process upload');
@@ -278,7 +322,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
           existingProduct = data;
         }
 
-        // Extract images from the CSV
+        // Extract images from the Excel
         const imageUrls = item.images ? item.images.split('|').filter(Boolean).map((url: string) => url.trim()) : [];
         
         // Remove images field from the item to avoid database errors
@@ -360,109 +404,163 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
     }
   };
 
-  const downloadTemplate = () => {
-    // Get subcategory options for the template
-    const subcategoryOptions = subcategories.map(s => s.id).join('|');
-    
-    // Define sample data based on category
-    let sampleData: any = {
-      name: 'Sample Product',
-      slug: 'sample-product',
-      sku: 'SAMPLE-001',
-      price: '99.99',
-      compare_at_price: '129.99',
-      stock_quantity: '10',
-      description: 'This is a sample product description',
-      brand_id: '', // Would be a UUID in real data
-      is_visible: 'true',
-      is_featured: 'false',
-      is_new: 'true',
-      gender: 'unisex', // Options: men, women, kids, unisex
-      tags: 'new,featured,sale',
-      images: 'https://example.com/image1.jpg|https://example.com/image2.jpg',
-      subcategory: subcategories.length > 0 ? subcategories[0].id : '', // First subcategory as example
-      type: category || 'clothing' // Default to clothing if no category specified
-    };
-
-    // Add category-specific fields
-    if (category) {
-      sampleData.type = category;
+  const downloadTemplate = async () => {
+    try {
+      // Create a new workbook
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Products');
       
-      if (category === 'clothing' || category === 'footwear') {
-        sampleData.materials = 'cotton,polyester';
-        sampleData.care_instructions = 'Machine wash cold, tumble dry low';
-        sampleData.size_guide = '{"S":"Small","M":"Medium","L":"Large"}';
-      } else if (category === 'jewelry') {
-        sampleData.materials = 'gold,silver,diamonds';
-        sampleData.care_instructions = 'Clean with soft cloth, avoid chemicals';
-      } else if (category === 'beauty') {
-        sampleData.ingredients = 'water,glycerin,fragrance';
-        sampleData.usage_instructions = 'Apply to clean skin, use twice daily';
-      } else if (category === 'bridal') {
-        sampleData.materials = 'silk,lace,satin';
-        sampleData.care_instructions = 'Dry clean only';
-        sampleData.tags = 'bridal,wedding,luxury';
-      } else if (category === 'christmas') {
-        sampleData.is_christmas_sale = 'true';
-        sampleData.tags = 'christmas,holiday,gift';
-      } else if (category === 'sale') {
-        sampleData.sale_discount = '25';
-        sampleData.tags = 'sale,discount,clearance';
-      }
-    }
-    
-    // Add subcategory options as a comment in the first row
-    const csvData = [
-      // Add a comment row with subcategory options
-      {
-        name: '# Available subcategories: ' + subcategoryOptions,
+      // Define columns
+      const columns = templateFields.map(field => ({
+        header: field,
+        key: field,
+        width: 15
+      }));
+      
+      worksheet.columns = columns;
+      
+      // Style the header row
+      const headerRow = worksheet.getRow(1);
+      headerRow.font = { bold: true };
+      headerRow.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFE0E0E0' }
+      };
+      
+      // Add comment rows
+      worksheet.addRow({
+        name: '# Available subcategories: ' + subcategories.map(s => s.id).join(', '),
         sku: '',
         price: '',
         stock_quantity: '',
         subcategory: '',
-        type: '',
-        // Add other empty fields to match the template
-        ...Object.fromEntries(templateFields.filter(f => !['name', 'sku', 'price', 'stock_quantity', 'subcategory', 'type'].includes(f)).map(f => [f, '']))
-      },
-      // Add gender options as a comment
-      {
+        type: ''
+      });
+      
+      worksheet.addRow({
         name: '# Gender options: men, women, kids, unisex',
         sku: '',
         price: '',
         stock_quantity: '',
         subcategory: '',
-        type: '',
-        // Add other empty fields
-        ...Object.fromEntries(templateFields.filter(f => !['name', 'sku', 'price', 'stock_quantity', 'subcategory', 'type'].includes(f)).map(f => [f, '']))
-      },
-      // Add type options as a comment
-      {
+        type: ''
+      });
+      
+      worksheet.addRow({
         name: '# Type options: footwear, clothing, jewelry, beauty, accessories, bags',
         sku: '',
         price: '',
         stock_quantity: '',
         subcategory: '',
-        type: '',
-        // Add other empty fields
-        ...Object.fromEntries(templateFields.filter(f => !['name', 'sku', 'price', 'stock_quantity', 'subcategory', 'type'].includes(f)).map(f => [f, '']))
-      },
-      // Add the actual sample data
-      sampleData
-    ];
-    
-    const csv = Papa.unparse({
-      fields: templateFields,
-      data: csvData
-    });
-    
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `${category || 'product'}_upload_template.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+        type: ''
+      });
+      
+      // Add sample data
+      const sampleData: any = {
+        name: 'Sample Product',
+        slug: 'sample-product',
+        sku: 'SAMPLE-001',
+        price: 99.99,
+        compare_at_price: 129.99,
+        stock_quantity: 10,
+        description: 'This is a sample product description',
+        brand_id: brands.length > 0 ? brands[0].id : '',
+        is_visible: 'true',
+        is_featured: 'false',
+        is_new: 'true',
+        gender: 'unisex',
+        tags: 'new,featured,sale',
+        images: 'https://example.com/image1.jpg|https://example.com/image2.jpg',
+        subcategory: subcategories.length > 0 ? subcategories[0].id : '',
+        type: category || 'clothing'
+      };
+      
+      // Add category-specific fields
+      if (category) {
+        sampleData.type = category;
+        
+        if (category === 'clothing' || category === 'footwear') {
+          sampleData.materials = 'cotton,polyester';
+          sampleData.care_instructions = 'Machine wash cold, tumble dry low';
+          sampleData.size_guide = '{"S":"Small","M":"Medium","L":"Large"}';
+        } else if (category === 'jewelry') {
+          sampleData.materials = 'gold,silver,diamonds';
+          sampleData.care_instructions = 'Clean with soft cloth, avoid chemicals';
+        } else if (category === 'beauty') {
+          sampleData.ingredients = 'water,glycerin,fragrance';
+          sampleData.usage_instructions = 'Apply to clean skin, use twice daily';
+        } else if (category === 'bridal') {
+          sampleData.materials = 'silk,lace,satin';
+          sampleData.care_instructions = 'Dry clean only';
+          sampleData.tags = 'bridal,wedding,luxury';
+        } else if (category === 'christmas') {
+          sampleData.is_christmas_sale = 'true';
+          sampleData.tags = 'christmas,holiday,gift';
+        } else if (category === 'sale') {
+          sampleData.sale_discount = 25;
+          sampleData.tags = 'sale,discount,clearance';
+        }
+      }
+      
+      worksheet.addRow(sampleData);
+      
+      // Add data validation for specific columns
+      
+      // Gender validation
+      worksheet.dataValidations.add('G5:G1000', {
+        type: 'list',
+        allowBlank: true,
+        formulae: ['"men,women,kids,unisex"']
+      });
+      
+      // Type validation
+      worksheet.dataValidations.add('P5:P1000', {
+        type: 'list',
+        allowBlank: false,
+        formulae: ['"footwear,clothing,jewelry,beauty,accessories,bags"']
+      });
+      
+      // Boolean fields validation
+      ['is_visible', 'is_featured', 'is_new'].forEach((field, index) => {
+        const col = String.fromCharCode(73 + index); // I, J, K columns
+        worksheet.dataValidations.add(`${col}5:${col}1000`, {
+          type: 'list',
+          allowBlank: true,
+          formulae: ['"true,false"']
+        });
+      });
+      
+      // Subcategory validation
+      if (subcategories.length > 0) {
+        const subcategoryOptions = subcategories.map(s => s.id).join(',');
+        worksheet.dataValidations.add('O5:O1000', {
+          type: 'list',
+          allowBlank: false,
+          formulae: [`"${subcategoryOptions}"`]
+        });
+      }
+      
+      // Brand validation
+      if (brands.length > 0) {
+        const brandOptions = brands.map(b => b.id).join(',');
+        worksheet.dataValidations.add('H5:H1000', {
+          type: 'list',
+          allowBlank: true,
+          formulae: [`"${brandOptions}"`]
+        });
+      }
+      
+      // Generate the Excel file
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      saveAs(blob, `${category || 'product'}_upload_template.xlsx`);
+      
+      toast.success('Template downloaded successfully');
+    } catch (error) {
+      console.error('Error generating template:', error);
+      toast.error('Failed to generate template');
+    }
   };
 
   if (!isOpen) return null;
@@ -488,7 +586,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
             <div className="mb-6">
               <h3 className="text-lg font-medium mb-2 dark:text-white">Instructions</h3>
               <p className="text-gray-600 mb-4 dark:text-gray-300">
-                Upload a CSV file containing product data. The file should include columns for product name, price, and other details.
+                Upload an Excel file containing product data. The file should include columns for product name, price, type, subcategory, and other details.
               </p>
               <div className="flex items-center mb-4">
                 <button 
@@ -526,7 +624,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
 
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
-                Upload CSV or Excel File
+                Upload Excel File (.xlsx or .xls)
               </label>
               <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md dark:border-gray-600">
                 <div className="space-y-1 text-center">
@@ -542,7 +640,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
                         name="file-upload"
                         type="file"
                         className="sr-only"
-                        accept=".csv,.xlsx,.xls"
+                        accept=".xlsx,.xls"
                         onChange={handleFileChange}
                         disabled={uploading}
                       />
@@ -550,7 +648,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
                     <p className="pl-1">or drag and drop</p>
                   </div>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    CSV or Excel files only
+                    Excel files only (.xlsx or .xls)
                   </p>
                 </div>
               </div>
