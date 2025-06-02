@@ -4,7 +4,7 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     id: 'blog1',
     title: 'Summer 2025 Fashion Trends: What You Need to Know',
-    slug: 'summer-2025-fashion-trends',
+    slug: 'summer-fashion-trends',
     excerpt: 'Discover the hottest trends for the upcoming summer season, from bold colors to innovative silhouettes.',
     content: `
       <p>The summer of 2025 is shaping up to be a season of contrasts in the fashion world. Designers are embracing both minimalism and maximalism, creating versatile collections that cater to various style preferences.</p>
