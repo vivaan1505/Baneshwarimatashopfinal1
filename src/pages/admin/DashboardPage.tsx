@@ -102,7 +102,14 @@ const DashboardPage: React.FC = () => {
             last_name,
             email
           ),
-          items:order_items(*)
+          items:order_items(
+            id,
+            product_variant_id,
+            variant:product_variants(
+              product_id,
+              product:products(name)
+            )
+          )
         `)
         .order('created_at', { ascending: false })
         .limit(5);

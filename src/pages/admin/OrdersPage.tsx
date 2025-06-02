@@ -10,6 +10,7 @@ interface OrderItem {
   price_at_time: number;
   product_variant_id: string;
   variant: {
+    product_id: string;
     product: {
       name: string;
       images: Array<{ url: string }>;
@@ -83,6 +84,7 @@ const OrdersPage: React.FC = () => {
             price_at_time,
             product_variant_id,
             variant:product_variants(
+              product_id,
               product:products(
                 name,
                 images:product_images(url)
@@ -148,6 +150,7 @@ const OrdersPage: React.FC = () => {
             price_at_time: 199.99,
             product_variant_id: 'var-001',
             variant: {
+              product_id: 'prod-001',
               product: {
                 name: 'Premium Leather Shoes',
                 images: [{ url: 'https://images.pexels.com/photos/1461048/pexels-photo-1461048.jpeg' }]
@@ -160,6 +163,7 @@ const OrdersPage: React.FC = () => {
             price_at_time: 49.99,
             product_variant_id: 'var-002',
             variant: {
+              product_id: 'prod-002',
               product: {
                 name: 'Cotton T-Shirt',
                 images: [{ url: 'https://images.pexels.com/photos/5709665/pexels-photo-5709665.jpeg' }]
@@ -201,6 +205,7 @@ const OrdersPage: React.FC = () => {
             price_at_time: 149.99,
             product_variant_id: 'var-003',
             variant: {
+              product_id: 'prod-003',
               product: {
                 name: 'Designer Handbag',
                 images: [{ url: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg' }]
@@ -242,6 +247,7 @@ const OrdersPage: React.FC = () => {
             price_at_time: 499.99,
             product_variant_id: 'var-004',
             variant: {
+              product_id: 'prod-004',
               product: {
                 name: 'Luxury Watch',
                 images: [{ url: 'https://images.pexels.com/photos/9981133/pexels-photo-9981133.jpeg' }]
@@ -254,6 +260,7 @@ const OrdersPage: React.FC = () => {
             price_at_time: 99.99,
             product_variant_id: 'var-005',
             variant: {
+              product_id: 'prod-005',
               product: {
                 name: 'Silk Tie',
                 images: [{ url: 'https://images.pexels.com/photos/45055/pexels-photo-45055.jpeg' }]
