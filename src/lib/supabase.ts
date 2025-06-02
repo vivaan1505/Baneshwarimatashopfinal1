@@ -7,18 +7,15 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Validate environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables. Please check your .env file.');
-  
-  // Provide fallback values for development only
-  if (import.meta.env.DEV) {
-    console.warn('Using fallback values for development. DO NOT use in production!');
-  }
+  throw new Error(
+    'Missing Supabase environment variables. Please check your .env file and ensure both VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set.'
+  );
 }
 
 // Create Supabase client
 export const supabase = createClient<Database>(
-  supabaseUrl || 'https://your-project-id.supabase.co',
-  supabaseAnonKey || 'your-anon-key',
+  supabaseUrl,
+  supabaseAnonKey,
   {
     auth: {
       persistSession: true,
@@ -30,7 +27,7 @@ export const supabase = createClient<Database>(
 // Test connection in development
 if (import.meta.env.DEV) {
   supabase
-    .from('coupons')
+    .from('products')
     .select('count')
     .limit(1)
     .then(() => console.log('✅ Supabase connection successful'))
