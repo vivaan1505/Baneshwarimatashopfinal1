@@ -30,6 +30,7 @@ import SearchResultsPage from './pages/SearchResultsPage';
 import FestiveGiftGuidesPage from './pages/specialty/FestiveGiftGuidesPage';
 import AccessibilityPage from './pages/AccessibilityPage';
 import SitemapPage from './pages/SitemapPage';
+import SizeChartPage from './pages/SizeChartPage';
 
 // Category Pages
 import FootwearPage from './pages/FootwearPage';
@@ -101,6 +102,7 @@ function App() {
             <Route path="brand/:slug" element={<BrandPage />} />
             <Route path="wishlist" element={<WishlistPage />} />
             <Route path="search" element={<SearchResultsPage />} />
+            <Route path="size-chart" element={<SizeChartPage />} />
             
             {/* Protected Routes */}
             <Route path="account" element={<AccountPage />} />

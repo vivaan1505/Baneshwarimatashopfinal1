@@ -158,6 +158,9 @@ const Footer: React.FC = () => {
               <li>
                 <Link to="/festive-store" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Festive Store</Link>
               </li>
+              <li>
+                <Link to="/size-chart" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Size Charts</Link>
+              </li>
             </ul>
           </motion.div>
           
@@ -187,6 +190,9 @@ const Footer: React.FC = () => {
               </li>
               <li>
                 <Link to="/terms-conditions" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Terms & Conditions</Link>
+              </li>
+              <li>
+                <Link to="/disclaimer" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Disclaimer</Link>
               </li>
             </ul>
           </motion.div>

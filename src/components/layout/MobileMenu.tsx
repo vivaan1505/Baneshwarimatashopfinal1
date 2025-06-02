@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { X, ChevronRight, Ticket, Heart } from 'lucide-react';
+import { X, ChevronRight, Ticket, Heart, Ruler } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { cn } from '../../utils/cn';
 import { scrollToTop } from '../../utils/scroll';
@@ -209,6 +209,16 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
               Coupons
             </Link>
             
+            {/* Size Charts */}
+            <Link 
+              to="/size-chart" 
+              className="flex items-center p-3 text-base font-medium text-gray-700 hover:bg-gray-100 rounded-md dark:text-gray-200 dark:hover:bg-gray-700"
+              onClick={handleNavClick}
+            >
+              <Ruler className="mr-3 h-5 w-5" />
+              Size Charts
+            </Link>
+            
             {/* Wishlist */}
             <Link 
               to="/wishlist" 
@@ -271,6 +281,14 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
               onClick={handleNavClick}
             >
               Terms & Conditions
+            </Link>
+            
+            <Link 
+              to="/disclaimer" 
+              className="block p-3 text-base font-medium text-gray-700 hover:bg-gray-100 rounded-md dark:text-gray-200 dark:hover:bg-gray-700"
+              onClick={handleNavClick}
+            >
+              Disclaimer
             </Link>
           </nav>
         </div>

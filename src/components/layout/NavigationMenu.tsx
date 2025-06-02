@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Ticket } from 'lucide-react';
+import { ChevronDown, Ticket, Ruler } from 'lucide-react';
 import { scrollToTop } from '../../utils/scroll';
 import { motion } from 'framer-motion';
 
@@ -179,6 +179,17 @@ const NavigationMenu: React.FC = () => {
       
       <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
         <Link 
+          to="/size-chart" 
+          onClick={handleNavClick}
+          className="nav-link flex items-center"
+        >
+          <Ruler className="mr-1 h-4 w-4" />
+          Size Charts
+        </Link>
+      </motion.div>
+      
+      <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
+        <Link 
           to="/blog" 
           onClick={handleNavClick}
           className="nav-link"
@@ -247,6 +258,15 @@ const NavigationMenu: React.FC = () => {
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
                 >
                   Terms & Conditions
+                </Link>
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <Link 
+                  to="/disclaimer" 
+                  onClick={handleNavClick}
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                >
+                  Disclaimer
                 </Link>
               </motion.div>
             </div>
