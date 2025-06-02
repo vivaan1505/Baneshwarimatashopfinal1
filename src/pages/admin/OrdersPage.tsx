@@ -9,9 +9,11 @@ interface OrderItem {
   quantity: number;
   price_at_time: number;
   product_variant_id: string;
-  product: {
-    name: string;
-    images: Array<{ url: string }>;
+  variant: {
+    product: {
+      name: string;
+      images: Array<{ url: string }>;
+    };
   };
 }
 
@@ -80,9 +82,11 @@ const OrdersPage: React.FC = () => {
             quantity,
             price_at_time,
             product_variant_id,
-            product:products(
-              name,
-              images:product_images(url)
+            variant:product_variants(
+              product:products(
+                name,
+                images:product_images(url)
+              )
             )
           ),
           shipping_address:addresses!shipping_address_id(*),
@@ -143,9 +147,11 @@ const OrdersPage: React.FC = () => {
             quantity: 1,
             price_at_time: 199.99,
             product_variant_id: 'var-001',
-            product: {
-              name: 'Premium Leather Shoes',
-              images: [{ url: 'https://images.pexels.com/photos/1461048/pexels-photo-1461048.jpeg' }]
+            variant: {
+              product: {
+                name: 'Premium Leather Shoes',
+                images: [{ url: 'https://images.pexels.com/photos/1461048/pexels-photo-1461048.jpeg' }]
+              }
             }
           },
           {
@@ -153,9 +159,11 @@ const OrdersPage: React.FC = () => {
             quantity: 2,
             price_at_time: 49.99,
             product_variant_id: 'var-002',
-            product: {
-              name: 'Cotton T-Shirt',
-              images: [{ url: 'https://images.pexels.com/photos/5709665/pexels-photo-5709665.jpeg' }]
+            variant: {
+              product: {
+                name: 'Cotton T-Shirt',
+                images: [{ url: 'https://images.pexels.com/photos/5709665/pexels-photo-5709665.jpeg' }]
+              }
             }
           }
         ],
@@ -192,9 +200,11 @@ const OrdersPage: React.FC = () => {
             quantity: 1,
             price_at_time: 149.99,
             product_variant_id: 'var-003',
-            product: {
-              name: 'Designer Handbag',
-              images: [{ url: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg' }]
+            variant: {
+              product: {
+                name: 'Designer Handbag',
+                images: [{ url: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg' }]
+              }
             }
           }
         ],
@@ -231,9 +241,11 @@ const OrdersPage: React.FC = () => {
             quantity: 1,
             price_at_time: 499.99,
             product_variant_id: 'var-004',
-            product: {
-              name: 'Luxury Watch',
-              images: [{ url: 'https://images.pexels.com/photos/9981133/pexels-photo-9981133.jpeg' }]
+            variant: {
+              product: {
+                name: 'Luxury Watch',
+                images: [{ url: 'https://images.pexels.com/photos/9981133/pexels-photo-9981133.jpeg' }]
+              }
             }
           },
           {
@@ -241,9 +253,11 @@ const OrdersPage: React.FC = () => {
             quantity: 1,
             price_at_time: 99.99,
             product_variant_id: 'var-005',
-            product: {
-              name: 'Silk Tie',
-              images: [{ url: 'https://images.pexels.com/photos/45055/pexels-photo-45055.jpeg' }]
+            variant: {
+              product: {
+                name: 'Silk Tie',
+                images: [{ url: 'https://images.pexels.com/photos/45055/pexels-photo-45055.jpeg' }]
+              }
             }
           }
         ],
@@ -575,13 +589,13 @@ const OrdersPage: React.FC = () => {
                                   {order.items.map((item) => (
                                     <div key={item.id} className="flex items-center">
                                       <img
-                                        src={item.product?.images?.[0]?.url || 'https://via.placeholder.com/50'}
-                                        alt={item.product?.name || 'Product'}
+                                        src={item.variant.product?.images?.[0]?.url || 'https://via.placeholder.com/50'}
+                                        alt={item.variant.product?.name || 'Product'}
                                         className="h-16 w-16 object-cover rounded"
                                       />
                                       <div className="ml-4 flex-1">
                                         <div className="text-sm font-medium text-gray-900 dark:text-white">
-                                          {item.product?.name || 'Product'}
+                                          {item.variant.product?.name || 'Product'}
                                         </div>
                                         <div className="text-sm text-gray-500 dark:text-gray-400">
                                           Quantity: {item.quantity} × ${item.price_at_time.toFixed(2)}
