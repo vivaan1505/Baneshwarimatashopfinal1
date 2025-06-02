@@ -181,12 +181,20 @@ const Chatbot: React.FC = () => {
     // Convert message to lowercase for matching
     const lowerMessage = message.toLowerCase();
     
-    // Find matching script
-    const matchingScript = scripts.find(script => 
-      script.trigger_keywords.some(keyword => 
+    // Find matching script by checking if any trigger keyword is included in the message
+    let matchingScript = null;
+    
+    for (const script of scripts) {
+      // Check if any of the script's trigger keywords are in the user's message
+      const hasMatch = script.trigger_keywords.some(keyword => 
         lowerMessage.includes(keyword.toLowerCase())
-      )
-    );
+      );
+      
+      if (hasMatch) {
+        matchingScript = script;
+        break;
+      }
+    }
     
     if (matchingScript) {
       // Reset failed responses counter
@@ -220,7 +228,7 @@ const Chatbot: React.FC = () => {
           `${settings?.fallback_message || "I'm sorry, I don't understand."} Would you like to speak with a human agent?`
         );
       } else {
-        addBotMessage(settings?.fallback_message || "I'm sorry, I don't understand.");
+        addBotMessage(settings?.fallback_message || "I'm sorry, I don't understand. Could you please rephrase your question or select from one of these common topics: shipping, returns, or order tracking.");
       }
     }
   };
@@ -313,7 +321,7 @@ const Chatbot: React.FC = () => {
               <div className="flex justify-center mb-4">
                 <button
                   onClick={handleHumanSupport}
-                  className="bg-primary-600 text-white px-4 py-2 rounded-md text-sm hover:bg-primary-700 transition-colors flex items-center dark:bg-primary-700 dark:hover:bg-primary-800"
+                  className="bg-primary-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-primary-700 transition-colors flex items-center dark:bg-primary-700 dark:hover:bg-primary-800"
                 >
                   <User size={16} className="mr-2" />
                   Connect with Human Support
