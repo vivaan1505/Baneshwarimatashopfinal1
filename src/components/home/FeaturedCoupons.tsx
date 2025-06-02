@@ -45,14 +45,7 @@ const FeaturedCoupons: React.FC = () => {
       const { data, error } = await supabase
         .from('coupons')
         .select(`
-          id,
-          code,
-          description,
-          discount_type,
-          discount_value,
-          minimum_purchase,
-          expires_at,
-          brand_link,
+          *,
           brand:brands(id, name, logo_url, category, slug, website)
         `)
         .eq('is_active', true)
@@ -75,11 +68,15 @@ const FeaturedCoupons: React.FC = () => {
           {
             id: 'coupon-1',
             code: 'WELCOME20',
+            brand_id: 'brand-1',
             description: 'Get 20% off your first order',
             discount_type: 'percentage',
             discount_value: 20,
             minimum_purchase: 50,
+            usage_limit: 1,
+            usage_count: 0,
             expires_at: '2025-12-31',
+            is_active: true,
             brand: {
               id: 'brand-1',
               name: 'MinddShopp',
@@ -92,11 +89,15 @@ const FeaturedCoupons: React.FC = () => {
           {
             id: 'coupon-2',
             code: 'SUMMER25',
+            brand_id: 'brand-2',
             description: 'Summer sale - 25% off selected items',
             discount_type: 'percentage',
             discount_value: 25,
             minimum_purchase: 75,
+            usage_limit: null,
+            usage_count: 0,
             expires_at: '2025-08-31',
+            is_active: true,
             brand: {
               id: 'brand-2',
               name: 'Fashion Brand',
@@ -109,11 +110,15 @@ const FeaturedCoupons: React.FC = () => {
           {
             id: 'coupon-3',
             code: 'FREESHIP',
+            brand_id: 'brand-3',
             description: 'Free shipping on all orders',
             discount_type: 'fixed_amount',
             discount_value: 10,
             minimum_purchase: 0,
+            usage_limit: null,
+            usage_count: 0,
             expires_at: '2025-12-31',
+            is_active: true,
             brand: {
               id: 'brand-3',
               name: 'Luxury Brand',
