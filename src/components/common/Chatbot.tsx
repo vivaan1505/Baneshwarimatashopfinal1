@@ -84,6 +84,14 @@ const Chatbot: React.FC = () => {
       }
     } catch (error) {
       console.error('Error fetching chatbot settings:', error);
+      // Set default settings if fetch fails
+      setSettings({
+        welcome_message: 'Welcome to MinddShopp! How can I assist you today?',
+        fallback_message: 'I\'m sorry, I don\'t understand. Could you please rephrase your question?',
+        is_enabled: true,
+        auto_response_delay: 1000,
+        human_handoff_threshold: 3
+      });
     }
   };
 
@@ -112,6 +120,7 @@ const Chatbot: React.FC = () => {
       }
     } catch (error) {
       console.error('Error fetching chatbot scripts:', error);
+      // Keep default suggestions if fetch fails
     }
   };
 
@@ -221,7 +230,19 @@ const Chatbot: React.FC = () => {
     // In a real implementation, this would create a support ticket
   };
 
-  if (!settings?.is_enabled) {
+  // Default settings if none are loaded
+  const defaultSettings = {
+    is_enabled: true,
+    welcome_message: "Welcome to MinddShopp! How can I assist you today?",
+    fallback_message: "I'm sorry, I don't understand. Could you please rephrase your question?",
+    auto_response_delay: 1000,
+    human_handoff_threshold: 3
+  };
+
+  // Use default settings or loaded settings
+  const chatSettings = settings || defaultSettings;
+
+  if (!chatSettings.is_enabled) {
     return null;
   }
 

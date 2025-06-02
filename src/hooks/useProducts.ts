@@ -182,6 +182,9 @@ export const useProducts = ({
     } catch (err) {
       console.error('Error fetching products:', err);
       setError('Failed to fetch products');
+      
+      // Set fallback data even on error
+      setData(isFeatured ? FEATURED_PRODUCTS : PRODUCTS);
     } finally {
       setIsLoading(false);
     }
