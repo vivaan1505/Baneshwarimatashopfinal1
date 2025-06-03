@@ -82,7 +82,7 @@ const FeaturedCollectionsLayout: React.FC = () => {
                         FESTIVE COLLECTION
                       </span>
                       <h2 className="text-3xl font-heading font-medium text-white mb-2">
-                        Festive Store
+                        Festive Collections
                       </h2>
                       <p className="text-gray-200 mb-4">
                         Discover perfect gifts for everyone
