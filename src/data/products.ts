@@ -3,7 +3,7 @@ import { Product } from '../types';
 export const PRODUCTS: Product[] = [
   // Clothing Products
   {
-    id: 'cl-001',
+    id: '123e4567-e89b-12d3-a456-426614174001',
     name: 'Silk Evening Gown',
     brand: {
       id: 'dior',
@@ -20,7 +20,7 @@ export const PRODUCTS: Product[] = [
     stock_quantity: 5
   },
   {
-    id: 'cl-002',
+    id: '123e4567-e89b-12d3-a456-426614174002',
     name: 'Tailored Wool Suit',
     brand: {
       id: 'tom-ford',
@@ -38,7 +38,7 @@ export const PRODUCTS: Product[] = [
 
   // Footwear Products
   {
-    id: 'fw-001',
+    id: '123e4567-e89b-12d3-a456-426614174003',
     name: 'Crystal Embellished Pumps',
     brand: {
       id: 'jimmy-choo',
@@ -55,7 +55,7 @@ export const PRODUCTS: Product[] = [
     stock_quantity: 12
   },
   {
-    id: 'fw-002',
+    id: '123e4567-e89b-12d3-a456-426614174004',
     name: 'Classic Leather Oxfords',
     brand: {
       id: 'john-lobb',
@@ -73,7 +73,7 @@ export const PRODUCTS: Product[] = [
 
   // Jewelry Products
   {
-    id: 'jw-001',
+    id: '123e4567-e89b-12d3-a456-426614174005',
     name: 'Diamond Tennis Bracelet',
     brand: {
       id: 'cartier',
@@ -90,7 +90,7 @@ export const PRODUCTS: Product[] = [
     stock_quantity: 3
   },
   {
-    id: 'jw-002',
+    id: '123e4567-e89b-12d3-a456-426614174006',
     name: 'Pearl Strand Necklace',
     brand: {
       id: 'mikimoto',
@@ -108,7 +108,7 @@ export const PRODUCTS: Product[] = [
 
   // Beauty Products
   {
-    id: 'bt-001',
+    id: '123e4567-e89b-12d3-a456-426614174007',
     name: 'Luxury Skincare Set',
     brand: {
       id: 'la-mer',
@@ -125,7 +125,7 @@ export const PRODUCTS: Product[] = [
     stock_quantity: 20
   },
   {
-    id: 'bt-002',
+    id: '123e4567-e89b-12d3-a456-426614174008',
     name: 'Signature Fragrance',
     brand: {
       id: 'tom-ford-beauty',
@@ -143,7 +143,7 @@ export const PRODUCTS: Product[] = [
 
   // Bridal Boutique Products
   {
-    id: 'br-001',
+    id: '123e4567-e89b-12d3-a456-426614174009',
     name: 'Couture Wedding Gown',
     brand: {
       id: 'vera-wang',
@@ -160,7 +160,7 @@ export const PRODUCTS: Product[] = [
     stock_quantity: 2
   },
   {
-    id: 'br-002',
+    id: '123e4567-e89b-12d3-a456-426614174010',
     name: 'Bridal Tiara',
     brand: {
       id: 'cartier',
@@ -178,7 +178,7 @@ export const PRODUCTS: Product[] = [
 
   // Christmas Store Products
   {
-    id: 'cs-001',
+    id: '123e4567-e89b-12d3-a456-426614174011',
     name: 'Holiday Collection Watch',
     brand: {
       id: 'cartier',
@@ -195,7 +195,7 @@ export const PRODUCTS: Product[] = [
     stock_quantity: 5
   },
   {
-    id: 'cs-002',
+    id: '123e4567-e89b-12d3-a456-426614174012',
     name: 'Festive Gift Set',
     brand: {
       id: 'dior-beauty',
@@ -213,7 +213,7 @@ export const PRODUCTS: Product[] = [
 
   // Sale Products
   {
-    id: 'sale-001',
+    id: '123e4567-e89b-12d3-a456-426614174013',
     name: 'Designer Handbag',
     brand: {
       id: 'gucci',
@@ -231,7 +231,7 @@ export const PRODUCTS: Product[] = [
     stock_quantity: 4
   },
   {
-    id: 'sale-002',
+    id: '123e4567-e89b-12d3-a456-426614174014',
     name: 'Luxury Sunglasses',
     brand: {
       id: 'tom-ford',
