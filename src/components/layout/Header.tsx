@@ -138,7 +138,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
           className="bg-primary-800 text-white text-center py-2 text-sm dark:bg-primary-900"
         >
           Free shipping on all orders over $75 | Easy returns within 30 days
-          >
+          
         </motion.div>
         
         {/* Main header */}
