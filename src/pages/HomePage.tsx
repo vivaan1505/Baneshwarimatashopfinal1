@@ -10,8 +10,8 @@ import MinimalLayout from '../components/home/layouts/MinimalLayout';
 import { useProducts } from '../hooks/useProducts';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import HeroSlider from '../components/home/HeroSlider';
-import AdBanner from '../components/common/AdBanner';
+import { HeroSlider } from '../components/home/HeroSlider';
+import { AdBanner } from '../components/common/AdBanner';
 
 // Import Swiper styles
 import 'swiper/css';
