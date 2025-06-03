@@ -5,11 +5,13 @@ import { ArrowRight, ShoppingBag, Heart, Star, TrendingUp, ChevronRight, Chevron
 import { useThemeStore } from '../stores/themeStore';
 import HeroCentered from '../components/home/layouts/HeroCentered';
 import FeaturedCollectionsLayout from '../components/home/layouts/FeaturedCollectionsLayout';
+import { updateMetaTags, addStructuredData, generateOrganizationSchema } from '../utils/seo';
 import MinimalLayout from '../components/home/layouts/MinimalLayout';
 import { useProducts } from '../hooks/useProducts';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import HeroSlider from '../components/home/HeroSlider';
+import AdBanner from '../components/common/AdBanner';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -19,6 +21,20 @@ import 'swiper/css/pagination';
 const HomePage: React.FC = () => {
   const { homeLayout } = useThemeStore();
   const { data: featuredProducts, isLoading } = useProducts({ 
+  
+  useEffect(() => {
+    // Set default SEO metadata for homepage
+    updateMetaTags(
+      'MinddShopp | Premium Fashion & Beauty Marketplace',
+      'Discover premium footwear, clothing, jewelry, and beauty products at MinddShopp. Shop our exclusive bridal boutique and seasonal collections.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add organization schema
+    addStructuredData(generateOrganizationSchema());
+  }, []);
+  
     isFeatured: true, 
     limit: 8 
   });
@@ -372,6 +388,8 @@ const HomePage: React.FC = () => {
           </section>
 
           {/* Featured Products Carousel */}
+          <AdBanner slot="1234567890" className="py-4 bg-gray-100 dark:bg-gray-800 text-center" />
+          
           <section className="py-20 dark:bg-gray-800">
             <div className="container-custom">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-12">
@@ -490,6 +508,8 @@ const HomePage: React.FC = () => {
           </section>
 
           {/* Trending Now Section */}
+          <AdBanner slot="0987654321" className="py-4 bg-gray-100 dark:bg-gray-800 text-center" />
+          
           <section className="py-20 bg-gray-50 dark:bg-gray-900">
             <div className="container-custom">
               <div className="flex items-center mb-12">

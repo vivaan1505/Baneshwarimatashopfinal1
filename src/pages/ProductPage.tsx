@@ -5,6 +5,8 @@ import { toast } from 'react-hot-toast';
 import WishlistButton from '../components/common/WishlistButton';
 import { supabase } from '../lib/supabase';
 import { Star, Truck, Package, RefreshCw } from 'lucide-react';
+import { updateMetaTags, addStructuredData, generateProductSchema, generateBreadcrumbSchema } from '../utils/seo';
+import AdBanner from '../components/common/AdBanner';
 
 interface ProductVariant {
   id: string;
@@ -37,6 +39,8 @@ const ProductPage: React.FC = () => {
   useEffect(() => {
     if (id) {
       fetchProduct(id);
+      // Reset scroll position when product changes
+      window.scrollTo(0, 0);
     }
   }, [id]);
 
@@ -78,6 +82,41 @@ const ProductPage: React.FC = () => {
       }
       
       setProduct(productData);
+      
+      // Update SEO metadata
+      if (productData) {
+        updateMetaTags(
+          `${productData.name} | MinddShopp`,
+          productData.description || `Shop ${productData.name} at MinddShopp. Premium quality, fast shipping.`,
+          productData.images?.[0]?.url,
+          window.location.href
+        );
+        
+        // Add product schema
+        const productSchema = generateProductSchema({
+          id: productData.id,
+          name: productData.name,
+          description: productData.description || '',
+          price: productData.price,
+          imageUrl: productData.images?.[0]?.url || '',
+          brand: productData.brand,
+          rating: productData.rating,
+          reviewCount: productData.review_count
+        });
+        
+        // Add breadcrumb schema
+        const breadcrumbs = [
+          { name: 'Home', url: '/' },
+          { name: productData.type ? productData.type.charAt(0).toUpperCase() + productData.type.slice(1) : 'Products', 
+            url: productData.type ? `/${productData.type}` : '/products' },
+          { name: productData.name, url: `/product/${productData.id}` }
+        ];
+        
+        const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs);
+        
+        // Add both schemas
+        addStructuredData([productSchema, breadcrumbSchema]);
+      }
       
       // Fetch product options
       const { data: optionsData, error: optionsError } = await supabase
@@ -504,6 +543,9 @@ const ProductPage: React.FC = () => {
             )}
           </div>
         </div>
+
+        {/* Ad Banner */}
+        <AdBanner slot="3456789012" className="my-12 py-4 bg-gray-100 dark:bg-gray-800 text-center" />
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (

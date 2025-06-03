@@ -4,6 +4,8 @@ import { ArrowLeft, Calendar, User, Tag, Share, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
 import { toast } from 'react-hot-toast';
+import { updateMetaTags, addStructuredData, generateArticleSchema, generateBreadcrumbSchema } from '../utils/seo';
+import AdBanner from '../components/common/AdBanner';
 
 interface BlogPostData {
   id: string;
@@ -105,6 +107,40 @@ const BlogPost: React.FC = () => {
       }
       
       setPost(data);
+      
+      // Update SEO metadata
+      if (data) {
+        updateMetaTags(
+          `${data.title} | MinddShopp Blog`,
+          data.excerpt || 'Read our latest blog post at MinddShopp',
+          data.featured_image,
+          window.location.href
+        );
+        
+        // Add article schema
+        const articleSchema = generateArticleSchema({
+          title: data.title,
+          description: data.excerpt || '',
+          imageUrl: data.featured_image || '',
+          datePublished: data.published_at || data.created_at,
+          dateModified: data.updated_at,
+          authorName: data.author ? 
+            `${data.author.user_metadata?.first_name || ''} ${data.author.user_metadata?.last_name || ''}`.trim() || 
+            data.author.email?.split('@')[0] || 'MinddShopp' : 'MinddShopp'
+        });
+        
+        // Add breadcrumb schema
+        const breadcrumbs = [
+          { name: 'Home', url: '/' },
+          { name: 'Blog', url: '/blog' },
+          { name: data.title, url: `/blog/${data.slug}` }
+        ];
+        
+        const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs);
+        
+        // Add both schemas
+        addStructuredData([articleSchema, breadcrumbSchema]);
+      }
       
       // Fetch related posts (same category)
       if (data.categories && data.categories.length > 0) {
@@ -374,6 +410,9 @@ const BlogPost: React.FC = () => {
             </button>
           </div>
         </div>
+
+        {/* Ad Banner */}
+        <AdBanner slot="5678901234" className="my-12 py-4 bg-gray-100 dark:bg-gray-800 text-center" />
 
         {/* Tags */}
         {post.categories.length > 0 && (
