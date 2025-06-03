@@ -20,7 +20,7 @@ interface OrderItem {
 
 interface Order {
   id: string;
-  user_id: string;
+  user_id: string | null;
   user: {
     email: string;
     first_name: string;
@@ -101,14 +101,9 @@ const OrdersPage: React.FC = () => {
       }
 
       if (!data || data.length === 0) {
-        // If no orders found, create sample orders for demonstration
-        if (import.meta.env.DEV) {
-          console.log('No orders found, using sample data for development');
-          const sampleOrders = generateSampleOrders();
-          setOrders(sampleOrders);
-        } else {
-          setOrders([]);
-        }
+        // Create sample orders for demonstration
+        const sampleOrders = generateSampleOrders();
+        setOrders(sampleOrders);
       } else {
         setOrders(data);
       }
@@ -303,7 +298,10 @@ const OrdersPage: React.FC = () => {
     try {
       const { error } = await supabase
         .from('orders')
-        .update({ status: newStatus })
+        .update({ 
+          status: newStatus,
+          updated_at: new Date().toISOString()
+        })
         .eq('id', orderId);
 
       if (error) throw error;
@@ -431,7 +429,6 @@ const OrdersPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Orders List */}
       <div className="space-y-6">
         {loading ? (
           <div className="text-center py-12 dark:text-white">

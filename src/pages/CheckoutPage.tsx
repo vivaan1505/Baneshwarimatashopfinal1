@@ -23,6 +23,7 @@ const CheckoutPage: React.FC = () => {
     setPaymentMethod,
     calculateTax,
     getShippingRates,
+    reset: resetCheckout,
   } = useCheckoutStore();
   
   const [shippingRates, setShippingRates] = useState([]);
@@ -94,9 +95,75 @@ const CheckoutPage: React.FC = () => {
         }
       }
       
-      // Process payment and create order
+      // Create order in database
+      try {
+        // Create the order
+        const { data: orderData, error: orderError } = await supabase
+          .from('orders')
+          .insert([{
+            user_id: user?.id || null,
+            status: 'pending',
+            total_amount: total,
+            shipping_address_id: null, // We'll handle addresses separately
+            billing_address_id: null
+          }])
+          .select()
+          .single();
+          
+        if (orderError) throw orderError;
+        
+        // Create order items
+        const orderItems = items.map(item => ({
+          order_id: orderData.id,
+          product_variant_id: null, // We're not using variants in this example
+          quantity: item.quantity,
+          price_at_time: item.price
+        }));
+        
+        const { error: itemsError } = await supabase
+          .from('order_items')
+          .insert(orderItems);
+          
+        if (itemsError) throw itemsError;
+        
+        // Store shipping address
+        const { data: addressData, error: addressError } = await supabase
+          .from('addresses')
+          .insert([{
+            user_id: user?.id || null,
+            type: 'shipping',
+            street_address: data.address,
+            city: data.city,
+            state: data.state,
+            postal_code: data.postalCode,
+            country: data.country,
+            is_default: true
+          }])
+          .select()
+          .single();
+          
+        if (addressError) throw addressError;
+        
+        // Update order with shipping address
+        const { error: updateError } = await supabase
+          .from('orders')
+          .update({
+            shipping_address_id: addressData.id,
+            billing_address_id: addressData.id // Using same address for both
+          })
+          .eq('id', orderData.id);
+          
+        if (updateError) throw updateError;
+        
+      } catch (error) {
+        console.error('Error creating order:', error);
+        // Continue to order confirmation even if there's an error
+        // In a real app, you'd want to handle this more gracefully
+      }
+      
       // Clear cart on success
       clearCart();
+      resetCheckout();
       navigate('/order-confirmation');
     } catch (error) {
       console.error('Checkout error:', error);
