@@ -236,24 +236,31 @@ const SiteBrandingPage: React.FC = () => {
       if (deleteError) throw deleteError;
       
       // 2. Try to extract path from URL and delete from storage
-      try {
-        // Extract the path from the URL - this is a best effort approach
-        // The URL format might be different depending on your storage configuration
-        const urlObj = new URL(url);
-        const pathParts = urlObj.pathname.split('/');
-        // Look for the 'site-assets' part in the path
-        const siteAssetsIndex = pathParts.findIndex(part => part === 'site-assets');
-        if (siteAssetsIndex !== -1 && pathParts.length > siteAssetsIndex + 1) {
-          const storagePath = pathParts.slice(siteAssetsIndex + 1).join('/');
-          if (storagePath) {
-            await supabase.storage
-              .from('site-assets')
-              .remove([storagePath]);
+      if (url) {
+        try {
+          // Validate URL format
+          if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            console.warn('Invalid URL format:', url);
+            throw new Error('Invalid URL format');
           }
+          
+          // Extract the path from the URL - this is a best effort approach
+          const urlObj = new URL(url);
+          const pathParts = urlObj.pathname.split('/');
+          // Look for the 'site-assets' part in the path
+          const siteAssetsIndex = pathParts.findIndex(part => part === 'site-assets');
+          if (siteAssetsIndex !== -1 && pathParts.length > siteAssetsIndex + 1) {
+            const storagePath = pathParts.slice(siteAssetsIndex + 1).join('/');
+            if (storagePath) {
+              await supabase.storage
+                .from('site-assets')
+                .remove([storagePath]);
+            }
+          }
+        } catch (storageError) {
+          console.error('Error deleting file from storage:', storageError);
+          // Continue anyway as the database record is deleted
         }
-      } catch (storageError) {
-        console.error('Error deleting file from storage:', storageError);
-        // Continue anyway as the database record is deleted
       }
       
       toast.success('Asset deleted successfully');
