@@ -46,6 +46,35 @@ const PRODUCT_TAGS = [
   { value: 'kids', label: 'Kids', color: 'bg-green-100 text-green-800' }
 ];
 
+// Luxury fashion brands
+const LUXURY_BRANDS = [
+  { value: 'gucci', label: 'Gucci' },
+  { value: 'chanel', label: 'Chanel' },
+  { value: 'dior', label: 'Dior' },
+  { value: 'saint-laurent', label: 'Saint Laurent (YSL)' },
+  { value: 'hermes', label: 'Hermès' },
+  { value: 'prada', label: 'Prada' },
+  { value: 'fendi', label: 'Fendi' },
+  { value: 'balenciaga', label: 'Balenciaga' },
+  { value: 'givenchy', label: 'Givenchy' },
+  { value: 'valentino', label: 'Valentino' },
+  { value: 'burberry', label: 'Burberry' },
+  { value: 'versace', label: 'Versace' },
+  { value: 'dolce-gabbana', label: 'Dolce & Gabbana' },
+  { value: 'tom-ford', label: 'Tom Ford' },
+  { value: 'alexander-mcqueen', label: 'Alexander McQueen' },
+  { value: 'loewe', label: 'Loewe' },
+  { value: 'celine', label: 'Celine' },
+  { value: 'bottega-veneta', label: 'Bottega Veneta' },
+  { value: 'off-white', label: 'Off-White' },
+  { value: 'maison-margiela', label: 'Maison Margiela' },
+  { value: 'ralph-lauren-purple-label', label: 'Ralph Lauren Purple Label' },
+  { value: 'giorgio-armani', label: 'Giorgio Armani' },
+  { value: 'brunello-cucinelli', label: 'Brunello Cucinelli' },
+  { value: 'kenzo', label: 'Kenzo' },
+  { value: 'lanvin', label: 'Lanvin' }
+];
+
 // Define subcategories for each product type
 const SUBCATEGORIES = {
   footwear: [
@@ -728,10 +757,13 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Brand</label>
                   <BrandSelect
-                    options={brands.map(brand => ({
-                      value: brand.id,
-                      label: brand.name
-                    }))}
+                    options={[
+                      ...LUXURY_BRANDS,
+                      ...brands.map(brand => ({
+                        value: brand.id,
+                        label: brand.name
+                      }))
+                    ]}
                     className="mt-1"
                     classNamePrefix="select"
                     placeholder={isSpecialCategory ? "Select or enter brand" : "Select brand"}
