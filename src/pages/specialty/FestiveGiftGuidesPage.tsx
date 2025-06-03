@@ -475,13 +475,11 @@ const FestiveGiftGuidesPage: React.FC = () => {
                 <Link key={product.id} to={`/product/${product.id}`} className="group">
                   <div className="bg-white rounded-lg shadow-sm overflow-hidden dark:bg-gray-800">
                     <div className="aspect-square relative overflow-hidden">
-                      {product && (
-                        <img
-                          src={product.images?.[0]?.url || '/placeholder-product.jpg'}
-                          alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      )}
+                      <img
+                        src={product.images[0]?.url || '/placeholder-product.jpg'}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
                       {product.is_new && (
                         <div className="absolute top-2 left-2">
                           <span className="inline-block px-2 py-1 bg-accent-600 text-white text-xs font-medium rounded-md">
@@ -499,15 +497,26 @@ const FestiveGiftGuidesPage: React.FC = () => {
                     </div>
                     
                     <div className="p-4">
-                      {product && (
-                        <h3 className="font-medium mb-1 group-hover:text-accent-600 dark:text-white dark:group-hover:text-accent-400">
-                          {product.name}
-                        </h3>
+                      {product.brand && (
+                        <div className="flex items-center mb-2">
+                          <img 
+                            src={product.brand.logo_url || '/placeholder-brand.jpg'} 
+                            alt={product.brand.name || 'Brand'} 
+                            className="w-6 h-6 object-contain mr-2"
+                          />
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                            {product.brand.name || 'Brand'}
+                          </span>
+                        </div>
                       )}
+                      
+                      <h3 className="font-medium mb-1 group-hover:text-accent-600 dark:text-white dark:group-hover:text-accent-400">
+                        {product.name}
+                      </h3>
                       
                       <div className="flex items-center justify-between mt-2">
                         <div>
-                          {product?.compare_at_price ? (
+                          {product.compare_at_price ? (
                             <div className="flex items-center">
                               <span className="font-medium dark:text-white">${product.price.toFixed(2)}</span>
                               <span className="ml-2 text-sm text-gray-500 line-through dark:text-gray-400">
@@ -515,7 +524,7 @@ const FestiveGiftGuidesPage: React.FC = () => {
                               </span>
                             </div>
                           ) : (
-                            product && <span className="font-medium dark:text-white">${product.price.toFixed(2)}</span>
+                            <span className="font-medium dark:text-white">${product.price.toFixed(2)}</span>
                           )}
                         </div>
                         
@@ -633,7 +642,7 @@ const FestiveGiftGuidesPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-xl shadow-sm dark:bg-gray-800">
               <div className="w-12 h-12 bg-accent-100 rounded-full flex items-center justify-center mb-4 dark:bg-accent-900">
-                <Calendar size={24} className="text-accent-600 dark:text-accent-400" />
+                <Calendar className="w-6 h-6 text-accent-600 dark:text-accent-400" />
               </div>
               <h3 className="text-xl font-medium mb-3 dark:text-white">Shop Early</h3>
               <p className="text-gray-600 dark:text-gray-300">
@@ -643,7 +652,7 @@ const FestiveGiftGuidesPage: React.FC = () => {
             
             <div className="bg-white p-6 rounded-xl shadow-sm dark:bg-gray-800">
               <div className="w-12 h-12 bg-accent-100 rounded-full flex items-center justify-center mb-4 dark:bg-accent-900">
-                <Gift size={24} className="text-accent-600 dark:text-accent-400" />
+                <Gift className="w-6 h-6 text-accent-600 dark:text-accent-400" />
               </div>
               <h3 className="text-xl font-medium mb-3 dark:text-white">Gift Wrapping</h3>
               <p className="text-gray-600 dark:text-gray-300">
@@ -653,6 +662,55 @@ const FestiveGiftGuidesPage: React.FC = () => {
             
             <div className="bg-white p-6 rounded-xl shadow-sm dark:bg-gray-800">
               <div className="w-12 h-12 bg-accent-100 rounded-full flex items-center justify-center mb-4 dark:bg-accent-900">
-                <Truck size={24} className="text-accent-600 dark:text-accent-400" />
+                <Truck className="w-6 h-6 text-accent-600 dark:text-accent-400" />
               </div>
-              
+              <h3 className="text-xl font-medium mb-3 dark:text-white">Shipping Deadlines</h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                Order by December 20th for guaranteed delivery before Christmas with standard shipping, or December 22nd with express.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16">
+        <div className="container-custom">
+          <div className="bg-accent-900 rounded-xl overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-2">
+              <div className="p-8 md:p-12 lg:p-16 flex items-center">
+                <div>
+                  <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
+                    Ready to Start Your Holiday Shopping?
+                  </h2>
+                  <p className="text-accent-100 mb-8">
+                    Browse our complete festive collection and find perfect gifts for everyone on your list.
+                  </p>
+                  <Link 
+                    to="/festive-store" 
+                    className="btn bg-white text-accent-900 hover:bg-accent-50"
+                  >
+                    Shop Festive Collection
+                  </Link>
+                </div>
+              </div>
+              <div className="relative h-64 lg:h-auto">
+                <img 
+                  src="https://images.pexels.com/photos/1666067/pexels-photo-1666067.jpeg" 
+                  alt="Holiday gifts" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+
+export default FestiveGiftGuidesPage
+
+
+export default FestiveGiftGuidesPage
