@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Heart, ShoppingBag, Calendar, MapPin, Phone, Clock, ExternalLink } from 'lucide-react';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import { supabase } from '../../lib/supabase';
 import { toast } from 'react-hot-toast';
 import { useCartStore } from '../../stores/cartStore';
@@ -111,10 +113,13 @@ const BridalBoutique: React.FC = () => {
       {/* Hero Section */}
       <section className="relative h-[60vh] min-h-[500px] bg-secondary-50">
         <div className="absolute inset-0">
-          <img 
+          <LazyLoadImage 
             src="https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
             alt="Bridal Collection"
             className="w-full h-full object-cover"
+            effect="blur"
+            threshold={300}
+            placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
           />
           <div className="absolute inset-0 bg-black bg-opacity-40"></div>
         </div>
@@ -153,10 +158,13 @@ const BridalBoutique: React.FC = () => {
             {/* Bridal Footwear */}
             <div className="card group">
               <div className="relative overflow-hidden">
-                <img 
+                <LazyLoadImage 
                   src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                   alt="Bridal Footwear"
                   className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
+                  effect="blur"
+                  threshold={300}
+                  placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
                   <div className="absolute bottom-4 left-4">
@@ -170,10 +178,13 @@ const BridalBoutique: React.FC = () => {
             {/* Bridal Jewelry */}
             <div className="card group">
               <div className="relative overflow-hidden">
-                <img 
+                <LazyLoadImage 
                   src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                   alt="Bridal Jewelry"
                   className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
+                  effect="blur"
+                  threshold={300}
+                  placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
                   <div className="absolute bottom-4 left-4">
@@ -187,10 +198,13 @@ const BridalBoutique: React.FC = () => {
             {/* Bridal Accessories */}
             <div className="card group">
               <div className="relative overflow-hidden">
-                <img 
+                <LazyLoadImage 
                   src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                   alt="Bridal Accessories"
                   className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
+                  effect="blur"
+                  threshold={300}
+                  placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
                   <div className="absolute bottom-4 left-4">
@@ -220,10 +234,13 @@ const BridalBoutique: React.FC = () => {
                   onClick={() => handleProductClick(product.id)}
                 >
                   <div className="relative overflow-hidden">
-                    <img 
+                    <LazyLoadImage 
                       src={product.images?.[0]?.url || "https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
                       alt={product.name}
                       className="w-full h-64 object-cover"
+                      effect="blur"
+                      threshold={300}
+                      placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
                     <button 
                       className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600"
@@ -252,10 +269,13 @@ const BridalBoutique: React.FC = () => {
               <>
                 <div className="card group cursor-pointer" onClick={() => handleProductClick("fallback-1")}>
                   <div className="relative overflow-hidden">
-                    <img 
+                    <LazyLoadImage 
                       src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                       alt="Crystal Embellished Heels"
                       className="w-full h-64 object-cover"
+                      effect="blur"
+                      threshold={300}
+                      placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
                     <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600" onClick={(e) => e.stopPropagation()}>
                       <Heart size={20} />
@@ -285,10 +305,13 @@ const BridalBoutique: React.FC = () => {
 
                 <div className="card group cursor-pointer" onClick={() => handleProductClick("fallback-2")}>
                   <div className="relative overflow-hidden">
-                    <img 
+                    <LazyLoadImage 
                       src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                       alt="Pearl Drop Earrings"
                       className="w-full h-64 object-cover"
+                      effect="blur"
+                      threshold={300}
+                      placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
                     <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600" onClick={(e) => e.stopPropagation()}>
                       <Heart size={20} />
@@ -318,10 +341,13 @@ const BridalBoutique: React.FC = () => {
 
                 <div className="card group cursor-pointer" onClick={() => handleProductClick("fallback-3")}>
                   <div className="relative overflow-hidden">
-                    <img 
+                    <LazyLoadImage 
                       src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                       alt="Lace Trim Veil"
                       className="w-full h-64 object-cover"
+                      effect="blur"
+                      threshold={300}
+                      placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
                     <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600" onClick={(e) => e.stopPropagation()}>
                       <Heart size={20} />
@@ -351,10 +377,13 @@ const BridalBoutique: React.FC = () => {
 
                 <div className="card group cursor-pointer" onClick={() => handleProductClick("fallback-4")}>
                   <div className="relative overflow-hidden">
-                    <img 
+                    <LazyLoadImage 
                       src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                       alt="Crystal Hair Pins"
                       className="w-full h-64 object-cover"
+                      effect="blur"
+                      threshold={300}
+                      placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
                     <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600" onClick={(e) => e.stopPropagation()}>
                       <Heart size={20} />
@@ -411,7 +440,7 @@ const BridalBoutique: React.FC = () => {
                     <div className="p-8 lg:p-12">
                       <div className="flex items-center gap-2 text-secondary-600 mb-4">
                         <Calendar className="w-6 h-6" />
-                        <span className="font-medium">Bridal Beauty Partner</span>
+                        <span className="font-medium">Bridal Partner</span>
                       </div>
                       <h2 className="text-3xl font-heading font-bold mb-4">
                         {service.name}
@@ -457,10 +486,13 @@ const BridalBoutique: React.FC = () => {
                     </div>
                     
                     <div className="relative h-64 lg:h-auto">
-                      <img 
+                      <LazyLoadImage 
                         src="https://images.pexels.com/photos/3997391/pexels-photo-3997391.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                         alt={`${service.name} Salon`}
                         className="absolute inset-0 w-full h-full object-cover"
+                        effect="blur"
+                        threshold={300}
+                        placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                       />
                     </div>
                   </div>

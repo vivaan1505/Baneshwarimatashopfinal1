@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import FeaturedProducts from '../FeaturedProducts';
 import FeaturedCoupons from '../FeaturedCoupons';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 
@@ -28,18 +29,16 @@ const FeaturedCollectionsLayout: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Bridal Collection */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
+            <div>
               <Link to="/bridal-boutique" className="block group">
                 <div className="relative h-96 rounded-xl overflow-hidden">
-                  <img 
+                  <LazyLoadImage 
                     src="https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
                     alt="Bridal Collection" 
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                    effect="blur"
+                    threshold={300}
+                    placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
                     <div className="absolute bottom-0 left-0 right-0 p-8">
@@ -60,21 +59,19 @@ const FeaturedCollectionsLayout: React.FC = () => {
                   </div>
                 </div>
               </Link>
-            </motion.div>
+            </div>
             
             {/* Festive Collection */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
+            <div>
               <Link to="/festive-store" className="block group">
                 <div className="relative h-96 rounded-xl overflow-hidden">
-                  <img 
+                  <LazyLoadImage 
                     src="https://images.pexels.com/photos/717988/pexels-photo-717988.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
                     alt="Festive Collection" 
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                    effect="blur"
+                    threshold={300}
+                    placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
                     <div className="absolute bottom-0 left-0 right-0 p-8">
@@ -95,7 +92,7 @@ const FeaturedCollectionsLayout: React.FC = () => {
                   </div>
                 </div>
               </Link>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
