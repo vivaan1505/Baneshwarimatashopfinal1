@@ -128,7 +128,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
         "sticky top-0 z-50 w-full transition-all duration-300",
         isScrolled ? "bg-white shadow-md dark:bg-gray-900" : "bg-transparent"
       )}
-    >
+    
       
         
         {/* Main header */}
