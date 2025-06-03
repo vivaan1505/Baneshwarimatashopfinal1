@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useAuthStore } from '../../stores/authStore';
 import { toast } from 'react-hot-toast';
 import { AuthError } from '@supabase/supabase-js';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../../utils/seo';
 
 interface SignUpFormData {
   email: string;
@@ -18,6 +19,25 @@ const SignUpPage: React.FC = () => {
   const { signUp } = useAuthStore();
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<SignUpFormData>();
   const password = watch('password');
+
+  useEffect(() => {
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Create Account | MinddShopp',
+      'Create a MinddShopp account to enjoy a personalized shopping experience, track orders, save favorites, and more.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Create Account | MinddShopp',
+      description: 'Create a MinddShopp account to enjoy a personalized shopping experience, track orders, save favorites, and more.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+  }, []);
 
   const onSubmit = async (data: SignUpFormData) => {
     try {

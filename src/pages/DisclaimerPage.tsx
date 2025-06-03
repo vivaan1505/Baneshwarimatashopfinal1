@@ -1,8 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 const DisclaimerPage: React.FC = () => {
+  useEffect(() => {
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Disclaimer | MinddShopp',
+      'Read MinddShopp\'s disclaimer to understand the limitations of our website content, external links, and product information.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Disclaimer | MinddShopp',
+      description: 'Read MinddShopp\'s disclaimer to understand the limitations of our website content, external links, and product information.',
+      url: window.location.href,
+      lastModified: 'June 1, 2025'
+    });
+    
+    addStructuredData(webPageSchema);
+  }, []);
+
   return (
     <div className="py-12">
       <div className="container-custom">

@@ -37,6 +37,18 @@ export const updateMetaTags = (
   if (twitterTitle) twitterTitle.setAttribute('content', title);
   if (twitterDescription) twitterDescription.setAttribute('content', description);
   if (twitterImage && image) twitterImage.setAttribute('content', image);
+
+  // Update canonical URL if provided
+  const canonicalLink = document.querySelector('link[rel="canonical"]');
+  if (canonicalLink && url) {
+    canonicalLink.setAttribute('href', url);
+  } else if (url) {
+    // Create canonical link if it doesn't exist
+    const link = document.createElement('link');
+    link.rel = 'canonical';
+    link.href = url;
+    document.head.appendChild(link);
+  }
 };
 
 // Add JSON-LD structured data to the page
@@ -171,5 +183,81 @@ export const generateArticleSchema = (post: {
       '@type': 'WebPage',
       '@id': window.location.href
     }
+  };
+};
+
+// Generate WebPage schema
+export const generateWebPageSchema = (page: {
+  title: string;
+  description: string;
+  url: string;
+  lastModified?: string;
+}) => {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: page.title,
+    description: page.description,
+    url: page.url,
+    ...(page.lastModified ? { dateModified: page.lastModified } : {}),
+    isPartOf: {
+      '@type': 'WebSite',
+      name: 'MinddShopp',
+      url: window.location.origin
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'MinddShopp',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${window.location.origin}/icon-512.png`
+      }
+    }
+  };
+};
+
+// Generate LocalBusiness schema
+export const generateLocalBusinessSchema = () => {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name: 'MinddShopp',
+    image: `${window.location.origin}/icon-512.png`,
+    '@id': window.location.origin,
+    url: window.location.origin,
+    telephone: '+1-555-123-4567',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: '123 Fashion Street',
+      addressLocality: 'New York',
+      addressRegion: 'NY',
+      postalCode: '10001',
+      addressCountry: 'US'
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 40.7128,
+      longitude: -74.0060
+    },
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '09:00',
+        closes: '18:00'
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Saturday'],
+        opens: '10:00',
+        closes: '17:00'
+      }
+    ],
+    sameAs: [
+      'https://facebook.com/minddshopp',
+      'https://twitter.com/minddshopp',
+      'https://instagram.com/minddshopp',
+      'https://pinterest.com/minddshopp'
+    ]
   };
 };

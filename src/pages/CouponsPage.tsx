@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { Search, Copy, Check, ExternalLink } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 interface Coupon {
   id: string;
@@ -33,10 +34,42 @@ const CouponsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
     fetchCoupons();
+    
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Exclusive Coupons & Discounts | MinddShopp',
+      'Save on your favorite brands with our exclusive coupon codes and special offers. Find discounts on fashion, beauty, and more.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Exclusive Coupons & Discounts | MinddShopp',
+      description: 'Save on your favorite brands with our exclusive coupon codes and special offers. Find discounts on fashion, beauty, and more.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+    
+    metaUpdatedRef.current = true;
   }, []);
+
+  // Update meta tags when category filter changes
+  useEffect(() => {
+    if (!metaUpdatedRef.current || categoryFilter === 'all') return;
+    
+    updateMetaTags(
+      `${categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1)} Coupons | MinddShopp`,
+      `Save on ${categoryFilter} products with our exclusive coupon codes and special offers.`,
+      `${window.location.origin}/icon-512.png`,
+      `${window.location.origin}/coupons?category=${categoryFilter}`
+    );
+  }, [categoryFilter]);
 
   const fetchCoupons = async () => {
     try {

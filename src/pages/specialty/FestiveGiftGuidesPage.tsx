@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { Gift, Tag, ArrowRight, ChevronRight, Star, Clock, Truck, Filter, Search, Calendar } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../../utils/seo';
 
 interface Product {
   id: string;
@@ -46,9 +47,29 @@ const FestiveGiftGuidesPage: React.FC = () => {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>(''); 
+  const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
     fetchData();
+    
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Holiday Gift Guides & Special Offers | MinddShopp',
+      'Find the perfect gifts for everyone on your list with our curated holiday gift guides. Discover exclusive deals and special offers for the festive season.',
+      'https://images.pexels.com/photos/1303092/pexels-photo-1303092.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Holiday Gift Guides & Special Offers | MinddShopp',
+      description: 'Find the perfect gifts for everyone on your list with our curated holiday gift guides. Discover exclusive deals and special offers for the festive season.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+    
+    metaUpdatedRef.current = true;
   }, []);
 
   const fetchData = async () => {

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { updateMetaTags, addStructuredData, generateWebPageSchema, generateLocalBusinessSchema } from '../utils/seo';
 
 const ContactPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,27 @@ const ContactPage: React.FC = () => {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Contact MinddShopp | Customer Support & Inquiries',
+      'Get in touch with MinddShopp\'s customer service team. We\'re here to help with product inquiries, order support, and more.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Contact MinddShopp | Customer Support & Inquiries',
+      description: 'Get in touch with MinddShopp\'s customer service team. We\'re here to help with product inquiries, order support, and more.',
+      url: window.location.href
+    });
+    
+    const localBusinessSchema = generateLocalBusinessSchema();
+    
+    addStructuredData([webPageSchema, localBusinessSchema]);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

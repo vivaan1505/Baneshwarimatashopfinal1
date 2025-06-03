@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuthStore } from '../../stores/authStore';
 import { supabase } from '../../lib/supabase';
 import { toast } from 'react-hot-toast';
 import { Share2, Copy, Check, Clock, X } from 'lucide-react';
 import { format } from 'date-fns';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../../utils/seo';
 
 interface Referral {
   id: string;
@@ -21,11 +22,31 @@ const ReferralPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [copied, setCopied] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
     if (user) {
       fetchReferrals();
     }
+    
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Referral Program | MinddShopp',
+      'Invite your friends to MinddShopp and earn rewards. Get $10 in store credit for each friend who makes their first purchase.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Referral Program | MinddShopp',
+      description: 'Invite your friends to MinddShopp and earn rewards. Get $10 in store credit for each friend who makes their first purchase.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+    
+    metaUpdatedRef.current = true;
   }, [user]);
 
   const fetchReferrals = async () => {

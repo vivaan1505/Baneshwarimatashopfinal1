@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useCartStore } from '../stores/cartStore';
 import { useCheckoutStore, ShippingAddress, PaymentMethod } from '../stores/checkoutStore';
 import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../stores/authStore';
+import { updateMetaTags } from '../utils/seo';
 
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const CheckoutPage: React.FC = () => {
   
   const [shippingRates, setShippingRates] = useState([]);
   const [loading, setLoading] = useState(false);
+  const metaUpdatedRef = useRef(false);
   
   const { register, handleSubmit, watch } = useForm<ShippingAddress>({
     defaultValues: shippingAddress || undefined,
@@ -31,6 +33,18 @@ const CheckoutPage: React.FC = () => {
   const country = watch('country');
   const state = watch('state');
   
+  useEffect(() => {
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Checkout | MinddShopp',
+      'Complete your purchase securely at MinddShopp. Review your order, enter shipping details, and select payment method.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    metaUpdatedRef.current = true;
+  }, []);
+
   useEffect(() => {
     if (country && state) {
       loadShippingRates();

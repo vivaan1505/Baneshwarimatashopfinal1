@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Briefcase, MapPin, Clock, ChevronRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { toast } from 'react-hot-toast';
 import { useAuthStore } from '../stores/authStore';
 import { format } from 'date-fns';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 interface Job {
   id: string;
@@ -51,6 +52,7 @@ const CareersPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
+  const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
     fetchJobs();
@@ -64,6 +66,25 @@ const CareersPage: React.FC = () => {
         email: user.email || ''
       }));
     }
+    
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Careers at MinddShopp | Join Our Team',
+      'Explore career opportunities at MinddShopp. Join our team and help shape the future of luxury fashion and beauty.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Careers at MinddShopp | Join Our Team',
+      description: 'Explore career opportunities at MinddShopp. Join our team and help shape the future of luxury fashion and beauty.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+    
+    metaUpdatedRef.current = true;
   }, [user]);
 
   const fetchJobs = async () => {

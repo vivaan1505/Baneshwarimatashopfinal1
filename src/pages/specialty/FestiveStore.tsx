@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Gift, Star, Clock, Truck, ArrowRight, Heart, ShoppingBag } from 'lucide-react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
@@ -6,6 +6,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import { supabase } from '../../lib/supabase';
 import { toast } from 'react-hot-toast';
 import { useCartStore } from '../../stores/cartStore';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../../utils/seo';
 
 interface Product {
   id: string;
@@ -24,9 +25,29 @@ const FestiveStore: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { addItem } = useCartStore();
+  const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
     fetchFestiveProducts();
+    
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Festive Store | MinddShopp - Holiday Collection 2025',
+      'Discover perfect gifts for everyone on your list. From festive fashion to luxury beauty sets, our holiday collection has everything you need for the season.',
+      'https://images.pexels.com/photos/717988/pexels-photo-717988.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Festive Store | MinddShopp - Holiday Collection 2025',
+      description: 'Discover perfect gifts for everyone on your list. From festive fashion to luxury beauty sets, our holiday collection has everything you need for the season.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+    
+    metaUpdatedRef.current = true;
   }, []);
 
   const fetchFestiveProducts = async () => {

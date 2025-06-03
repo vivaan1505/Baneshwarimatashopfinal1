@@ -1,8 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 const AccessibilityPage: React.FC = () => {
+  useEffect(() => {
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Accessibility Statement | MinddShopp',
+      'Read MinddShopp\'s accessibility statement to learn about our commitment to making our website accessible to all users, including those with disabilities.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Accessibility Statement | MinddShopp',
+      description: 'Read MinddShopp\'s accessibility statement to learn about our commitment to making our website accessible to all users, including those with disabilities.',
+      url: window.location.href,
+      lastModified: 'June 1, 2025'
+    });
+    
+    addStructuredData(webPageSchema);
+  }, []);
+
   return (
     <div className="py-12">
       <div className="container-custom">

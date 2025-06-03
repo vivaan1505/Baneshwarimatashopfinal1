@@ -1,8 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { updateMetaTags, addStructuredData, generateWebPageSchema, generateLocalBusinessSchema } from '../utils/seo';
 
 const AboutPage: React.FC = () => {
+  useEffect(() => {
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'About MinddShopp | Our Story, Mission & Values',
+      'Learn about MinddShopp\'s journey, our mission to redefine luxury fashion and beauty, and the values that drive our commitment to quality and sustainability.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'About MinddShopp | Our Story, Mission & Values',
+      description: 'Learn about MinddShopp\'s journey, our mission to redefine luxury fashion and beauty, and the values that drive our commitment to quality and sustainability.',
+      url: window.location.href
+    });
+    
+    const localBusinessSchema = generateLocalBusinessSchema();
+    
+    addStructuredData([webPageSchema, localBusinessSchema]);
+  }, []);
+
   return (
     <div className="py-12">
       <div className="container-custom">

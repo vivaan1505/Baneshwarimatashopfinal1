@@ -1,8 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 const TermsConditionsPage: React.FC = () => {
+  useEffect(() => {
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Terms and Conditions | MinddShopp',
+      'Read the terms and conditions for using MinddShopp\'s website and services. Learn about our policies regarding orders, payments, shipping, returns, and more.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Terms and Conditions | MinddShopp',
+      description: 'Read the terms and conditions for using MinddShopp\'s website and services. Learn about our policies regarding orders, payments, shipping, returns, and more.',
+      url: window.location.href,
+      lastModified: 'June 1, 2025'
+    });
+    
+    addStructuredData(webPageSchema);
+  }, []);
+
   return (
     <div className="py-12">
       <div className="container-custom">

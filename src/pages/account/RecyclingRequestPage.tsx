@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuthStore } from '../../stores/authStore';
 import { supabase } from '../../lib/supabase';
 import { toast } from 'react-hot-toast';
@@ -7,6 +7,7 @@ import { useDropzone } from 'react-dropzone';
 import { Recycle, Upload, X, Star, Clock, Check, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import Select from 'react-select';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../../utils/seo';
 
 interface RecyclingRequest {
   id: string;
@@ -48,6 +49,7 @@ const RecyclingRequestPage: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const metaUpdatedRef = useRef(false);
   
   const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<FormData>({
     defaultValues: {
@@ -70,6 +72,25 @@ const RecyclingRequestPage: React.FC = () => {
       fetchRequests();
       fetchProducts();
     }
+    
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Product Recycling Program | MinddShopp',
+      'Participate in MinddShopp\'s recycling program. Submit used products for recycling and earn store credit for your sustainable choices.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Product Recycling Program | MinddShopp',
+      description: 'Participate in MinddShopp\'s recycling program. Submit used products for recycling and earn store credit for your sustainable choices.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+    
+    metaUpdatedRef.current = true;
   }, [user]);
 
   const fetchRequests = async () => {

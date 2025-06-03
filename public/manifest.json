@@ -1,11 +1,16 @@
 {
   "name": "MinddShopp",
   "short_name": "MinddShopp",
-  "description": "Premium Fashion & Beauty Marketplace",
+  "description": "Discover premium footwear, clothing, jewelry, and beauty products at MinddShopp. Shop our exclusive bridal boutique and seasonal collections.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#4338CA",
+  "orientation": "portrait-primary",
+  "categories": ["shopping", "fashion", "lifestyle", "beauty"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/icon-192.png",
@@ -18,6 +23,15 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Home page of MinddShopp"
     }
   ]
 }

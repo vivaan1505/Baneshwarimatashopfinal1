@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '../stores/authStore';
 import { Link } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
@@ -9,12 +9,23 @@ import WishlistSection from '../components/account/WishlistSection';
 import PaymentSection from '../components/account/PaymentSection';
 import SettingsSection from '../components/account/SettingsSection';
 import AccountNav from '../components/account/AccountNav';
+import { updateMetaTags } from '../utils/seo';
 
 type AccountSection = 'profile' | 'orders' | 'addresses' | 'wishlist' | 'payment' | 'settings';
 
 const AccountPage: React.FC = () => {
   const [activeSection, setActiveSection] = useState<AccountSection>('profile');
   const { user, signOut } = useAuthStore();
+
+  useEffect(() => {
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'My Account | MinddShopp',
+      'Manage your MinddShopp account. View orders, update profile, manage addresses, and more.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+  }, []);
 
   if (!user) {
     return (

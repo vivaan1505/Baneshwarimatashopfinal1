@@ -1,9 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import SiteMapLinks from '../components/layout/SiteMapLinks';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 const SitemapPage: React.FC = () => {
+  useEffect(() => {
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Sitemap | MinddShopp',
+      'Navigate MinddShopp\'s website with our comprehensive sitemap. Find links to all sections and pages of our online store.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Sitemap | MinddShopp',
+      description: 'Navigate MinddShopp\'s website with our comprehensive sitemap. Find links to all sections and pages of our online store.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+  }, []);
+
   return (
     <div className="py-12">
       <div className="container-custom">

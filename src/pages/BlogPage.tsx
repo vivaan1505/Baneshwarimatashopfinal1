@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Calendar, User, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 interface BlogPost {
   id: string;
@@ -37,11 +38,47 @@ const BlogPage: React.FC = () => {
   const [categories, setCategories] = useState<{id: string, name: string, slug: string}[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedPost, setExpandedPost] = useState<string | null>(null);
+  const initialRenderRef = useRef(true);
 
   useEffect(() => {
     fetchBlogPosts();
     fetchCategories();
+    
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'MinddShopp Blog | Fashion Trends, Style Tips & Beauty Insights',
+      'Explore the latest in fashion trends, styling tips, beauty advice, and product insights on the MinddShopp blog.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'MinddShopp Blog | Fashion Trends, Style Tips & Beauty Insights',
+      description: 'Explore the latest in fashion trends, styling tips, beauty advice, and product insights on the MinddShopp blog.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
   }, []);
+
+  // Update meta tags when category filter changes
+  useEffect(() => {
+    if (initialRenderRef.current) {
+      initialRenderRef.current = false;
+      return;
+    }
+    
+    if (selectedCategory) {
+      const categoryName = categories.find(c => c.slug === selectedCategory)?.name || 'Category';
+      updateMetaTags(
+        `${categoryName} Articles | MinddShopp Blog`,
+        `Explore our collection of articles about ${categoryName.toLowerCase()} on the MinddShopp blog.`,
+        `${window.location.origin}/icon-512.png`,
+        `${window.location.origin}/blog?category=${selectedCategory}`
+      );
+    }
+  }, [selectedCategory, categories]);
 
   const fetchBlogPosts = async () => {
     try {

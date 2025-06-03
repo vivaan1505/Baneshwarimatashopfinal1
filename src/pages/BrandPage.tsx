@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { toast } from 'react-hot-toast';
 import ProductCard from '../components/common/ProductCard';
 import CouponCard from '../components/common/CouponCard';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 interface Brand {
   id: string;
@@ -44,12 +45,37 @@ const BrandPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [loading, setLoading] = useState(true);
+  const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
     if (slug) {
       fetchBrandData(slug);
     }
   }, [slug]);
+
+  // Update meta tags when brand data is loaded
+  useEffect(() => {
+    if (!brand || metaUpdatedRef.current) return;
+    
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      `${brand.name} | Shop at MinddShopp`,
+      `Discover ${brand.name} products at MinddShopp. ${brand.description || `Shop ${brand.name} ${brand.category || 'products'}.`}`,
+      brand.logo_url || `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: `${brand.name} | Shop at MinddShopp`,
+      description: `Discover ${brand.name} products at MinddShopp. ${brand.description || `Shop ${brand.name} ${brand.category || 'products'}.`}`,
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+    
+    metaUpdatedRef.current = true;
+  }, [brand]);
 
   const fetchBrandData = async (brandSlug: string) => {
     try {

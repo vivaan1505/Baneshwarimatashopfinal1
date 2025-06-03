@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { toast } from 'react-hot-toast';
 import ProductCard from '../components/common/ProductCard';
 import CategoryFilter from '../components/shop/CategoryFilter';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 const MenPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -11,10 +12,43 @@ const MenPage: React.FC = () => {
   const [sortBy, setSortBy] = useState('newest');
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
     fetchMensProducts();
+    
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Men\'s Collection | MinddShopp',
+      'Discover our premium selection of men\'s clothing, footwear, accessories, and grooming products. Shop the latest styles and trends.',
+      'https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Men\'s Collection | MinddShopp',
+      description: 'Discover our premium selection of men\'s clothing, footwear, accessories, and grooming products. Shop the latest styles and trends.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+    
+    metaUpdatedRef.current = true;
   }, []);
+
+  // Update meta tags when category filter changes
+  useEffect(() => {
+    if (!metaUpdatedRef.current || selectedCategory === 'all') return;
+    
+    const categoryName = categories.find(c => c.id === selectedCategory)?.name || 'Men\'s';
+    updateMetaTags(
+      `Men's ${categoryName} | MinddShopp Collection`,
+      `Shop our premium selection of men's ${categoryName.toLowerCase()}. Find the perfect style for any occasion.`,
+      'https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      `${window.location.origin}/men?category=${selectedCategory}`
+    );
+  }, [selectedCategory]);
 
   const fetchMensProducts = async () => {
     try {

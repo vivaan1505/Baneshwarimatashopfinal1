@@ -2,3 +2,38 @@ User-agent: *
 Allow: /
 
 Sitemap: https://melodic-cobbler-eefed1.netlify.app/sitemap.xml
+
+# Disallow admin pages
+User-agent: *
+Disallow: /admin/
+
+# Disallow account pages
+User-agent: *
+Disallow: /account/
+
+# Disallow auth pages
+User-agent: *
+Disallow: /auth/
+
+# Disallow checkout pages
+User-agent: *
+Disallow: /checkout
+
+# Allow product pages
+User-agent: *
+Allow: /product/
+
+# Allow category pages
+User-agent: *
+Allow: /footwear
+Allow: /clothing
+Allow: /jewelry
+Allow: /beauty
+Allow: /men
+Allow: /women
+Allow: /kids
+
+# Allow specialty pages
+User-agent: *
+Allow: /bridal-boutique
+Allow: /festive-store

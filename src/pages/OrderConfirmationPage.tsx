@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
+import { updateMetaTags } from '../utils/seo';
 
 const OrderConfirmationPage: React.FC = () => {
+  useEffect(() => {
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Order Confirmation | MinddShopp',
+      'Thank you for your order! Your purchase has been confirmed and is being processed.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+  }, []);
+
   return (
     <div className="container-custom py-16">
       <div className="max-w-2xl mx-auto text-center">

@@ -1,14 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Filter, Search } from 'lucide-react';
 import ProductCard from '../components/common/ProductCard';
 import { useProducts } from '../hooks/useProducts';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 const NewArrivalsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
+  const metaUpdatedRef = useRef(false);
 
   const { data: products = [], isLoading } = useProducts({ isNew: true });
+
+  useEffect(() => {
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'New Arrivals | Latest Products at MinddShopp',
+      'Discover our latest arrivals at MinddShopp. Shop the newest additions to our premium fashion and beauty collections.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'New Arrivals | Latest Products at MinddShopp',
+      description: 'Discover our latest arrivals at MinddShopp. Shop the newest additions to our premium fashion and beauty collections.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+    
+    metaUpdatedRef.current = true;
+  }, []);
+
+  // Update meta tags when category filter changes
+  useEffect(() => {
+    if (!metaUpdatedRef.current || selectedCategory === 'all') return;
+    
+    updateMetaTags(
+      `New ${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Arrivals | MinddShopp`,
+      `Discover our latest ${selectedCategory} arrivals at MinddShopp. Shop the newest additions to our premium collection.`,
+      `${window.location.origin}/icon-512.png`,
+      `${window.location.origin}/new-arrivals?category=${selectedCategory}`
+    );
+  }, [selectedCategory]);
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());

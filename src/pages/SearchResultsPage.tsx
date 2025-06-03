@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Search, Filter, ArrowLeft } from 'lucide-react';
 import ProductCard from '../components/common/ProductCard';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 interface SearchResult {
   id: string;
@@ -27,6 +28,7 @@ const SearchResultsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('relevance');
+  const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
     if (query) {
@@ -35,7 +37,38 @@ const SearchResultsPage: React.FC = () => {
       setResults([]);
       setLoading(false);
     }
+    
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      query ? `Search Results for "${query}" | MinddShopp` : 'Search | MinddShopp',
+      query ? `Browse search results for "${query}" at MinddShopp. Find products, articles, and more.` : 'Search for products, articles, and more at MinddShopp.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: query ? `Search Results for "${query}" | MinddShopp` : 'Search | MinddShopp',
+      description: query ? `Browse search results for "${query}" at MinddShopp. Find products, articles, and more.` : 'Search for products, articles, and more at MinddShopp.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+    
+    metaUpdatedRef.current = true;
   }, [query]);
+
+  // Update meta tags when filter changes
+  useEffect(() => {
+    if (!metaUpdatedRef.current || !query) return;
+    
+    updateMetaTags(
+      `${activeFilter !== 'all' ? activeFilter.charAt(0).toUpperCase() + activeFilter.slice(1) + ' ' : ''}Search Results for "${query}" | MinddShopp`,
+      `Browse ${activeFilter !== 'all' ? activeFilter + ' ' : ''}search results for "${query}" at MinddShopp.`,
+      `${window.location.origin}/icon-512.png`,
+      `${window.location.origin}/search?q=${encodeURIComponent(query)}&filter=${activeFilter}`
+    );
+  }, [activeFilter, query]);
 
   const performSearch = async (searchQuery: string) => {
     setLoading(true);

@@ -1,8 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 const PrivacyPolicyPage: React.FC = () => {
+  useEffect(() => {
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Privacy Policy | MinddShopp',
+      'Read MinddShopp\'s privacy policy to understand how we collect, use, and protect your personal information when you use our website and services.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Privacy Policy | MinddShopp',
+      description: 'Read MinddShopp\'s privacy policy to understand how we collect, use, and protect your personal information when you use our website and services.',
+      url: window.location.href,
+      lastModified: 'June 1, 2025'
+    });
+    
+    addStructuredData(webPageSchema);
+  }, []);
+
   return (
     <div className="py-12">
       <div className="container-custom">

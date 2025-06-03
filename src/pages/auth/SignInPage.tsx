@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useAuthStore } from '../../stores/authStore';
 import { toast } from 'react-hot-toast';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../../utils/seo';
 
 interface SignInFormData {
   email: string;
@@ -16,6 +17,25 @@ const SignInPage: React.FC = () => {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignInFormData>();
 
   const from = location.state?.from?.pathname || '/';
+
+  useEffect(() => {
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Sign In | MinddShopp',
+      'Sign in to your MinddShopp account to access your orders, wishlist, and more.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Sign In | MinddShopp',
+      description: 'Sign in to your MinddShopp account to access your orders, wishlist, and more.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+  }, []);
 
   const onSubmit = async (data: SignInFormData) => {
     try {

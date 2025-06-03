@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { toast } from 'react-hot-toast';
 import ProductCard from '../components/common/ProductCard';
 import CategoryFilter from '../components/shop/CategoryFilter';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 const WomenPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -11,10 +12,43 @@ const WomenPage: React.FC = () => {
   const [sortBy, setSortBy] = useState('newest');
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
     fetchWomensProducts();
+    
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Women\'s Collection | MinddShopp',
+      'Discover our premium selection of women\'s clothing, footwear, jewelry, and beauty products. Shop the latest styles and trends.',
+      'https://images.pexels.com/photos/1619801/pexels-photo-1619801.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Women\'s Collection | MinddShopp',
+      description: 'Discover our premium selection of women\'s clothing, footwear, jewelry, and beauty products. Shop the latest styles and trends.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+    
+    metaUpdatedRef.current = true;
   }, []);
+
+  // Update meta tags when category filter changes
+  useEffect(() => {
+    if (!metaUpdatedRef.current || selectedCategory === 'all') return;
+    
+    const categoryName = categories.find(c => c.id === selectedCategory)?.name || 'Women\'s';
+    updateMetaTags(
+      `Women's ${categoryName} | MinddShopp Collection`,
+      `Shop our premium selection of women's ${categoryName.toLowerCase()}. Find the perfect style for any occasion.`,
+      'https://images.pexels.com/photos/1619801/pexels-photo-1619801.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      `${window.location.origin}/women?category=${selectedCategory}`
+    );
+  }, [selectedCategory]);
 
   const fetchWomensProducts = async () => {
     try {

@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { updateMetaTags } from '../utils/seo';
 
 const NotFoundPage: React.FC = () => {
+  useEffect(() => {
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Page Not Found | MinddShopp',
+      'The page you\'re looking for doesn\'t exist or has been moved.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+  }, []);
+
   return (
     <div className="min-h-[70vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 dark:bg-gray-900">
       <div className="w-full max-w-md text-center">

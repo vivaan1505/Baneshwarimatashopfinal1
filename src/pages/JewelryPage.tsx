@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { toast } from 'react-hot-toast';
 import ProductCard from '../components/common/ProductCard';
 import CategoryFilter from '../components/shop/CategoryFilter';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 const JewelryPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -12,11 +13,44 @@ const JewelryPage: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [subcategories, setSubcategories] = useState<{id: string, name: string}[]>([]);
+  const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
     fetchJewelryProducts();
     fetchSubcategories();
+    
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Luxury Jewelry Collection | MinddShopp',
+      'Discover our exquisite collection of fine jewelry. Shop necklaces, rings, earrings, bracelets, watches, and more.',
+      'https://images.pexels.com/photos/8891959/pexels-photo-8891959.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Luxury Jewelry Collection | MinddShopp',
+      description: 'Discover our exquisite collection of fine jewelry. Shop necklaces, rings, earrings, bracelets, watches, and more.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+    
+    metaUpdatedRef.current = true;
   }, []);
+
+  // Update meta tags when category filter changes
+  useEffect(() => {
+    if (!metaUpdatedRef.current || selectedCategory === 'all') return;
+    
+    const categoryName = categories.find(c => c.id === selectedCategory)?.name || 'Jewelry';
+    updateMetaTags(
+      `${categoryName} | MinddShopp Jewelry Collection`,
+      `Shop our exquisite selection of ${categoryName.toLowerCase()}. Find the perfect piece to complete your look.`,
+      'https://images.pexels.com/photos/8891959/pexels-photo-8891959.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      `${window.location.origin}/jewelry?category=${selectedCategory}`
+    );
+  }, [selectedCategory]);
 
   const fetchJewelryProducts = async () => {
     try {

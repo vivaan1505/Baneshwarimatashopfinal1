@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { toast } from 'react-hot-toast';
 import ProductCard from '../components/common/ProductCard';
 import CategoryFilter from '../components/shop/CategoryFilter';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 const ClothingPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -12,11 +13,44 @@ const ClothingPage: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [subcategories, setSubcategories] = useState<{id: string, name: string}[]>([]);
+  const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
     fetchClothingProducts();
     fetchSubcategories();
+    
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Premium Clothing Collection | MinddShopp',
+      'Discover our premium selection of clothing for men, women, and kids. Shop designer apparel, outerwear, activewear, and more.',
+      'https://images.pexels.com/photos/5709665/pexels-photo-5709665.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Premium Clothing Collection | MinddShopp',
+      description: 'Discover our premium selection of clothing for men, women, and kids. Shop designer apparel, outerwear, activewear, and more.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+    
+    metaUpdatedRef.current = true;
   }, []);
+
+  // Update meta tags when category filter changes
+  useEffect(() => {
+    if (!metaUpdatedRef.current || selectedCategory === 'all') return;
+    
+    const categoryName = categories.find(c => c.id === selectedCategory)?.name || 'Clothing';
+    updateMetaTags(
+      `${categoryName} | MinddShopp Clothing Collection`,
+      `Shop our premium selection of ${categoryName.toLowerCase()}. Find the perfect style for any occasion.`,
+      'https://images.pexels.com/photos/5709665/pexels-photo-5709665.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      `${window.location.origin}/clothing?category=${selectedCategory}`
+    );
+  }, [selectedCategory]);
 
   const fetchClothingProducts = async () => {
     try {

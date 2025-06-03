@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../stores/authStore';
 import { toast } from 'react-hot-toast';
 import { Heart, Trash, ShoppingBag } from 'lucide-react';
 import { useCartStore } from '../stores/cartStore';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 interface WishlistItem {
   id: string;
@@ -27,6 +28,7 @@ const WishlistPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useAuthStore();
   const { addItem } = useCartStore();
+  const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
     if (user) {
@@ -35,6 +37,25 @@ const WishlistPage: React.FC = () => {
       setWishlistItems([]);
       setLoading(false);
     }
+    
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Your Wishlist | MinddShopp',
+      'View and manage your saved items. Add your favorite products to your wishlist and easily move them to your shopping cart.',
+      `${window.location.origin}/icon-512.png`,
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Your Wishlist | MinddShopp',
+      description: 'View and manage your saved items. Add your favorite products to your wishlist and easily move them to your shopping cart.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+    
+    metaUpdatedRef.current = true;
   }, [user]);
 
   const fetchWishlist = async () => {

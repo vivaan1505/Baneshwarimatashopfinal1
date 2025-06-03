@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Heart, ShoppingBag, Calendar, MapPin, Phone, Clock, ExternalLink } from 'lucide-react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
@@ -6,6 +6,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import { supabase } from '../../lib/supabase';
 import { toast } from 'react-hot-toast';
 import { useCartStore } from '../../stores/cartStore';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../../utils/seo';
 
 interface PartnerService {
   id: string;
@@ -38,10 +39,30 @@ const BridalBoutique: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { addItem } = useCartStore();
+  const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
     fetchPartnerServices();
     fetchBridalProducts();
+    
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Bridal Boutique | MinddShopp - Luxury Wedding Collection',
+      'Discover our exquisite bridal collection featuring wedding gowns, accessories, jewelry, and beauty essentials for your perfect day.',
+      'https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Bridal Boutique | MinddShopp - Luxury Wedding Collection',
+      description: 'Discover our exquisite bridal collection featuring wedding gowns, accessories, jewelry, and beauty essentials for your perfect day.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+    
+    metaUpdatedRef.current = true;
   }, []);
 
   const fetchPartnerServices = async () => {

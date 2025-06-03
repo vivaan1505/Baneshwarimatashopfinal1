@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { toast } from 'react-hot-toast';
 import ProductCard from '../components/common/ProductCard';
 import CategoryFilter from '../components/shop/CategoryFilter';
+import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 const FootwearPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -12,11 +13,44 @@ const FootwearPage: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [subcategories, setSubcategories] = useState<{id: string, name: string}[]>([]);
+  const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
     fetchFootwearProducts();
     fetchSubcategories();
+    
+    // Update meta tags for SEO and social sharing
+    updateMetaTags(
+      'Premium Footwear Collection | MinddShopp',
+      'Discover our premium selection of footwear for men, women, and kids. Shop designer shoes, boots, sneakers, and more.',
+      'https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      window.location.href
+    );
+    
+    // Add structured data
+    const webPageSchema = generateWebPageSchema({
+      title: 'Premium Footwear Collection | MinddShopp',
+      description: 'Discover our premium selection of footwear for men, women, and kids. Shop designer shoes, boots, sneakers, and more.',
+      url: window.location.href
+    });
+    
+    addStructuredData(webPageSchema);
+    
+    metaUpdatedRef.current = true;
   }, []);
+
+  // Update meta tags when category filter changes
+  useEffect(() => {
+    if (!metaUpdatedRef.current || selectedCategory === 'all') return;
+    
+    const categoryName = categories.find(c => c.id === selectedCategory)?.name || 'Footwear';
+    updateMetaTags(
+      `${categoryName} | MinddShopp Footwear Collection`,
+      `Shop our premium selection of ${categoryName.toLowerCase()}. Find the perfect pair for any occasion.`,
+      'https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      `${window.location.origin}/footwear?category=${selectedCategory}`
+    );
+  }, [selectedCategory]);
 
   const fetchFootwearProducts = async () => {
     try {
