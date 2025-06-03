@@ -11,7 +11,6 @@ import { useProducts } from '../hooks/useProducts';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import HeroSlider from '../components/home/HeroSlider';
-import { AdBanner } from '../components/common/AdBanner';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -339,7 +338,7 @@ const HomePage: React.FC = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
                       <div className="absolute bottom-0 left-0 right-0 p-8">
                         <span className="inline-block px-4 py-1 bg-white/90 text-secondary-800 rounded-full text-sm font-medium mb-4">
-                          BRIDAL COLLECTION
+                          NEW COLLECTION
                         </span>
                         <h2 className="text-3xl font-heading font-medium text-white mb-2">
                           Bridal Boutique
@@ -387,10 +386,6 @@ const HomePage: React.FC = () => {
           </section>
 
           {/* Featured Products Carousel */}
-          <AdBanner slot="1234567890" className="py-4 bg-gray-100 dark:bg-gray-800 text-center" />
-          
-          <AdBanner slot="1234567890" className="py-4 bg-gray-100 dark:bg-gray-800 text-center" />
-          
           <section className="py-20 dark:bg-gray-800">
             <div className="container-custom">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-12">
@@ -509,10 +504,6 @@ const HomePage: React.FC = () => {
           </section>
 
           {/* Trending Now Section */}
-          <AdBanner slot="0987654321" className="py-4 bg-gray-100 dark:bg-gray-800 text-center" />
-          
-          <AdBanner slot="0987654321" className="py-4 bg-gray-100 dark:bg-gray-800 text-center" />
-          
           <section className="py-20 bg-gray-50 dark:bg-gray-900">
             <div className="container-custom">
               <div className="flex items-center mb-12">

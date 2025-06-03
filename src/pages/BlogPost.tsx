@@ -5,7 +5,6 @@ import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
 import { toast } from 'react-hot-toast';
 import { updateMetaTags, addStructuredData, generateArticleSchema, generateBreadcrumbSchema } from '../utils/seo';
-import { AdBanner } from '../components/common/AdBanner';
 
 interface BlogPostData {
   id: string;
@@ -190,10 +189,23 @@ const BlogPost: React.FC = () => {
   // Get formatted date
   const getFormattedDate = (dateString: string) => {
     try {
-      return format(new Date(dateString), 'MMMM d, yyyy');
+      return format(new Date(dateString), 'MMM d, yyyy');
     } catch (error) {
       return 'Unknown date';
     }
+  };
+
+  // Get category color class
+  const getCategoryColorClass = (categoryName: string) => {
+    const colorMap: Record<string, string> = {
+      'Fashion Trends': 'primary',
+      'Style Guide': 'secondary',
+      'Beauty Tips': 'accent',
+      'Lifestyle': 'success',
+      'Interviews': 'warning'
+    };
+    
+    return colorMap[categoryName] || 'primary';
   };
 
   // Share post
@@ -286,7 +298,7 @@ const BlogPost: React.FC = () => {
               {post.categories.length > 0 && (
                 <>
                   <span className="mx-2">•</span>
-                  <span className={`badge-primary`}>
+                  <span className={`badge-${getCategoryColorClass(post.categories[0].category.name)}`}>
                     {post.categories[0].category.name}
                   </span>
                 </>
@@ -306,7 +318,7 @@ const BlogPost: React.FC = () => {
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
             
-            <div className="mt-8 pt-6 border-t dark:border-gray-700 flex justify-between">
+            <div className="mt-8 pt-6 border-t dark:border-gray-700">
               <button
                 onClick={toggleExpanded}
                 className="btn-outline"
@@ -410,12 +422,6 @@ const BlogPost: React.FC = () => {
             </button>
           </div>
         </div>
-
-        {/* Ad Banner */}
-        <AdBanner slot="5678901234" className="my-12 py-4 bg-gray-100 dark:bg-gray-800 text-center" />
-
-        {/* Ad Banner */}
-        <AdBanner slot="5678901234" className="my-12 py-4 bg-gray-100 dark:bg-gray-800 text-center" />
 
         {/* Tags */}
         {post.categories.length > 0 && (

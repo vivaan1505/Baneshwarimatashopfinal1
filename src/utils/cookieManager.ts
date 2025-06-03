@@ -92,48 +92,8 @@ export const deleteCookie = (name: string): void => {
   document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;SameSite=Lax`;
 };
 
-// Initialize Google Analytics (if consent is given)
-export const initializeAnalytics = (): void => {
-  if (hasConsent('analytics')) {
-    // This would normally load Google Analytics
-    console.log('Google Analytics initialized');
-    
-    // Example of how you would load GA in a real implementation:
-    /*
-    const script = document.createElement('script');
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${import.meta.env.VITE_GA_MEASUREMENT_ID}`;
-    script.async = true;
-    document.head.appendChild(script);
-    
-    window.dataLayer = window.dataLayer || [];
-    function gtag(...args: any[]) {
-      window.dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-    gtag('config', import.meta.env.VITE_GA_MEASUREMENT_ID);
-    */
-  }
-};
-
-// Initialize Google AdSense (if consent is given)
-export const initializeAdsense = (): void => {
-  if (hasConsent('advertising')) {
-    // This would normally load Google AdSense
-    console.log('Google AdSense initialized');
-    
-    // Example of how you would load AdSense in a real implementation:
-    /*
-    const script = document.createElement('script');
-    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${import.meta.env.VITE_ADSENSE_CLIENT_ID}`;
-    script.async = true;
-    script.crossOrigin = 'anonymous';
-    document.head.appendChild(script);
-    */
-  }
-};
-
 // Initialize all consent-based services
 export const initializeConsentServices = (): void => {
-  initializeAnalytics();
-  initializeAdsense();
+  // No services to initialize since we've removed Google Analytics and AdSense
+  console.log('Consent services initialized (no external services enabled)');
 };

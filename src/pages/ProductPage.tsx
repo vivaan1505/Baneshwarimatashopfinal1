@@ -6,7 +6,6 @@ import WishlistButton from '../components/common/WishlistButton';
 import { supabase } from '../lib/supabase';
 import { Star, Truck, Package, RefreshCw } from 'lucide-react';
 import { updateMetaTags, addStructuredData, generateProductSchema, generateBreadcrumbSchema } from '../utils/seo';
-import { AdBanner } from '../components/common/AdBanner';
 
 interface ProductVariant {
   id: string;
@@ -543,12 +542,6 @@ const ProductPage: React.FC = () => {
             )}
           </div>
         </div>
-
-        {/* Ad Banner */}
-        <AdBanner slot="3456789012" className="my-12 py-4 bg-gray-100 dark:bg-gray-800 text-center" />
-
-        {/* Ad Banner */}
-        <AdBanner slot="3456789012" className="my-12 py-4 bg-gray-100 dark:bg-gray-800 text-center" />
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
