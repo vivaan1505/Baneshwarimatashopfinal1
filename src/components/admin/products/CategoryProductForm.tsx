@@ -344,7 +344,7 @@ const SUBCATEGORIES = {
     { id: 'bridal-lingerie', name: 'Bridal Lingerie', gender: 'women' },
     { id: 'bridal-robes', name: 'Bridal Robes', gender: 'women' },
     
-    // Bridal Jewelry
+    //Bridal Jewelry
     { id: 'bridal-necklaces-sets', name: 'Bridal Necklaces & Sets', gender: 'women' },
     { id: 'bridal-earrings', name: 'Bridal Earrings', gender: 'women' },
     { id: 'bridal-bangles-bracelets', name: 'Bridal Bangles & Bracelets', gender: 'women' },
@@ -413,7 +413,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
   const [dbSubcategories, setDbSubcategories] = useState<{id: string, name: string}[]>([]);
   const [availableSubcategories, setAvailableSubcategories] = useState<{id: string, name: string}[]>([]);
   
-  const { register, handleSubmit, watch, setValue, reset, formState: { errors }, trigger, reset } = useForm<ProductFormData>({
+  const { register, handleSubmit, watch, setValue, reset, formState: { errors }, trigger } = useForm<ProductFormData>({
     defaultValues: {
       name: '',
       price: 0,
