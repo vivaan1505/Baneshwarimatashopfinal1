@@ -126,7 +126,7 @@ const HeroSlider: React.FC = () => {
         }}
         loop={true}
         onSlideChange={(swiper) => setActiveSlide(swiper.realIndex)}
-        className="h-[80vh] min-h-[500px]"
+        className="h-[90vh] min-h-[600px]"
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={slide.id}>
@@ -136,7 +136,7 @@ const HeroSlider: React.FC = () => {
                 <LazyLoadImage 
                   src={slide.image_url} 
                   alt={slide.title} 
-                  className="w-full h-full object-cover object-center object-position-center"
+                  className="w-full h-full object-cover object-center"
                   effect="blur"
                   threshold={300}
                   placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
