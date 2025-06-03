@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { toast } from 'react-hot-toast';
 import { updateMetaTags, addStructuredData, generateArticleSchema, generateBreadcrumbSchema } from '../utils/seo';
 import { AdBanner } from '../components/common/AdBanner';
+import { AdBanner } from '../components/common/AdBanner';
 
 interface BlogPostData {
   id: string;
@@ -410,6 +411,9 @@ const BlogPost: React.FC = () => {
             </button>
           </div>
         </div>
+
+        {/* Ad Banner */}
+        <AdBanner slot="5678901234" className="my-12 py-4 bg-gray-100 dark:bg-gray-800 text-center" />
 
         {/* Ad Banner */}
         <AdBanner slot="5678901234" className="my-12 py-4 bg-gray-100 dark:bg-gray-800 text-center" />

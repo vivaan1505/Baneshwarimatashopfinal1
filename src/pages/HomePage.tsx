@@ -12,6 +12,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import HeroSlider from '../components/home/HeroSlider';
 import { AdBanner } from '../components/common/AdBanner';
+import { AdBanner } from '../components/common/AdBanner';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -389,6 +390,8 @@ const HomePage: React.FC = () => {
           {/* Featured Products Carousel */}
           <AdBanner slot="1234567890" className="py-4 bg-gray-100 dark:bg-gray-800 text-center" />
           
+          <AdBanner slot="1234567890" className="py-4 bg-gray-100 dark:bg-gray-800 text-center" />
+          
           <section className="py-20 dark:bg-gray-800">
             <div className="container-custom">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-12">
@@ -507,6 +510,8 @@ const HomePage: React.FC = () => {
           </section>
 
           {/* Trending Now Section */}
+          <AdBanner slot="0987654321" className="py-4 bg-gray-100 dark:bg-gray-800 text-center" />
+          
           <AdBanner slot="0987654321" className="py-4 bg-gray-100 dark:bg-gray-800 text-center" />
           
           <section className="py-20 bg-gray-50 dark:bg-gray-900">

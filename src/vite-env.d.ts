@@ -3,3 +3,6 @@
 interface Window {
   adsbygoogle: any[];
 }
+interface Window {
+  adsbygoogle: any[];
+}
