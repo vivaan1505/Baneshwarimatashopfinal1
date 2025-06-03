@@ -6,7 +6,7 @@ import WishlistButton from '../components/common/WishlistButton';
 import { supabase } from '../lib/supabase';
 import { Star, Truck, Package, RefreshCw } from 'lucide-react';
 import { updateMetaTags, addStructuredData, generateProductSchema, generateBreadcrumbSchema } from '../utils/seo';
-import AdBanner from '../components/common/AdBanner';
+import { AdBanner } from '../components/common/AdBanner';
 
 interface ProductVariant {
   id: string;

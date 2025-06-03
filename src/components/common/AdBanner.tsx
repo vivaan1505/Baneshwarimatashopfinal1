@@ -7,7 +7,7 @@ interface AdBannerProps {
   className?: string;
 }
 
-const AdBanner: React.FC<AdBannerProps> = ({ 
+export const AdBanner: React.FC<AdBannerProps> = ({ 
   slot, 
   format = 'auto', 
   responsive = true,
@@ -51,6 +51,3 @@ const AdBanner: React.FC<AdBannerProps> = ({
       {/* AdSense will populate this div */}
     </div>
   );
-};
-
-export default AdBanner;
