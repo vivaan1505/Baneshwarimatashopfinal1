@@ -6,6 +6,7 @@ import WishlistButton from '../components/common/WishlistButton';
 import { supabase } from '../lib/supabase';
 import { Star, Truck, Package, RefreshCw } from 'lucide-react';
 import { updateMetaTags, addStructuredData, generateProductSchema, generateBreadcrumbSchema } from '../utils/seo';
+import ProductCard from '../components/common/ProductCard';
 
 interface ProductVariant {
   id: string;
