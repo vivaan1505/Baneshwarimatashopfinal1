@@ -368,6 +368,9 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
   useEffect(() => {
     fetchBrands();
     fetchSubcategories();
+    
+    // Initialize the product type based on the category
+    setValue('type', mapCategoryToType(category));
   }, [category]);
 
   useEffect(() => {
