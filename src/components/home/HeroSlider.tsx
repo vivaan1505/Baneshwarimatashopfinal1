@@ -61,7 +61,7 @@ const HeroSlider: React.FC = () => {
       title: "Summer Collection 2025",
       subtitle: "Elevate Your Style",
       description: "Discover our premium selection of summer essentials",
-      image_url: "https://images.pexels.com/photos/5709661/pexels-photo-5709661.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      image_url: "https://images.pexels.com/photos/5709661/pexels-photo-5709661.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1&fit=crop",
       cta_text: "Shop Now",
       cta_link: "/new-arrivals",
       accent: "primary",
@@ -73,7 +73,7 @@ const HeroSlider: React.FC = () => {
       title: "Bridal Boutique",
       subtitle: "Your Perfect Day",
       description: "Everything you need for your special occasion",
-      image_url: "https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      image_url: "https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1&fit=crop",
       cta_text: "Explore Collection",
       cta_link: "/bridal-boutique",
       accent: "secondary",
@@ -85,7 +85,7 @@ const HeroSlider: React.FC = () => {
       title: "Festive Collection",
       subtitle: "Celebrate in Style",
       description: "Discover perfect gifts and festive fashion",
-      image_url: "https://images.pexels.com/photos/717988/pexels-photo-717988.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      image_url: "https://images.pexels.com/photos/717988/pexels-photo-717988.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1&fit=crop",
       cta_text: "Shop Collection",
       cta_link: "/festive-store",
       accent: "accent",
@@ -126,7 +126,7 @@ const HeroSlider: React.FC = () => {
         }}
         loop={true}
         onSlideChange={(swiper) => setActiveSlide(swiper.realIndex)}
-        className="h-[90vh] min-h-[500px]"
+        className="h-[80vh] min-h-[500px]"
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={slide.id}>
@@ -136,7 +136,7 @@ const HeroSlider: React.FC = () => {
                 <LazyLoadImage 
                   src={slide.image_url} 
                   alt={slide.title} 
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-center"
                   effect="blur"
                   threshold={300}
                   placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
