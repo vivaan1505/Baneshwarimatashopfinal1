@@ -48,15 +48,7 @@ const PRODUCT_TAGS = [
   { value: 'kids', label: 'Kids', color: 'bg-green-100 text-green-800' }
 ];
 
-const PRODUCT_TYPES = [
-  { value: 'footwear', label: 'Footwear' },
-  { value: 'clothing', label: 'Clothing' },
-  { value: 'jewelry', label: 'Jewelry' },
-  { value: 'beauty', label: 'Beauty' },
-  { value: 'accessories', label: 'Accessories' },
-  { value: 'bags', label: 'Bags' }
-];
-
+// Define subcategories for each product type
 const SUBCATEGORIES = {
   footwear: [
     // Men's Footwear
@@ -306,6 +298,25 @@ const SUBCATEGORIES = {
     { id: 'laptop-bags', name: 'Laptop Bags', gender: 'unisex' },
     { id: 'wallets-purses', name: 'Wallets & Purses', gender: 'unisex' },
     { id: 'luggage', name: 'Luggage', gender: 'unisex' }
+  ],
+  // Bridal specific subcategories
+  bridal: [
+    { id: 'bridal-gowns', name: 'Bridal Gowns', gender: 'women' },
+    { id: 'bridal-veils', name: 'Bridal Veils', gender: 'women' },
+    { id: 'bridal-tiaras', name: 'Bridal Tiaras & Headpieces', gender: 'women' },
+    { id: 'bridal-jewelry', name: 'Bridal Jewelry Sets', gender: 'women' },
+    { id: 'bridal-earrings', name: 'Bridal Earrings', gender: 'women' },
+    { id: 'bridal-necklaces', name: 'Bridal Necklaces', gender: 'women' },
+    { id: 'bridal-bracelets', name: 'Bridal Bracelets', gender: 'women' },
+    { id: 'bridal-rings', name: 'Bridal Rings', gender: 'women' },
+    { id: 'bridal-hair-accessories', name: 'Bridal Hair Accessories', gender: 'women' },
+    { id: 'bridal-shoes', name: 'Bridal Shoes', gender: 'women' },
+    { id: 'bridal-clutches', name: 'Bridal Clutches', gender: 'women' },
+    { id: 'bridal-lingerie', name: 'Bridal Lingerie', gender: 'women' },
+    { id: 'bridesmaid-dresses', name: 'Bridesmaid Dresses', gender: 'women' },
+    { id: 'bridesmaid-accessories', name: 'Bridesmaid Accessories', gender: 'women' },
+    { id: 'groom-accessories', name: 'Groom Accessories', gender: 'men' },
+    { id: 'wedding-bands', name: 'Wedding Bands', gender: 'unisex' }
   ]
 };
 
@@ -383,44 +394,65 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
     if (isSpecialCategory && !product.tags?.includes(category)) {
       setValue('tags', [...(product.tags || []), category]);
     }
+    
+    // For bridal category, set gender to women by default
+    if (category === 'bridal') {
+      setValue('gender', 'women');
+    }
   }, [product]);
 
   useEffect(() => {
     const type = selectedType;
     if (type && SUBCATEGORIES[type]) {
-      const predefinedSubcats = SUBCATEGORIES[type];
-      const dbSubcats = dbSubcategories.filter(s => s.parent_category === type);
-      
-      const mergedSubcats = [...dbSubcats];
-      
-      predefinedSubcats.forEach(predef => {
-        if (!mergedSubcats.some(s => s.id === predef.id)) {
-          mergedSubcats.push(predef);
-        }
-      });
-      
-      let filteredSubcats = mergedSubcats;
-      if (selectedGender && selectedGender !== 'unisex') {
-        filteredSubcats = mergedSubcats.filter(subcat => {
-          if ('gender' in subcat) {
-            return subcat.gender === selectedGender || subcat.gender === 'unisex';
+      // For bridal category, use bridal-specific subcategories regardless of the product type
+      if (category === 'bridal') {
+        const predefinedSubcats = SUBCATEGORIES['bridal'] || [];
+        const dbSubcats = dbSubcategories.filter(s => s.parent_category === 'bridal');
+        
+        const mergedSubcats = [...dbSubcats];
+        
+        predefinedSubcats.forEach(predef => {
+          if (!mergedSubcats.some(s => s.id === predef.id)) {
+            mergedSubcats.push(predef);
           }
-          
-          const id = subcat.id.toLowerCase();
-          const genderPrefix = selectedGender === 'men' ? 'mens-' : 
+        });
+        
+        setAvailableSubcategories(mergedSubcats);
+      } else {
+        const predefinedSubcats = SUBCATEGORIES[type];
+        const dbSubcats = dbSubcategories.filter(s => s.parent_category === type);
+        
+        const mergedSubcats = [...dbSubcats];
+        
+        predefinedSubcats.forEach(predef => {
+          if (!mergedSubcats.some(s => s.id === predef.id)) {
+            mergedSubcats.push(predef);
+          }
+        });
+        
+        let filteredSubcats = mergedSubcats;
+        if (selectedGender && selectedGender !== 'unisex') {
+          filteredSubcats = mergedSubcats.filter(subcat => {
+            if ('gender' in subcat) {
+              return subcat.gender === selectedGender || subcat.gender === 'unisex';
+            }
+            
+            const id = subcat.id.toLowerCase();
+            const genderPrefix = selectedGender === 'men' ? 'mens-' : 
                               selectedGender === 'women' ? 'womens-' : 
                               selectedGender === 'kids' ? 'kids-' : '';
-          
-          return id.startsWith(genderPrefix) || 
+            
+            return id.startsWith(genderPrefix) || 
                  (!id.startsWith('mens-') && !id.startsWith('womens-') && !id.startsWith('kids-'));
-        });
+          });
+        }
+        
+        setAvailableSubcategories(filteredSubcats);
       }
-      
-      setAvailableSubcategories(filteredSubcats);
     } else {
       setAvailableSubcategories([]);
     }
-  }, [selectedType, dbSubcategories, selectedGender]);
+  }, [selectedType, dbSubcategories, selectedGender, category]);
 
   const fetchBrands = async () => {
     try {
@@ -636,11 +668,12 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                     disabled={!isSpecialCategory}
                   >
-                    {PRODUCT_TYPES.map(type => (
-                      <option key={type.value} value={type.value}>
-                        {type.label}
-                      </option>
-                    ))}
+                    <option value="footwear">Footwear</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="jewelry">Jewelry</option>
+                    <option value="beauty">Beauty</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="bags">Bags</option>
                   </select>
                   {errors.type && (
                     <p className="mt-1 text-sm text-red-600">{errors.type.message}</p>
@@ -654,6 +687,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
                   <select
                     {...register('gender', { required: 'Gender is required' })}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    disabled={category === 'bridal'} // Disable for bridal category
                   >
                     <option value="">Select Gender</option>
                     <option value="men">Men</option>
