@@ -352,7 +352,7 @@ const FestiveStore: React.FC = () => {
             ) : (
               // Fallback products if no data from backend
               <>
-                <div className="card group cursor-pointer" onClick={() => handleProductClick("festive-1")}>
+                <div className="card group cursor-pointer" onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174019")}>
                   <div className="relative overflow-hidden">
                     <LazyLoadImage 
                       src="https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg"
@@ -374,7 +374,7 @@ const FestiveStore: React.FC = () => {
                       <button 
                         className="p-2 text-accent-600 hover:text-accent-700"
                         onClick={(e) => handleAddToCart({
-                          id: "festive-1",
+                          id: "123e4567-e89b-12d3-a456-426614174019",
                           name: "Holiday Gift Set",
                           price: 149.99,
                           description: "Luxury skincare collection",
@@ -388,7 +388,7 @@ const FestiveStore: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="card group cursor-pointer" onClick={() => handleProductClick("festive-2")}>
+                <div className="card group cursor-pointer" onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174020")}>
                   <div className="relative overflow-hidden">
                     <LazyLoadImage 
                       src="https://images.pexels.com/photos/264771/pexels-photo-264771.jpeg"
@@ -410,7 +410,7 @@ const FestiveStore: React.FC = () => {
                       <button 
                         className="p-2 text-accent-600 hover:text-accent-700"
                         onClick={(e) => handleAddToCart({
-                          id: "festive-2",
+                          id: "123e4567-e89b-12d3-a456-426614174020",
                           name: "Festive Watch",
                           price: 299.99,
                           description: "Limited edition timepiece",
@@ -424,7 +424,7 @@ const FestiveStore: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="card group cursor-pointer" onClick={() => handleProductClick("festive-3")}>
+                <div className="card group cursor-pointer" onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174021")}>
                   <div className="relative overflow-hidden">
                     <LazyLoadImage 
                       src="https://images.pexels.com/photos/1303092/pexels-photo-1303092.jpeg"
@@ -446,7 +446,7 @@ const FestiveStore: React.FC = () => {
                       <button 
                         className="p-2 text-accent-600 hover:text-accent-700"
                         onClick={(e) => handleAddToCart({
-                          id: "festive-3",
+                          id: "123e4567-e89b-12d3-a456-426614174021",
                           name: "Festive Candle Set",
                           price: 79.99,
                           description: "Luxury scented candles",
@@ -460,7 +460,7 @@ const FestiveStore: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="card group cursor-pointer" onClick={() => handleProductClick("festive-4")}>
+                <div className="card group cursor-pointer" onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174022")}>
                   <div className="relative overflow-hidden">
                     <LazyLoadImage 
                       src="https://images.pexels.com/photos/1303086/pexels-photo-1303086.jpeg"
@@ -482,7 +482,7 @@ const FestiveStore: React.FC = () => {
                       <button 
                         className="p-2 text-accent-600 hover:text-accent-700"
                         onClick={(e) => handleAddToCart({
-                          id: "festive-4",
+                          id: "123e4567-e89b-12d3-a456-426614174022",
                           name: "Holiday Sweater",
                           price: 129.99,
                           description: "Premium cashmere blend",

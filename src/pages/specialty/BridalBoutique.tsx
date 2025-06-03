@@ -288,7 +288,7 @@ const BridalBoutique: React.FC = () => {
             ) : (
               // Fallback products if no data from backend
               <>
-                <div className="card group cursor-pointer" onClick={() => handleProductClick("fallback-1")}>
+                <div className="card group cursor-pointer" onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174015")}>
                   <div className="relative overflow-hidden">
                     <LazyLoadImage 
                       src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
@@ -310,7 +310,7 @@ const BridalBoutique: React.FC = () => {
                       <button 
                         className="p-2 text-secondary-600 hover:text-secondary-700"
                         onClick={(e) => handleAddToCart({
-                          id: "fallback-1",
+                          id: "123e4567-e89b-12d3-a456-426614174015",
                           name: "Crystal Embellished Heels",
                           price: 299.99,
                           description: "Perfect for your special day",
@@ -324,7 +324,7 @@ const BridalBoutique: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="card group cursor-pointer" onClick={() => handleProductClick("fallback-2")}>
+                <div className="card group cursor-pointer" onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174016")}>
                   <div className="relative overflow-hidden">
                     <LazyLoadImage 
                       src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
@@ -346,7 +346,7 @@ const BridalBoutique: React.FC = () => {
                       <button 
                         className="p-2 text-secondary-600 hover:text-secondary-700"
                         onClick={(e) => handleAddToCart({
-                          id: "fallback-2",
+                          id: "123e4567-e89b-12d3-a456-426614174016",
                           name: "Pearl Drop Earrings",
                           price: 199.99,
                           description: "Elegant pearl and crystal design",
@@ -360,7 +360,7 @@ const BridalBoutique: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="card group cursor-pointer" onClick={() => handleProductClick("fallback-3")}>
+                <div className="card group cursor-pointer" onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174017")}>
                   <div className="relative overflow-hidden">
                     <LazyLoadImage 
                       src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
@@ -382,7 +382,7 @@ const BridalBoutique: React.FC = () => {
                       <button 
                         className="p-2 text-secondary-600 hover:text-secondary-700"
                         onClick={(e) => handleAddToCart({
-                          id: "fallback-3",
+                          id: "123e4567-e89b-12d3-a456-426614174017",
                           name: "Lace Trim Veil",
                           price: 249.99,
                           description: "Cathedral length with lace detail",
@@ -396,7 +396,7 @@ const BridalBoutique: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="card group cursor-pointer" onClick={() => handleProductClick("fallback-4")}>
+                <div className="card group cursor-pointer" onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174018")}>
                   <div className="relative overflow-hidden">
                     <LazyLoadImage 
                       src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
@@ -418,7 +418,7 @@ const BridalBoutique: React.FC = () => {
                       <button 
                         className="p-2 text-secondary-600 hover:text-secondary-700"
                         onClick={(e) => handleAddToCart({
-                          id: "fallback-4",
+                          id: "123e4567-e89b-12d3-a456-426614174018",
                           name: "Crystal Hair Pins",
                           price: 89.99,
                           description: "Set of 6 decorative pins",
