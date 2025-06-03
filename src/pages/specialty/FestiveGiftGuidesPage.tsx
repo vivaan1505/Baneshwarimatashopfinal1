@@ -75,6 +75,8 @@ const FestiveGiftGuidesPage: React.FC = () => {
       
       if (productsError) throw productsError;
       
+      const validProducts = (products || []).filter(product => product && product.id);
+      
       // Create gift guides
       const guides: GiftGuide[] = [
         {
@@ -82,35 +84,35 @@ const FestiveGiftGuidesPage: React.FC = () => {
           title: 'Gifts Under $50',
           description: 'Perfect affordable gifts for everyone on your list',
           image: 'https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg',
-          products: (products || []).filter(p => p && p.price < 50).slice(0, 4)
+          products: validProducts.filter(p => p.price < 50).slice(0, 4)
         },
         {
           id: 'luxury-gifts',
           title: 'Luxury Gift Ideas',
           description: 'Premium gifts for those special someone',
           image: 'https://images.pexels.com/photos/264771/pexels-photo-264771.jpeg',
-          products: (products || []).filter(p => p && p.price > 200).slice(0, 4)
+          products: validProducts.filter(p => p.price > 200).slice(0, 4)
         },
         {
           id: 'for-her',
           title: 'Gifts For Her',
           description: 'Thoughtful gifts she\'ll love',
           image: 'https://images.pexels.com/photos/1619801/pexels-photo-1619801.jpeg',
-          products: (products || []).filter(p => p && p.tags && p.tags.includes('women')).slice(0, 4)
+          products: validProducts.filter(p => p.tags && p.tags.includes('women')).slice(0, 4)
         },
         {
           id: 'for-him',
           title: 'Gifts For Him',
           description: 'Find the perfect gift for the men in your life',
           image: 'https://images.pexels.com/photos/1687719/pexels-photo-1687719.jpeg',
-          products: (products || []).filter(p => p && p.tags && p.tags.includes('men')).slice(0, 4)
+          products: validProducts.filter(p => p.tags && p.tags.includes('men')).slice(0, 4)
         },
         {
           id: 'stocking-stuffers',
           title: 'Stocking Stuffers',
           description: 'Small gifts with big impact',
           image: 'https://images.pexels.com/photos/1303092/pexels-photo-1303092.jpeg',
-          products: (products || []).filter(p => p && p.price < 25).slice(0, 4)
+          products: validProducts.filter(p => p.price < 25).slice(0, 4)
         }
       ];
       
@@ -123,7 +125,7 @@ const FestiveGiftGuidesPage: React.FC = () => {
           discount: 'Up to 40% Off',
           expiry: 'December 25, 2025',
           image: 'https://images.pexels.com/photos/1303086/pexels-photo-1303086.jpeg',
-          products: (products || []).filter(p => p && p.compare_at_price !== null).slice(0, 3)
+          products: validProducts.filter(p => p.compare_at_price !== null).slice(0, 3)
         },
         {
           id: 'free-shipping',
@@ -146,7 +148,7 @@ const FestiveGiftGuidesPage: React.FC = () => {
       
       setGiftGuides(guides);
       setSpecialOffers(offers);
-      setFeaturedProducts((products || []).slice(0, 8));
+      setFeaturedProducts(validProducts.slice(0, 8));
     } catch (error) {
       console.error('Error fetching festive data:', error);
       toast.error('Failed to load festive content');

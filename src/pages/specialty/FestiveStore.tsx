@@ -47,7 +47,8 @@ const FestiveStore: React.FC = () => {
         .limit(4);
 
       if (error) throw error;
-      setFestiveProducts(data || []);
+      const validProducts = (data || []).filter(product => product && product.id);
+      setFestiveProducts(validProducts);
     } catch (error) {
       console.error('Error fetching festive products:', error);
     } finally {
