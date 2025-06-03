@@ -162,7 +162,7 @@ const JewelryPage: React.FC = () => {
           
           <Link to="/jewelry?category=rings" className="relative overflow-hidden rounded-lg aspect-square group">
             <img 
-              src="https://images.pexels.com/photos/9428800/pexels-photo-9428800.jpeg" 
+              src="https://images.pexels.com/photos/735252/pexels-photo-735252.jpeg" 
               alt="Rings" 
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
