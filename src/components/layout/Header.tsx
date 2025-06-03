@@ -128,8 +128,18 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
         "sticky top-0 z-50 w-full transition-all duration-300",
         isScrolled ? "bg-white shadow-md dark:bg-gray-900" : "bg-transparent"
       )}
-    
-      
+    >
+      <div className="container-custom">
+        {/* Top announcement bar */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="bg-primary-800 text-white text-center py-2 text-sm dark:bg-primary-900"
+        >
+          Free shipping on all orders over $75 | Easy returns within 30 days
+          >
+        </motion.div>
         
         {/* Main header */}
         <div className="flex items-center justify-between py-4">
