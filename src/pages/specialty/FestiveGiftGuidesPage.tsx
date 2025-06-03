@@ -710,4 +710,4 @@ const FestiveGiftGuidesPage: React.FC = () => {
 };
 
 
-export default FestiveGiftGuidesPage
+export default FestiveGiftGuidesPage;

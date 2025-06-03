@@ -333,7 +333,7 @@ const HomePage: React.FC = () => {
                   <div className="aspect-[16/9]">
                     <img 
                       src="https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                      alt="Bridal Collection" 
+                      alt="Bridal Boutique" 
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
@@ -360,7 +360,7 @@ const HomePage: React.FC = () => {
                   <div className="aspect-[16/9]">
                     <img 
                       src="https://images.pexels.com/photos/717988/pexels-photo-717988.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                      alt="Festive Collection" 
+                      alt="Festive Store" 
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
@@ -369,7 +369,7 @@ const HomePage: React.FC = () => {
                           FESTIVE COLLECTION
                         </span>
                         <h2 className="text-3xl font-heading font-medium text-white mb-2">
-                          Festive Store
+                          Festive Collections
                         </h2>
                         <p className="text-gray-200 mb-4">
                           Discover perfect gifts for everyone
