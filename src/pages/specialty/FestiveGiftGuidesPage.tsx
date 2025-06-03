@@ -708,3 +708,6 @@ const FestiveGiftGuidesPage: React.FC = () => {
     </div>
   );
 };
+
+
+export default FestiveGiftGuidesPage
