@@ -5,7 +5,7 @@ import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { supabase } from '../../lib/supabase';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import LazyLoadImage from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
 // Import Swiper styles

@@ -5,7 +5,7 @@ import WishlistButton from './WishlistButton';
 import { ShoppingBag } from 'lucide-react';
 import { useCartStore } from '../../stores/cartStore';
 import { toast } from 'react-hot-toast';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import LazyLoadImage from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
 interface ProductCardProps {

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import FeaturedProducts from '../FeaturedProducts';
 import FeaturedCoupons from '../FeaturedCoupons';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import LazyLoadImage from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
