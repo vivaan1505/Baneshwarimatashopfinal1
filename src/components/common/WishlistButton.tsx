@@ -5,6 +5,12 @@ import { useAuthStore } from '../../stores/authStore';
 import { toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
 
+// Export the UUID validation function so it can be reused
+export const isValidUUID = (uuid: string) => {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(uuid);
+};
+
 interface WishlistButtonProps {
   productId: string;
   className?: string;
@@ -121,12 +127,6 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
     } finally {
       setLoading(false);
     }
-  };
-
-  // Function to validate UUID format
-  const isValidUUID = (uuid: string) => {
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    return uuidRegex.test(uuid);
   };
 
   return (

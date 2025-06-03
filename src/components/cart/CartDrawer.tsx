@@ -4,6 +4,7 @@ import { X, Minus, Plus, ShoppingBag } from 'lucide-react';
 import { useCartStore } from '../../stores/cartStore';
 import { supabase } from '../../lib/supabase';
 import { useAuthStore } from '../../stores/authStore';
+import { isValidUUID } from '../common/WishlistButton';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -20,10 +21,12 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
     // If user is logged in, remove items from wishlist when proceeding to checkout
     if (user) {
       try {
-        // Get product IDs from cart
-        const productIds = items.map(item => item.productId);
+        // Get product IDs from cart and filter out any invalid UUIDs
+        const productIds = items
+          .map(item => item.productId)
+          .filter(id => isValidUUID(id));
         
-        // Remove these products from the user's wishlist
+        // Only proceed with deletion if there are valid product IDs
         if (productIds.length > 0) {
           const { error } = await supabase
             .from('wishlists')
