@@ -20,8 +20,11 @@ import 'swiper/css/pagination';
 
 const HomePage: React.FC = () => {
   const { homeLayout } = useThemeStore();
-  const { data: featuredProducts, isLoading } = useProducts({ 
-  
+  const { data: featuredProducts, isLoading } = useProducts({
+    isFeatured: true, 
+    limit: 8 
+  });
+
   useEffect(() => {
     // Set default SEO metadata for homepage
     updateMetaTags(
@@ -34,10 +37,6 @@ const HomePage: React.FC = () => {
     // Add organization schema
     addStructuredData(generateOrganizationSchema());
   }, []);
-  
-    isFeatured: true, 
-    limit: 8 
-  });
   
   const { data: newArrivals } = useProducts({
     isNew: true,
