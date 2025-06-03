@@ -51,3 +51,4 @@ export const AdBanner: React.FC<AdBannerProps> = ({
       {/* AdSense will populate this div */}
     </div>
   );
+}
