@@ -77,6 +77,30 @@ const LUXURY_BRANDS = [
   { value: 'lanvin', label: 'Lanvin' }
 ];
 
+// Luxury beauty brands
+const BEAUTY_BRANDS = [
+  { value: 'la-mer', label: 'La Mer' },
+  { value: 'estee-lauder', label: 'Estée Lauder' },
+  { value: 'dior-beauty', label: 'Dior Beauty' },
+  { value: 'chanel-beauty', label: 'Chanel Beauty' },
+  { value: 'lancome', label: 'Lancôme' },
+  { value: 'cle-de-peau-beaute', label: 'Clé de Peau Beauté' },
+  { value: 'giorgio-armani-beauty', label: 'Giorgio Armani Beauty' },
+  { value: 'tom-ford-beauty', label: 'Tom Ford Beauty' },
+  { value: 'ysl-beauty', label: 'Yves Saint Laurent Beauty' },
+  { value: 'guerlain', label: 'Guerlain' },
+  { value: 'sisley-paris', label: 'Sisley Paris' },
+  { value: 'shiseido', label: 'Shiseido' },
+  { value: 'sk-ii', label: 'SK-II' },
+  { value: 'helena-rubinstein', label: 'Helena Rubinstein' },
+  { value: 'givenchy-beauty', label: 'Givenchy Beauty' },
+  { value: 'valmont', label: 'Valmont' },
+  { value: 'la-prairie', label: 'La Prairie' },
+  { value: 'augustinus-bader', label: 'Augustinus Bader' },
+  { value: 'oribe', label: 'Oribe' },
+  { value: 'byredo', label: 'Byredo' }
+];
+
 // Define subcategories for each product type
 const SUBCATEGORIES = {
   footwear: [
@@ -674,6 +698,27 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
 
   if (!isOpen) return null;
 
+  // Get the appropriate brand options based on the category
+  const getBrandOptions = () => {
+    if (category === 'beauty') {
+      return [
+        ...BEAUTY_BRANDS,
+        ...brands.map(brand => ({
+          value: brand.id,
+          label: brand.name
+        }))
+      ];
+    } else {
+      return [
+        ...LUXURY_BRANDS,
+        ...brands.map(brand => ({
+          value: brand.id,
+          label: brand.name
+        }))
+      ];
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen px-4">
@@ -770,13 +815,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
                       value: product.brand.id,
                       label: product.brand.name
                     } : null}
-                    options={[
-                      ...LUXURY_BRANDS,
-                      ...brands.map(brand => ({
-                        value: brand.id,
-                        label: brand.name
-                      }))
-                    ]}
+                    options={getBrandOptions()}
                     className="mt-1"
                     classNamePrefix="select"
                     placeholder={isSpecialCategory ? "Select or enter brand" : "Select brand"}
