@@ -168,12 +168,6 @@ const HeroSlider: React.FC = () => {
                       >
                         {slide.cta_text}
                       </Link>
-                      <Link 
-                        to="/collections" 
-                        className="btn bg-white/10 text-white border border-white/30 backdrop-blur-sm hover:bg-white/20 text-base"
-                      >
-                        View All Collections
-                      </Link>
                     </div>
                   </motion.div>
                 </div>

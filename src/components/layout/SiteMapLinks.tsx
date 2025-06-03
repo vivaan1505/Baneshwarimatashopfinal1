@@ -75,11 +75,6 @@ const SiteMapLinks: React.FC = () => {
               New Arrivals
             </Link>
           </li>
-          <li>
-            <Link to="/collections" className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">
-              Collections
-            </Link>
-          </li>
         </ul>
       </div>
 
