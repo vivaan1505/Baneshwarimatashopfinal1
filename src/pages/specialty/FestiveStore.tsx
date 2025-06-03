@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Gift, Star, Clock, Truck, ArrowRight, Heart, ShoppingBag } from 'lucide-react';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import { supabase } from '../../lib/supabase';
 import { toast } from 'react-hot-toast';
 import { useCartStore } from '../../stores/cartStore';
@@ -92,8 +94,8 @@ const FestiveStore: React.FC = () => {
             <span className="inline-block px-4 py-1 bg-accent-700 rounded-full text-sm font-medium mb-6">
               Holiday Season 2025
             </span>
-            <h1 className="font-heading text-4xl md:text-6xl font-bold mb-6">
-              Festive Store
+            <h1 className="font-heading text-4xl md:text-5xl font-bold mb-6">
+              Festive Collections
             </h1>
             <p className="text-lg md:text-xl mb-8 text-accent-100">
               Discover perfect gifts for everyone on your list. From festive fashion to luxury beauty sets.
@@ -295,10 +297,13 @@ const FestiveStore: React.FC = () => {
                   onClick={() => handleProductClick(product.id)}
                 >
                   <div className="relative overflow-hidden">
-                    <img 
+                    <LazyLoadImage 
                       src={product.images?.[0]?.url || "https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg"}
                       alt={product.name}
                       className="w-full h-64 object-cover"
+                      effect="blur"
+                      threshold={300}
+                      placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
                     <button 
                       className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-accent-600"
@@ -327,10 +332,13 @@ const FestiveStore: React.FC = () => {
               <>
                 <div className="card group cursor-pointer" onClick={() => handleProductClick("festive-1")}>
                   <div className="relative overflow-hidden">
-                    <img 
+                    <LazyLoadImage 
                       src="https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg"
                       alt="Holiday Gift Set"
                       className="w-full h-64 object-cover"
+                      effect="blur"
+                      threshold={300}
+                      placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
                     <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-accent-600" onClick={(e) => e.stopPropagation()}>
                       <Heart size={20} />
@@ -360,10 +368,13 @@ const FestiveStore: React.FC = () => {
 
                 <div className="card group cursor-pointer" onClick={() => handleProductClick("festive-2")}>
                   <div className="relative overflow-hidden">
-                    <img 
+                    <LazyLoadImage 
                       src="https://images.pexels.com/photos/264771/pexels-photo-264771.jpeg"
                       alt="Festive Watch"
                       className="w-full h-64 object-cover"
+                      effect="blur"
+                      threshold={300}
+                      placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
                     <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-accent-600" onClick={(e) => e.stopPropagation()}>
                       <Heart size={20} />
@@ -393,10 +404,13 @@ const FestiveStore: React.FC = () => {
 
                 <div className="card group cursor-pointer" onClick={() => handleProductClick("festive-3")}>
                   <div className="relative overflow-hidden">
-                    <img 
+                    <LazyLoadImage 
                       src="https://images.pexels.com/photos/1303092/pexels-photo-1303092.jpeg"
                       alt="Festive Candle Set"
                       className="w-full h-64 object-cover"
+                      effect="blur"
+                      threshold={300}
+                      placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
                     <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-accent-600" onClick={(e) => e.stopPropagation()}>
                       <Heart size={20} />
@@ -426,10 +440,13 @@ const FestiveStore: React.FC = () => {
 
                 <div className="card group cursor-pointer" onClick={() => handleProductClick("festive-4")}>
                   <div className="relative overflow-hidden">
-                    <img 
+                    <LazyLoadImage 
                       src="https://images.pexels.com/photos/1303086/pexels-photo-1303086.jpeg"
                       alt="Holiday Sweater"
                       className="w-full h-64 object-cover"
+                      effect="blur"
+                      threshold={300}
+                      placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
                     <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-accent-600" onClick={(e) => e.stopPropagation()}>
                       <Heart size={20} />
@@ -472,7 +489,7 @@ const FestiveStore: React.FC = () => {
                   <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
                     Need Help Finding the Perfect Gift?
                   </h2>
-                  <p className="text-accent-100 mb-8">
+                  <p className="text-accent-100 mb-6">
                     Our holiday gift guide makes it easy to find something special for everyone on your list.
                   </p>
                   <Link 
@@ -484,10 +501,13 @@ const FestiveStore: React.FC = () => {
                 </div>
               </div>
               <div className="relative h-64 lg:h-auto">
-                <img 
+                <LazyLoadImage 
                   src="https://images.pexels.com/photos/1666067/pexels-photo-1666067.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                   alt="Holiday gifts" 
                   className="absolute inset-0 w-full h-full object-cover"
+                  effect="blur"
+                  threshold={300}
+                  placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                 />
               </div>
             </div>

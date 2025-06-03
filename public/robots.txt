@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://melodic-cobbler-eefed1.netlify.app/sitemap.xml

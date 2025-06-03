@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ProductCard from '../common/ProductCard';
 import { useProducts } from '../../hooks/useProducts';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
+import { Star } from 'lucide-react';
 
 const FeaturedProducts: React.FC = () => {
   const [activeTab, setActiveTab] = useState('bestsellers');
@@ -81,7 +83,7 @@ const FeaturedProducts: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[...Array(8)].map((_, i) => (
               <div key={i} className="animate-pulse">
-                <div className="h-64 bg-gray-200 rounded-lg mb-4 dark:bg-gray-700"></div>
+                <div className="h-48 bg-gray-200 rounded-lg mb-4 dark:bg-gray-700"></div>
                 <div className="h-4 bg-gray-200 rounded w-3/4 mb-2 dark:bg-gray-700"></div>
                 <div className="h-4 bg-gray-200 rounded w-1/2 dark:bg-gray-700"></div>
               </div>
@@ -89,8 +91,68 @@ const FeaturedProducts: React.FC = () => {
           </div>
         ) : products && products.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products.map(product => (
-              <ProductCard key={product.id} product={product} />
+            {products.map((product) => (
+              <div key={product.id} className="group hover:-translate-y-1 transition-transform duration-300">
+                <Link to={`/product/${product.id}`} className="block">
+                  <div className="bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md dark:bg-gray-800">
+                    <div className="aspect-square w-full overflow-hidden relative">
+                      <LazyLoadImage
+                        src={product.images?.[0]?.url || product.imageUrl}
+                        alt={product.name}
+                        className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
+                        effect="blur"
+                        threshold={300}
+                        placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
+                      />
+                      {product.is_new && (
+                        <div className="absolute top-2 left-2">
+                          <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-900/50 dark:text-primary-300">
+                            New
+                          </span>
+                        </div>
+                      )}
+                      {product.discount > 0 && (
+                        <div className="absolute top-2 right-2">
+                          <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300">
+                            {product.discount}% OFF
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">{product.brand?.name || 'Brand'}</p>
+                          <h3 className="text-sm font-medium group-hover:text-primary-600 transition-colors dark:text-white dark:group-hover:text-primary-400 line-clamp-1">{product.name}</h3>
+                        </div>
+                        
+                        <div className="flex items-center">
+                          {product.rating && (
+                            <div className="flex items-center">
+                              <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                              <span className="text-xs text-gray-600 ml-1 dark:text-gray-300">{product.rating}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="mt-2">
+                        {product.discountedPrice ? (
+                          <div className="flex items-center">
+                            <span className="font-medium dark:text-white">${product.price.toFixed(2)}</span>
+                            <span className="ml-2 text-sm text-gray-500 line-through dark:text-gray-400">
+                              ${product.discountedPrice.toFixed(2)}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="font-medium dark:text-white">${product.price.toFixed(2)}</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </div>
             ))}
           </div>
         ) : (

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Youtube, Pointer as Pinterest, Mail, Phone, MapPin } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { supabase } from '../../lib/supabase';
 
 const Footer: React.FC = () => {
@@ -62,12 +61,7 @@ const Footer: React.FC = () => {
       <div className="container-custom py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Column 1: About */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
+          <div>
             <h3 className="text-xl font-heading text-white mb-4">
               {logo ? (
                 <img src={logo} alt="MinddShopp" className="h-8 w-auto" />
@@ -79,56 +73,51 @@ const Footer: React.FC = () => {
               Premium destination for footwear, clothing, jewelry, and beauty products. Discover our exclusive bridal boutique and seasonal collections.
             </p>
             <div className="flex space-x-4 mt-4">
-              <motion.a 
+              <a 
                 href="#" 
                 className="text-gray-400 hover:text-white transition-colors" 
                 aria-label="Facebook"
-                whileHover={{ y: -3 }}
+                
               >
                 <Facebook size={20} />
-              </motion.a>
-              <motion.a 
+              </a>
+              <a 
                 href="#" 
                 className="text-gray-400 hover:text-white transition-colors" 
                 aria-label="Twitter"
-                whileHover={{ y: -3 }}
+                
               >
                 <Twitter size={20} />
-              </motion.a>
-              <motion.a 
+              </a>
+              <a 
                 href="#" 
                 className="text-gray-400 hover:text-white transition-colors" 
                 aria-label="Instagram"
-                whileHover={{ y: -3 }}
+                
               >
                 <Instagram size={20} />
-              </motion.a>
-              <motion.a 
+              </a>
+              <a 
                 href="#" 
                 className="text-gray-400 hover:text-white transition-colors" 
                 aria-label="Youtube"
-                whileHover={{ y: -3 }}
+                
               >
                 <Youtube size={20} />
-              </motion.a>
-              <motion.a 
+              </a>
+              <a 
                 href="#" 
                 className="text-gray-400 hover:text-white transition-colors" 
                 aria-label="Pinterest"
-                whileHover={{ y: -3 }}
+                
               >
                 <Pinterest size={20} />
-              </motion.a>
+              </a>
             </div>
-          </motion.div>
+          </div>
           
           {/* Column 2: Shopping */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
+          <div>
             <h4 className="text-lg font-heading text-white mb-4">Shopping</h4>
             <ul className="space-y-2 text-sm">
               <li>
@@ -156,21 +145,16 @@ const Footer: React.FC = () => {
                 <Link to="/bridal-boutique" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Bridal Boutique</Link>
               </li>
               <li>
-                <Link to="/festive-store" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Festive Store</Link>
+                <Link to="/festive-store" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Festive Collections</Link>
               </li>
               <li>
                 <Link to="/size-chart" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Size Charts</Link>
               </li>
             </ul>
-          </motion.div>
+          </div>
           
           {/* Column 3: Information */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
+          <div>
             <h4 className="text-lg font-heading text-white mb-4">Information</h4>
             <ul className="space-y-2 text-sm">
               <li>
@@ -195,15 +179,10 @@ const Footer: React.FC = () => {
                 <Link to="/disclaimer" className="hover:text-white transition-colors hover:translate-x-1 inline-block">Disclaimer</Link>
               </li>
             </ul>
-          </motion.div>
+          </div>
           
           {/* Column 4: Contact */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
+          <div>
             <h4 className="text-lg font-heading text-white mb-4">Contact Us</h4>
             <ul className="space-y-3 text-sm">
               <li className="flex items-start space-x-3">
@@ -278,7 +257,7 @@ const Footer: React.FC = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
       

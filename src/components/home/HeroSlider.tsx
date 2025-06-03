@@ -5,6 +5,8 @@ import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { supabase } from '../../lib/supabase';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -59,7 +61,7 @@ const HeroSlider: React.FC = () => {
       title: "Summer Collection 2025",
       subtitle: "Elevate Your Style",
       description: "Discover our premium selection of summer essentials",
-      image_url: "https://images.pexels.com/photos/5709661/pexels-photo-5709661.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      image_url: "https://images.pexels.com/photos/5709661/pexels-photo-5709661.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
       cta_text: "Shop Now",
       cta_link: "/new-arrivals",
       accent: "primary",
@@ -71,7 +73,7 @@ const HeroSlider: React.FC = () => {
       title: "Bridal Boutique",
       subtitle: "Your Perfect Day",
       description: "Everything you need for your special occasion",
-      image_url: "https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      image_url: "https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
       cta_text: "Explore Collection",
       cta_link: "/bridal-boutique",
       accent: "secondary",
@@ -83,7 +85,7 @@ const HeroSlider: React.FC = () => {
       title: "Festive Collection",
       subtitle: "Celebrate in Style",
       description: "Discover perfect gifts and festive fashion",
-      image_url: "https://images.pexels.com/photos/717988/pexels-photo-717988.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      image_url: "https://images.pexels.com/photos/717988/pexels-photo-717988.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
       cta_text: "Shop Collection",
       cta_link: "/festive-store",
       accent: "accent",
@@ -124,17 +126,20 @@ const HeroSlider: React.FC = () => {
         }}
         loop={true}
         onSlideChange={(swiper) => setActiveSlide(swiper.realIndex)}
-        className="h-[90vh] min-h-[600px]"
+        className="h-[90vh] min-h-[500px]"
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={slide.id}>
             <div className="relative h-full w-full">
               <div className="absolute inset-0">
                 <div className={`absolute inset-0 bg-gradient-to-r from-${slide.accent}-900/90 to-${slide.accent}-800/80 dark:from-${slide.accent}-900/95 dark:to-${slide.accent}-800/85`}></div>
-                <img 
+                <LazyLoadImage 
                   src={slide.image_url} 
                   alt={slide.title} 
                   className="w-full h-full object-cover"
+                  effect="blur"
+                  threshold={300}
+                  placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                 />
               </div>
               
@@ -149,10 +154,10 @@ const HeroSlider: React.FC = () => {
                     <span className="inline-block px-4 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium mb-6 text-white">
                       {slide.subtitle}
                     </span>
-                    <h1 className="font-heading text-4xl md:text-6xl font-bold mb-6 text-white leading-tight">
+                    <h1 className="font-heading text-3xl md:text-5xl font-bold mb-4 text-white leading-tight">
                       {slide.title}
                     </h1>
-                    <p className="text-lg md:text-xl mb-8 text-gray-200 max-w-lg">
+                    <p className="text-base md:text-lg mb-6 text-gray-200 max-w-lg">
                       {slide.description}
                     </p>
                     <div className="flex flex-wrap gap-4">
@@ -176,10 +181,10 @@ const HeroSlider: React.FC = () => {
           </SwiperSlide>
         ))}
         
-        <div className="swiper-button-prev !text-white !w-12 !h-12 !bg-black/20 backdrop-blur-sm !rounded-full flex items-center justify-center after:!text-lg">
+        <div className="swiper-button-prev !text-white !w-10 !h-10 !bg-black/20 backdrop-blur-sm !rounded-full flex items-center justify-center after:!text-lg">
           <ChevronLeft className="w-6 h-6" />
         </div>
-        <div className="swiper-button-next !text-white !w-12 !h-12 !bg-black/20 backdrop-blur-sm !rounded-full flex items-center justify-center after:!text-lg">
+        <div className="swiper-button-next !text-white !w-10 !h-10 !bg-black/20 backdrop-blur-sm !rounded-full flex items-center justify-center after:!text-lg">
           <ChevronRight className="w-6 h-6" />
         </div>
         

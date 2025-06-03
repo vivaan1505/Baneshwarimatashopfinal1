@@ -2,10 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Product } from '../../types';
 import WishlistButton from './WishlistButton';
-import { motion } from 'framer-motion';
 import { ShoppingBag } from 'lucide-react';
 import { useCartStore } from '../../stores/cartStore';
 import { toast } from 'react-hot-toast';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 interface ProductCardProps {
   product: Product;
@@ -43,21 +44,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
   
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      whileHover={{ y: -5 }}
-      className="group"
-    >
+    <div className="group hover:-translate-y-1 transition-transform duration-300">
       <Link to={`/product/${product.id}`} className="block">
         <div className="bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md dark:bg-gray-800">
           <div className="aspect-square w-full overflow-hidden relative">
-            <img
+            <LazyLoadImage
               src={imageUrl}
               alt={product.name}
               className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
               loading="lazy"
+              effect="blur"
+              threshold={300}
+              placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
             />
             <div className="absolute top-2 right-2 z-10">
               <WishlistButton 
@@ -132,7 +130,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 };
 
