@@ -316,7 +316,19 @@ const SUBCATEGORIES = {
     { id: 'bridesmaid-dresses', name: 'Bridesmaid Dresses', gender: 'women' },
     { id: 'bridesmaid-accessories', name: 'Bridesmaid Accessories', gender: 'women' },
     { id: 'groom-accessories', name: 'Groom Accessories', gender: 'men' },
-    { id: 'wedding-bands', name: 'Wedding Bands', gender: 'unisex' }
+    { id: 'wedding-bands', name: 'Wedding Bands', gender: 'unisex' },
+    { id: 'bridal-robes', name: 'Bridal Robes', gender: 'women' },
+    { id: 'bridal-sashes', name: 'Bridal Sashes & Belts', gender: 'women' },
+    { id: 'bridal-gloves', name: 'Bridal Gloves', gender: 'women' },
+    { id: 'bridal-cover-ups', name: 'Bridal Cover-ups', gender: 'women' },
+    { id: 'wedding-guest-dresses', name: 'Wedding Guest Dresses', gender: 'women' },
+    { id: 'mother-of-bride-dresses', name: 'Mother of Bride Dresses', gender: 'women' },
+    { id: 'flower-girl-dresses', name: 'Flower Girl Dresses', gender: 'kids' },
+    { id: 'ring-bearer-outfits', name: 'Ring Bearer Outfits', gender: 'kids' },
+    { id: 'bridal-party-gifts', name: 'Bridal Party Gifts', gender: 'unisex' },
+    { id: 'wedding-decorations', name: 'Wedding Decorations', gender: 'unisex' },
+    { id: 'wedding-favors', name: 'Wedding Favors', gender: 'unisex' },
+    { id: 'wedding-stationery', name: 'Wedding Stationery', gender: 'unisex' }
   ]
 };
 
