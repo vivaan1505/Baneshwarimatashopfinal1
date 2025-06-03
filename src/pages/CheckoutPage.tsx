@@ -7,6 +7,9 @@ import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../stores/authStore';
 import { updateMetaTags } from '../utils/seo';
 
+// UUID validation regex
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
   const { items, getTotal, clearCart } = useCartStore();
@@ -69,16 +72,18 @@ const CheckoutPage: React.FC = () => {
       // If user is logged in, remove items from wishlist
       if (user) {
         try {
-          // Get product IDs from cart
-          const productIds = items.map(item => item.productId);
+          // Get product IDs from cart and filter for valid UUIDs only
+          const validProductIds = items
+            .map(item => item.productId)
+            .filter(id => UUID_REGEX.test(id));
           
-          // Remove these products from the user's wishlist
-          if (productIds.length > 0) {
+          // Only proceed with deletion if there are valid product IDs
+          if (validProductIds.length > 0) {
             const { error } = await supabase
               .from('wishlists')
               .delete()
               .eq('user_id', user.id)
-              .in('product_id', productIds);
+              .in('product_id', validProductIds);
               
             if (error) {
               console.error('Error removing items from wishlist:', error);
