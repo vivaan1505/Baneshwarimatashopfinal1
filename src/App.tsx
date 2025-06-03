@@ -7,7 +7,6 @@ import HomePage from './pages/HomePage';
 import CategoryPage from './pages/CategoryPage';
 import ProductPage from './pages/ProductPage';
 import NewArrivalsPage from './pages/NewArrivalsPage';
-import CollectionsPage from './pages/CollectionsPage';
 import BridalBoutique from './pages/specialty/BridalBoutique';
 import FestiveStore from './pages/specialty/FestiveStore';
 import BlogPage from './pages/BlogPage';
@@ -89,7 +88,6 @@ function App() {
             
             {/* Shop Routes */}
             <Route path="new-arrivals" element={<NewArrivalsPage />} />
-            <Route path="collections" element={<CollectionsPage />} />
             <Route path="footwear" element={<FootwearPage />} />
             <Route path="clothing" element={<ClothingPage />} />
             <Route path="jewelry" element={<JewelryPage />} />
