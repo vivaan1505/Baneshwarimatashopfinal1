@@ -163,7 +163,7 @@ const HeroSlider: React.FC = () => {
                     </p>
                     <div className="flex flex-wrap gap-4">
                       <Link 
-                        to={slide.cta_link} 
+                        to={slide.cta_link.startsWith('/') ? slide.cta_link : `/${slide.cta_link}`} 
                         className={`btn-${slide.accent} text-base`}
                       >
                         {slide.cta_text}
