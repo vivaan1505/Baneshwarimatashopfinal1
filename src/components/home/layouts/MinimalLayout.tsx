@@ -82,7 +82,7 @@ const MinimalLayout: React.FC = () => {
                 { name: "Footwear", path: "/footwear", image: "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" },
                 { name: "Clothing", path: "/clothing", image: "https://images.pexels.com/photos/5709665/pexels-photo-5709665.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" },
                 { name: "Jewelry", path: "/jewelry", image: "https://images.pexels.com/photos/8891959/pexels-photo-8891959.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" },
-                { name: "Beauty", path: "/beauty", image: "https://images.pexels.com/photos/2693640/pexels-photo-2693640.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" },
+                { name: "Beauty", path: "/beauty", image: "https://images.pexels.com/photos/4938502/pexels-photo-4938502.jpeg" },
                 { name: "Men", path: "/men", image: "https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" },
                 { name: "Women", path: "/women", image: "https://images.pexels.com/photos/1619801/pexels-photo-1619801.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" }
               ].map((category, index) => (
