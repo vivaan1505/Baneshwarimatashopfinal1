@@ -129,9 +129,9 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
         isScrolled ? "bg-white shadow-md dark:bg-gray-900" : "bg-transparent"
       )}
     >
-
-          
-        </motion.div>
+      <div className="container-custom">
+        {/* Top announcement bar */}
+        
         
         {/* Main header */}
         <div className="flex items-center justify-between py-4">
