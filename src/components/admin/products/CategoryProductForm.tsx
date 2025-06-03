@@ -650,26 +650,28 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Product Type <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    {...register('type', { required: 'Product type is required' })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                    disabled={!isSpecialCategory}
-                  >
-                    <option value="footwear">Footwear</option>
-                    <option value="clothing">Clothing</option>
-                    <option value="jewelry">Jewelry</option>
-                    <option value="beauty">Beauty</option>
-                    <option value="accessories">Accessories</option>
-                    <option value="bags">Bags</option>
-                  </select>
-                  {errors.type && (
-                    <p className="mt-1 text-sm text-red-600">{errors.type.message}</p>
-                  )}
-                </div>
+                {category !== 'bridal' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Product Type <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      {...register('type', { required: 'Product type is required' })}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                      disabled={!isSpecialCategory}
+                    >
+                      <option value="footwear">Footwear</option>
+                      <option value="clothing">Clothing</option>
+                      <option value="jewelry">Jewelry</option>
+                      <option value="beauty">Beauty</option>
+                      <option value="accessories">Accessories</option>
+                      <option value="bags">Bags</option>
+                    </select>
+                    {errors.type && (
+                      <p className="mt-1 text-sm text-red-600">{errors.type.message}</p>
+                    )}
+                  </div>
+                )}
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">

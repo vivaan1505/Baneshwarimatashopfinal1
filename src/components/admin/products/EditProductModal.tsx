@@ -403,7 +403,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
 
   useEffect(() => {
     const type = selectedType;
-    if (type && SUBCATEGORIES[type]) {
+    if (type) {
       // For bridal category, use bridal-specific subcategories regardless of the product type
       if (category === 'bridal') {
         const predefinedSubcats = SUBCATEGORIES['bridal'] || [];
@@ -439,11 +439,11 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
             
             const id = subcat.id.toLowerCase();
             const genderPrefix = selectedGender === 'men' ? 'mens-' : 
-                              selectedGender === 'women' ? 'womens-' : 
-                              selectedGender === 'kids' ? 'kids-' : '';
+                               selectedGender === 'women' ? 'womens-' : 
+                               selectedGender === 'kids' ? 'kids-' : '';
             
             return id.startsWith(genderPrefix) || 
-                 (!id.startsWith('mens-') && !id.startsWith('womens-') && !id.startsWith('kids-'));
+                  (!id.startsWith('mens-') && !id.startsWith('womens-') && !id.startsWith('kids-'));
           });
         }
         
@@ -489,7 +489,6 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
       setDbSubcategories(data || []);
     } catch (error) {
       console.error('Error fetching subcategories:', error);
-      toast.error('Failed to load subcategories');
     }
   };
 
@@ -659,26 +658,28 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Product Type <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    {...register('type', { required: 'Product type is required' })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                    disabled={!isSpecialCategory}
-                  >
-                    <option value="footwear">Footwear</option>
-                    <option value="clothing">Clothing</option>
-                    <option value="jewelry">Jewelry</option>
-                    <option value="beauty">Beauty</option>
-                    <option value="accessories">Accessories</option>
-                    <option value="bags">Bags</option>
-                  </select>
-                  {errors.type && (
-                    <p className="mt-1 text-sm text-red-600">{errors.type.message}</p>
-                  )}
-                </div>
+                {category !== 'bridal' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Product Type <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      {...register('type', { required: 'Product type is required' })}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                      disabled={!isSpecialCategory}
+                    >
+                      <option value="footwear">Footwear</option>
+                      <option value="clothing">Clothing</option>
+                      <option value="jewelry">Jewelry</option>
+                      <option value="beauty">Beauty</option>
+                      <option value="accessories">Accessories</option>
+                      <option value="bags">Bags</option>
+                    </select>
+                    {errors.type && (
+                      <p className="mt-1 text-sm text-red-600">{errors.type.message}</p>
+                    )}
+                  </div>
+                )}
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
