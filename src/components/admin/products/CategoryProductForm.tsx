@@ -9,6 +9,13 @@ import 'react-quill/dist/quill.snow.css';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
+interface CategoryProductFormProps {
+  category: string;
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+}
+
 interface Brand {
   id: string;
   name: string;
@@ -21,37 +28,6 @@ interface Subcategory {
   name: string;
   slug: string;
   parent_category: string;
-}
-
-interface ProductFormData {
-  name: string;
-  brand_id: string;
-  custom_brand?: string | null;
-  gender: 'men' | 'women' | 'unisex' | 'kids';
-  description: string;
-  price: number;
-  compare_at_price?: number;
-  sku: string;
-  stock_quantity: number;
-  is_visible: boolean;
-  is_returnable: boolean;
-  meta_title?: string;
-  meta_description?: string;
-  tags: string[];
-  care_instructions?: string;
-  materials?: string[];
-  size_guide?: any;
-  shipping_info?: string;
-  return_policy?: string;
-  type: 'footwear' | 'clothing' | 'jewelry' | 'beauty' | 'accessories' | 'bags';
-  subcategory: string;
-}
-
-interface CategoryProductFormProps {
-  category: string;
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess: () => void;
 }
 
 const PRODUCT_TAGS = [
@@ -70,15 +46,7 @@ const PRODUCT_TAGS = [
   { value: 'kids', label: 'Kids', color: 'bg-green-100 text-green-800' }
 ];
 
-const PRODUCT_TYPES = [
-  { value: 'footwear', label: 'Footwear' },
-  { value: 'clothing', label: 'Clothing' },
-  { value: 'jewelry', label: 'Jewelry' },
-  { value: 'beauty', label: 'Beauty' },
-  { value: 'accessories', label: 'Accessories' },
-  { value: 'bags', label: 'Bags' }
-];
-
+// Define subcategories for each product type
 const SUBCATEGORIES = {
   footwear: [
     // Men's Footwear
@@ -328,75 +296,6 @@ const SUBCATEGORIES = {
     { id: 'laptop-bags', name: 'Laptop Bags', gender: 'unisex' },
     { id: 'wallets-purses', name: 'Wallets & Purses', gender: 'unisex' },
     { id: 'luggage', name: 'Luggage', gender: 'unisex' }
-  ],
-  bridal: [
-    // Bridal Dresses
-    { id: 'wedding-gowns', name: 'Wedding Gowns', gender: 'women' },
-    { id: 'reception-dresses', name: 'Reception Dresses', gender: 'women' },
-    { id: 'engagement-dresses', name: 'Engagement Dresses', gender: 'women' },
-    { id: 'mehndi-haldi-dresses', name: 'Mehndi / Haldi Dresses', gender: 'women' },
-    { id: 'sangeet-dresses', name: 'Sangeet Dresses', gender: 'women' },
-    { id: 'bridal-lehengas', name: 'Bridal Lehengas', gender: 'women' },
-    { id: 'bridal-sarees', name: 'Bridal Sarees', gender: 'women' },
-    { id: 'bridal-gowns', name: 'Bridal Gowns', gender: 'women' },
-    { id: 'bridal-jumpsuits', name: 'Bridal Jumpsuits', gender: 'women' },
-    { id: 'bridal-separates', name: 'Bridal Separates', gender: 'women' },
-    { id: 'bridal-lingerie', name: 'Bridal Lingerie', gender: 'women' },
-    { id: 'bridal-robes', name: 'Bridal Robes', gender: 'women' },
-    
-    //Bridal Jewelry
-    { id: 'bridal-necklaces-sets', name: 'Bridal Necklaces & Sets', gender: 'women' },
-    { id: 'bridal-earrings', name: 'Bridal Earrings', gender: 'women' },
-    { id: 'bridal-bangles-bracelets', name: 'Bridal Bangles & Bracelets', gender: 'women' },
-    { id: 'maang-tikka-headpieces', name: 'Maang Tikka & Headpieces', gender: 'women' },
-    { id: 'nose-rings-nath', name: 'Nose Rings & Nath', gender: 'women' },
-    { id: 'waist-belts-kamarbandh', name: 'Waist Belts (Kamarbandh)', gender: 'women' },
-    { id: 'bridal-anklets-payal', name: 'Bridal Anklets (Payal)', gender: 'women' },
-    { id: 'bridal-rings', name: 'Bridal Rings', gender: 'women' },
-    { id: 'wedding-rings', name: 'Wedding Rings', gender: 'unisex' },
-    { id: 'engagement-rings', name: 'Engagement Rings', gender: 'women' },
-    { id: 'bridal-hair-jewelry', name: 'Bridal Hair Jewelry', gender: 'women' },
-    
-    // Bridal Footwear
-    { id: 'bridal-heels-sandals', name: 'Bridal Heels & Sandals', gender: 'women' },
-    { id: 'bridal-stilettos', name: 'Bridal Stilettos', gender: 'women' },
-    { id: 'bridal-wedges', name: 'Bridal Wedges', gender: 'women' },
-    { id: 'bridal-flats', name: 'Bridal Flats', gender: 'women' },
-    { id: 'mojaris-juttis', name: 'Mojaris & Juttis', gender: 'women' },
-    { id: 'bridal-sandals', name: 'Bridal Sandals', gender: 'women' },
-    { id: 'bridal-pumps', name: 'Bridal Pumps', gender: 'women' },
-    { id: 'bridal-boots', name: 'Bridal Boots', gender: 'women' },
-    
-    // Bridal Accessories
-    { id: 'veils-dupattas', name: 'Veils & Dupattas', gender: 'women' },
-    { id: 'bridal-clutches-potlis', name: 'Bridal Clutches & Potlis', gender: 'women' },
-    { id: 'bridal-hair-accessories', name: 'Bridal Hair Accessories', gender: 'women' },
-    { id: 'bridal-gloves', name: 'Bridal Gloves', gender: 'women' },
-    { id: 'bridal-belts-sashes', name: 'Bridal Belts & Sashes', gender: 'women' },
-    { id: 'bridal-garters', name: 'Bridal Garters', gender: 'women' },
-    { id: 'bridal-tiaras-crowns', name: 'Bridal Tiaras & Crowns', gender: 'women' },
-    { id: 'bridal-hair-pins', name: 'Bridal Hair Pins', gender: 'women' },
-    { id: 'bridal-hair-combs', name: 'Bridal Hair Combs', gender: 'women' },
-    { id: 'bridal-hair-vines', name: 'Bridal Hair Vines', gender: 'women' },
-    
-    // Bridal Makeup & Beauty
-    { id: 'bridal-makeup-kits', name: 'Bridal Makeup Kits', gender: 'women' },
-    { id: 'bridal-foundation-concealers', name: 'Bridal Foundation & Concealers', gender: 'women' },
-    { id: 'bridal-lipsticks-lip-gloss', name: 'Bridal Lipsticks & Lip Gloss', gender: 'women' },
-    { id: 'bridal-eye-makeup', name: 'Bridal Eye Makeup', gender: 'women' },
-    { id: 'bridal-skincare', name: 'Bridal Skincare', gender: 'women' },
-    { id: 'bridal-fragrances', name: 'Bridal Fragrances', gender: 'women' },
-    { id: 'bridal-nail-polish', name: 'Bridal Nail Polish', gender: 'women' },
-    
-    // Bridal Hair Care
-    { id: 'bridal-hair-oils-serums', name: 'Bridal Hair Oils & Serums', gender: 'women' },
-    { id: 'hair-extensions-wigs', name: 'Hair Extensions & Wigs', gender: 'women' },
-    
-    // Other Bridal Categories
-    { id: 'bridal-mehndi-henna-kits', name: 'Bridal Mehndi & Henna Kits', gender: 'women' },
-    { id: 'bridal-gift-sets-packaging', name: 'Bridal Gift Sets & Packaging', gender: 'women' },
-    { id: 'bridal-shower-accessories', name: 'Bridal Shower Accessories', gender: 'women' },
-    { id: 'bridal-party-gifts', name: 'Bridal Party Gifts', gender: 'women' }
   ]
 };
 
@@ -409,26 +308,37 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
   const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [dbSubcategories, setDbSubcategories] = useState<{id: string, name: string}[]>([]);
+  const [dbSubcategories, setDbSubcategories] = useState<Subcategory[]>([]);
   const [availableSubcategories, setAvailableSubcategories] = useState<{id: string, name: string}[]>([]);
   
-  const { register, handleSubmit, watch, setValue, reset, formState: { errors }, trigger } = useForm<ProductFormData>({
+  const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm({
     defaultValues: {
       name: '',
+      description: '',
       price: 0,
+      compare_at_price: null as number | null,
       stock_quantity: 0,
+      sku: '',
+      brand_id: '',
+      custom_brand: null as string | null,
       is_visible: true,
-      is_returnable: true,
-      gender: 'unisex',
-      tags: [],
-      type: mapCategoryToType(category)
+      is_featured: false,
+      is_new: true,
+      gender: '',
+      type: mapCategoryToType(category),
+      subcategory: '',
+      tags: [] as string[],
+      materials: [] as string[],
+      care_instructions: '',
+      is_returnable: true
     }
   });
 
   const selectedType = watch('type');
   const selectedGender = watch('gender');
-  const selectedSubcategory = watch('subcategory');
+  const selectedTags = watch('tags') || [];
+  const isSpecialCategory = category === 'bridal' || category === 'christmas' || category === 'sale';
+  const BrandSelect = isSpecialCategory ? CreatableSelect : Select;
 
   function mapCategoryToType(category: string): 'footwear' | 'clothing' | 'jewelry' | 'beauty' | 'accessories' | 'bags' {
     switch (category) {
@@ -455,36 +365,16 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
     }
   }
 
-  const isSpecialCategory = category === 'bridal' || category === 'christmas' || category === 'sale';
-  const BrandSelect = isSpecialCategory ? CreatableSelect : Select;
+  useEffect(() => {
+    fetchBrands();
+    fetchSubcategories();
+  }, [category]);
 
   useEffect(() => {
-    if (isOpen) {
-      fetchBrands();
-      fetchSubcategories();
-    }
-  }, [category, isOpen]);
-
-  useEffect(() => {
-    // Set default values based on category
-    if (category === 'bridal') {
-      setValue('gender', 'women');
-      setValue('tags', ['bridal']);
-      
-      // For bridal, we want to show bridal-specific subcategories
-      const bridalSubcategories = SUBCATEGORIES.bridal || [];
-      setAvailableSubcategories(bridalSubcategories);
-    } else if (category === 'christmas') {
-      setValue('tags', ['christmas']);
-    } else if (category === 'sale') {
-      setValue('tags', ['sale']);
-    }
-  }, [category, setValue]);
-
-  useEffect(() => {
+    // Update subcategories when type or gender changes
     const type = selectedType;
-    if (type && SUBCATEGORIES[type]) {
-      const predefinedSubcats = SUBCATEGORIES[type];
+    if (type) {
+      const predefinedSubcats = SUBCATEGORIES[type as keyof typeof SUBCATEGORIES] || [];
       const dbSubcats = dbSubcategories.filter(s => s.parent_category === type);
       
       const mergedSubcats = [...dbSubcats];
@@ -518,87 +408,8 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
     }
   }, [selectedType, dbSubcategories, selectedGender]);
 
-  // Special handling for bridal category
-  useEffect(() => {
-    if (category === 'bridal') {
-      // Get bridal subcategories based on the selected type
-      let bridalSubcats: any[] = [];
-      
-      if (selectedType === 'clothing') {
-        bridalSubcats = SUBCATEGORIES.bridal.filter(subcat => 
-          subcat.id.includes('dress') || 
-          subcat.id.includes('gown') || 
-          subcat.id.includes('lehenga') || 
-          subcat.id.includes('saree') || 
-          subcat.id.includes('jumpsuit') || 
-          subcat.id.includes('separate') || 
-          subcat.id.includes('lingerie') || 
-          subcat.id.includes('robe')
-        );
-      } else if (selectedType === 'jewelry') {
-        bridalSubcats = SUBCATEGORIES.bridal.filter(subcat => 
-          subcat.id.includes('necklace') || 
-          subcat.id.includes('earring') || 
-          subcat.id.includes('bracelet') || 
-          subcat.id.includes('tikka') || 
-          subcat.id.includes('ring') || 
-          subcat.id.includes('anklet') || 
-          subcat.id.includes('jewelry')
-        );
-      } else if (selectedType === 'footwear') {
-        bridalSubcats = SUBCATEGORIES.bridal.filter(subcat => 
-          subcat.id.includes('heel') || 
-          subcat.id.includes('sandal') || 
-          subcat.id.includes('flat') || 
-          subcat.id.includes('boot') || 
-          subcat.id.includes('mojari') || 
-          subcat.id.includes('jutti') || 
-          subcat.id.includes('pump')
-        );
-      } else if (selectedType === 'beauty') {
-        bridalSubcats = SUBCATEGORIES.bridal.filter(subcat => 
-          subcat.id.includes('makeup') || 
-          subcat.id.includes('skincare') || 
-          subcat.id.includes('fragrance') || 
-          subcat.id.includes('nail') || 
-          subcat.id.includes('hair-oil') || 
-          subcat.id.includes('mehndi') || 
-          subcat.id.includes('henna')
-        );
-      } else if (selectedType === 'accessories') {
-        bridalSubcats = SUBCATEGORIES.bridal.filter(subcat => 
-          subcat.id.includes('veil') || 
-          subcat.id.includes('dupatta') || 
-          subcat.id.includes('hair-accessory') || 
-          subcat.id.includes('glove') || 
-          subcat.id.includes('belt') || 
-          subcat.id.includes('sash') || 
-          subcat.id.includes('garter') || 
-          subcat.id.includes('tiara') || 
-          subcat.id.includes('crown') || 
-          subcat.id.includes('pin') || 
-          subcat.id.includes('comb') || 
-          subcat.id.includes('vine')
-        );
-      } else if (selectedType === 'bags') {
-        bridalSubcats = SUBCATEGORIES.bridal.filter(subcat => 
-          subcat.id.includes('clutch') || 
-          subcat.id.includes('potli')
-        );
-      }
-      
-      // If no specific bridal subcategories found for this type, show all bridal subcategories
-      if (bridalSubcats.length === 0) {
-        bridalSubcats = SUBCATEGORIES.bridal;
-      }
-      
-      setAvailableSubcategories(bridalSubcats);
-    }
-  }, [category, selectedType]);
-
   const fetchBrands = async () => {
     try {
-      setLoading(true);
       let query = supabase
         .from('brands')
         .select('*')
@@ -612,13 +423,12 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
       }
 
       const { data, error } = await query;
+
       if (error) throw error;
       setBrands(data || []);
     } catch (error) {
       console.error('Error fetching brands:', error);
       toast.error('Failed to load brands');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -633,8 +443,18 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
       setDbSubcategories(data || []);
     } catch (error) {
       console.error('Error fetching subcategories:', error);
+      toast.error('Failed to load subcategories');
     }
   };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png', '.webp']
+    },
+    onDrop: acceptedFiles => {
+      setImages(prev => [...prev, ...acceptedFiles]);
+    }
+  });
 
   const handleBrandChange = async (option: any) => {
     if (option?.__isNew__) {
@@ -654,74 +474,13 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
     setValue('tags', tags);
   };
 
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: {
-      'image/*': ['.jpeg', '.jpg', '.png', '.webp']
-    },
-    onDrop: acceptedFiles => {
-      setImages(prev => [...prev, ...acceptedFiles]);
-    }
-  });
-
-  const generateUniqueSlug = async (baseSlug: string): Promise<string> => {
-    let slug = baseSlug;
-    let counter = 1;
-    let isUnique = false;
-
-    while (!isUnique) {
-      const { data: existingProduct } = await supabase
-        .from('products')
-        .select('id')
-        .eq('slug', slug)
-        .maybeSingle();
-
-      if (!existingProduct) {
-        isUnique = true;
-      } else {
-        slug = `${baseSlug}-${counter}`;
-        counter++;
-      }
-    }
-
-    return slug;
-  };
-
-  const onSubmit = async (data: ProductFormData) => {
-    const isValid = await trigger();
-    if (!isValid) {
-      toast.error('Please fill in all required fields');
-      return;
-    }
-
-    // Check for duplicate SKU before proceeding
-    try {
-      const { data: existingProduct, error: skuCheckError } = await supabase
-        .from('products')
-        .select('id')
-        .eq('sku', data.sku)
-        .maybeSingle();
-
-      if (skuCheckError) {
-        throw skuCheckError;
-      }
-
-      if (existingProduct) {
-        toast.error('A product with this SKU already exists. Please use a unique SKU.');
-        return;
-      }
-    } catch (error) {
-      console.error('Error checking SKU:', error);
-      toast.error('Error checking SKU availability. Please try again.');
-      return;
-    }
-
+  const onSubmit = async (formData: any) => {
     setUploading(true);
     try {
-      let brandId = data.brand_id;
+      let brandId = formData.brand_id;
 
-      // If custom brand is provided, create a new brand first
-      if (data.custom_brand) {
-        const brandSlug = data.custom_brand
+      if (formData.custom_brand) {
+        const brandSlug = formData.custom_brand
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-|-$/g, '');
@@ -729,7 +488,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         const { data: newBrand, error: brandError } = await supabase
           .from('brands')
           .insert([{
-            name: data.custom_brand,
+            name: formData.custom_brand,
             slug: brandSlug,
             category: category,
             is_active: true
@@ -744,38 +503,40 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         brandId = newBrand.id;
       }
 
-      if (isSpecialCategory && !data.tags.includes(category)) {
-        data.tags = [...data.tags, category];
+      const { brand, images: imagesProp, custom_brand, ...productData } = formData;
+
+      productData.tags = Array.isArray(productData.tags) ? productData.tags : [];
+
+      if (isSpecialCategory && !productData.tags.includes(category)) {
+        productData.tags.push(category);
       }
 
-      // Map category to correct type if needed
-      if (category === 'footwear' || category === 'clothing' || category === 'jewelry' || category === 'beauty' || category === 'accessories' || category === 'bags') {
-        data.type = category as any;
+      if (category === 'footwear' || category === 'clothing' || category === 'jewelry' || category === 'beauty') {
+        productData.type = category as any;
       }
 
-      const baseSlug = data.name
+      // Generate slug from name
+      const slug = productData.name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '');
 
-      const uniqueSlug = await generateUniqueSlug(baseSlug);
-
-      // Remove custom_brand from data before inserting into products table
-      const { custom_brand, ...productData } = data;
-
+      // Insert product
       const { data: product, error: productError } = await supabase
         .from('products')
         .insert([{
           ...productData,
+          slug,
           brand_id: brandId,
-          slug: uniqueSlug,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
         }])
         .select()
         .single();
 
       if (productError) throw productError;
 
-      // Handle new images
+      // Upload images
       if (images.length > 0) {
         const imagePromises = images.map(async (file, index) => {
           const fileExt = file.name.split('.').pop();
@@ -828,12 +589,10 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
       <div className="flex items-center justify-center min-h-screen px-4">
         <div className="fixed inset-0 bg-black opacity-30" onClick={onClose}></div>
         
-        <div className="relative bg-white rounded-lg w-full max-w-4xl dark:bg-gray-800">
-          <div className="flex justify-between items-center p-6 border-b dark:border-gray-700">
-            <h2 className="text-xl font-medium dark:text-white">
-              Add New {category.charAt(0).toUpperCase() + category.slice(1)} Product
-            </h2>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+        <div className="relative bg-white rounded-lg w-full max-w-4xl">
+          <div className="flex justify-between items-center p-6 border-b">
+            <h2 className="text-xl font-medium">Add New {category.charAt(0).toUpperCase() + category.slice(1)} Product</h2>
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
               <X size={24} />
             </button>
           </div>
@@ -842,51 +601,42 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Product Name <span className="text-red-500">*</span>
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700">Product Name</label>
                   <input
                     type="text"
-                    {...register('name', { 
-                      required: 'Product name is required',
-                      minLength: { value: 3, message: 'Name must be at least 3 characters' },
-                      maxLength: { value: 100, message: 'Name cannot exceed 100 characters' }
-                    })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    {...register('name', { required: 'Product name is required' })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                   />
-                  {errors.name && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>
-                  )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <label className="block text-sm font-medium text-gray-700">
                     Product Type <span className="text-red-500">*</span>
                   </label>
                   <select
                     {...register('type', { required: 'Product type is required' })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                     disabled={!isSpecialCategory}
                   >
-                    {PRODUCT_TYPES.map(type => (
-                      <option key={type.value} value={type.value}>
-                        {type.label}
-                      </option>
-                    ))}
+                    <option value="footwear">Footwear</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="jewelry">Jewelry</option>
+                    <option value="beauty">Beauty</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="bags">Bags</option>
                   </select>
                   {errors.type && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.type.message}</p>
+                    <p className="mt-1 text-sm text-red-600">{errors.type.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <label className="block text-sm font-medium text-gray-700">
                     Gender <span className="text-red-500">*</span>
                   </label>
                   <select
                     {...register('gender', { required: 'Gender is required' })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    disabled={category === 'bridal'} // Disable for bridal as it's always women
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                   >
                     <option value="">Select Gender</option>
                     <option value="men">Men</option>
@@ -895,18 +645,17 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     <option value="kids">Kids</option>
                   </select>
                   {errors.gender && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.gender.message}</p>
+                    <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <label className="block text-sm font-medium text-gray-700">
                     Subcategory <span className="text-red-500">*</span>
                   </label>
                   <select
                     {...register('subcategory', { required: 'Subcategory is required' })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    value={selectedSubcategory || ""}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                   >
                     <option value="">Select Subcategory</option>
                     {availableSubcategories.map(subcat => (
@@ -916,159 +665,102 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     ))}
                   </select>
                   {errors.subcategory && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.subcategory.message}</p>
-                  )}
-                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                    Select a subcategory to help customers find your product more easily
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Brand <span className="text-red-500">*</span>
-                  </label>
-                  {loading ? (
-                    <div className="mt-1 h-10 flex items-center">
-                      <span className="text-sm text-gray-500 dark:text-gray-400">Loading brands...</span>
-                    </div>
-                  ) : (
-                    <BrandSelect
-                      options={brands.map(brand => ({
-                        value: brand.id,
-                        label: brand.name
-                      }))}
-                      className="mt-1"
-                      classNamePrefix="select"
-                      placeholder={isSpecialCategory ? "Select or enter brand" : "Select brand"}
-                      onChange={handleBrandChange}
-                      isClearable
-                    />
+                    <p className="mt-1 text-sm text-red-600">{errors.subcategory.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    SKU <span className="text-red-500">*</span>
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700">Brand</label>
+                  <BrandSelect
+                    options={brands.map(brand => ({
+                      value: brand.id,
+                      label: brand.name
+                    }))}
+                    className="mt-1"
+                    classNamePrefix="select"
+                    placeholder={isSpecialCategory ? "Select or enter brand" : "Select brand"}
+                    onChange={handleBrandChange}
+                    isClearable
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">SKU</label>
                   <input
                     type="text"
-                    {...register('sku', { 
-                      required: 'SKU is required',
-                      pattern: {
-                        value: /^[A-Za-z0-9-]+$/,
-                        message: 'SKU can only contain letters, numbers, and hyphens'
-                      }
-                    })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    {...register('sku')}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                   />
-                  {errors.sku && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.sku.message}</p>
-                  )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Price <span className="text-red-500">*</span>
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700">Price</label>
                   <div className="mt-1 relative rounded-md shadow-sm">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span className="text-gray-500 sm:text-sm dark:text-gray-400">$</span>
+                      <span className="text-gray-500 sm:text-sm">$</span>
                     </div>
                     <input
                       type="number"
                       step="0.01"
-                      {...register('price', { 
-                        required: 'Price is required',
-                        min: { value: 0, message: 'Price must be greater than 0' }
-                      })}
-                      className="pl-7 block w-full rounded-md border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    />
-                  </div>
-                  {errors.price && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.price.message}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Compare at Price</label>
-                  <div className="mt-1 relative rounded-md shadow-sm">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span className="text-gray-500 sm:text-sm dark:text-gray-400">$</span>
-                    </div>
-                    <input
-                      type="number"
-                      step="0.01"
-                      {...register('compare_at_price', {
-                        min: { value: 0, message: 'Compare at price must be greater than 0' }
-                      })}
-                      className="pl-7 block w-full rounded-md border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      {...register('price', { required: 'Price is required', min: 0 })}
+                      className="pl-7 block w-full rounded-md border-gray-300 focus:border-primary-500 focus:ring-primary-500"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Stock Quantity <span className="text-red-500">*</span>
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700">Compare at Price</label>
+                  <div className="mt-1 relative rounded-md shadow-sm">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span className="text-gray-500 sm:text-sm">$</span>
+                    </div>
+                    <input
+                      type="number"
+                      step="0.01"
+                      {...register('compare_at_price')}
+                      className="pl-7 block w-full rounded-md border-gray-300 focus:border-primary-500 focus:ring-primary-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Stock Quantity</label>
                   <input
                     type="number"
-                    {...register('stock_quantity', { 
-                      required: 'Stock quantity is required',
-                      min: { value: 0, message: 'Stock quantity must be greater than or equal to 0' }
-                    })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    {...register('stock_quantity', { required: 'Stock quantity is required', min: 0 })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                   />
-                  {errors.stock_quantity && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.stock_quantity.message}</p>
-                  )}
                 </div>
 
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
-                  <ReactQuill
-                    theme="snow"
-                    value={watch('description')}
-                    onChange={(content) => setValue('description', content)}
-                    className="mt-1 dark:text-white"
-                    modules={{
-                      toolbar: [
-                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                        ['link', 'image'],
-                        ['clean']
-                      ]
-                    }}
-                  />
-                  {errors.description && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>
-                  )}
-                </div>
-
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Product Tags</label>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Tags</label>
                   <Select
                     isMulti
                     options={PRODUCT_TAGS}
-                    className="basic-multi-select"
-                    classNamePrefix="select"
                     onChange={handleTagsChange}
-                    defaultValue={isSpecialCategory ? [PRODUCT_TAGS.find(tag => tag.value === category)] : []}
-                    formatOptionLabel={({ label, color }) => (
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${color}`}>
-                        {label}
-                      </span>
-                    )}
+                    className="mt-1"
+                    classNamePrefix="select"
+                    placeholder="Select tags"
                   />
                 </div>
               </div>
 
-              <div className="border-t pt-6 dark:border-gray-700">
-                <h3 className="text-lg font-medium mb-4 dark:text-white">Product Images</h3>
-                <div {...getRootProps()} className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center dark:border-gray-600">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <ReactQuill
+                  theme="snow"
+                  value={watch('description')}
+                  onChange={(content) => setValue('description', content)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Product Images</label>
+                
+                <div {...getRootProps()} className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                   <input {...getInputProps()} />
-                  <Upload className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
-                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                  <p className="mt-2 text-sm text-gray-600">
                     Drag 'n' drop some images here, or click to select files
                   </p>
                 </div>
@@ -1085,9 +777,9 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                         <button
                           type="button"
                           onClick={() => setImages(images.filter((_, i) => i !== index))}
-                          className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow-sm dark:bg-gray-700"
+                          className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow-sm"
                         >
-                          <X size={16} className="text-gray-500 dark:text-gray-400" />
+                          <X size={16} className="text-gray-500" />
                         </button>
                       </div>
                     ))}
@@ -1095,84 +787,49 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                 )}
               </div>
 
-              <div className="border-t pt-6 dark:border-gray-700">
-                <h3 className="text-lg font-medium mb-4 dark:text-white">Additional Information</h3>
-                <div className="grid grid-cols-1 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Care Instructions</label>
-                    <textarea
-                      {...register('care_instructions')}
-                      rows={3}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Shipping Information</label>
-                    <textarea
-                      {...register('shipping_info')}
-                      rows={3}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Return Policy</label>
-                    <textarea
-                      {...register('return_policy')}
-                      rows={3}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    />
-                  </div>
+              <div className="space-y-4">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    {...register('is_visible')}
+                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  />
+                  <label className="ml-2 block text-sm text-gray-900">
+                    Make product visible
+                  </label>
                 </div>
-              </div>
 
-              <div className="border-t pt-6 dark:border-gray-700">
-                <h3 className="text-lg font-medium mb-4 dark:text-white">SEO Information</h3>
-                <div className="grid grid-cols-1 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Meta Title</label>
-                    <input
-                      type="text"
-                      {...register('meta_title')}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Meta Description</label>
-                    <textarea
-                      {...register('meta_description')}
-                      rows={3}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    />
-                  </div>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    {...register('is_returnable')}
+                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  />
+                  <label className="ml-2 block text-sm text-gray-900">
+                    Product is returnable
+                  </label>
                 </div>
-              </div>
 
-              <div className="border-t pt-6 dark:border-gray-700">
-                <h3 className="text-lg font-medium mb-4 dark:text-white">Product Settings</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="is_visible"
-                      {...register('is_visible')}
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded dark:border-gray-600 dark:bg-gray-700"
-                    />
-                    <label htmlFor="is_visible" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
-                      Make product visible
-                    </label>
-                  </div>
-                  
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="is_returnable"
-                      {...register('is_returnable')}
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded dark:border-gray-600 dark:bg-gray-700"
-                    />
-                    <label htmlFor="is_returnable" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
-                      Product is returnable
-                    </label>
-                  </div>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    {...register('is_featured')}
+                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  />
+                  <label className="ml-2 block text-sm text-gray-900">
+                    Featured product
+                  </label>
+                </div>
+
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    {...register('is_new')}
+                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  />
+                  <label className="ml-2 block text-sm text-gray-900">
+                    Mark as new
+                  </label>
                 </div>
               </div>
             </div>
@@ -1181,7 +838,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="btn-outline dark:border-gray-600 dark:text-gray-300"
+                className="btn-outline"
               >
                 Cancel
               </button>
@@ -1190,7 +847,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                 disabled={uploading}
                 className="btn-primary"
               >
-                {uploading ? 'Adding Product...' : 'Add Product'}
+                {uploading ? 'Adding...' : 'Add Product'}
               </button>
             </div>
           </form>
