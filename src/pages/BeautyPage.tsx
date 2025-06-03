@@ -162,7 +162,7 @@ const BeautyPage: React.FC = () => {
           
           <Link to="/beauty?category=makeup" className="relative overflow-hidden rounded-lg aspect-square group">
             <img 
-              src="https://images.pexels.com/photos/2693640/pexels-photo-2693640.jpeg" 
+              src="https://images.pexels.com/photos/4938502/pexels-photo-4938502.jpeg" 
               alt="Makeup" 
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
