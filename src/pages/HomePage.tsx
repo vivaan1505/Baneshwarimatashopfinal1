@@ -184,7 +184,7 @@ const HomePage: React.FC = () => {
                   <Link to="/beauty" className="block h-full">
                     <div className="relative overflow-hidden h-80">
                       <img 
-                        src="https://images.pexels.com/photos/2693640/pexels-photo-2693640.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                        src="https://images.pexels.com/photos/4938502/pexels-photo-4938502.jpeg" 
                         alt="Beauty" 
                         className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700"
                       />
