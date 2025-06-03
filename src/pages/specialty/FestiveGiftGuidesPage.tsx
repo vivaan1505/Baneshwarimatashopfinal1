@@ -731,5 +731,3 @@ const Calendar = ({ className }: { className?: string }) => (
 );
 
 export default FestiveGiftGuidesPage;
-
-export default FestiveGiftGuidesPage
