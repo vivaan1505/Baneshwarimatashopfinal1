@@ -63,11 +63,11 @@ const Footer: React.FC = () => {
           {/* Column 1: About */}
           <div>
             <h3 className="text-xl font-heading text-white mb-4">
-              {logo ? (
-                <img src={logo} alt="MinddShopp" className="h-8 w-auto" />
-              ) : (
-                "MinddShopp"
-              )}
+              <img 
+                src="/noBgColor.png" 
+                alt="MinddShopp" 
+                className="h-10 w-auto" 
+              />
             </h3>
             <p className="mb-4 text-sm leading-relaxed">
               Premium destination for footwear, clothing, jewelry, and beauty products. Discover our exclusive bridal boutique and seasonal collections.
@@ -265,9 +265,16 @@ const Footer: React.FC = () => {
       <div className="bg-gray-950 py-4 dark:bg-black">
         <div className="container-custom">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-gray-500 mb-4 md:mb-0">
+            <div className="flex items-center mb-4 md:mb-0">
+              <img 
+                src="/noBgColor.png" 
+                alt="MinddShopp" 
+                className="h-6 w-auto mr-2" 
+              />
+              <p className="text-sm text-gray-500">
               &copy; {new Date().getFullYear()} MinddShopp. All rights reserved.
-            </p>
+              </p>
+            </div>
             <div className="flex space-x-4 text-sm text-gray-500">
               <Link to="/privacy-policy" className="hover:text-gray-300 transition-colors">
                 Privacy

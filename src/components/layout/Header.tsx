@@ -158,16 +158,11 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" onClick={handleLogoClick} className="flex items-center">
-              {logo ? (
-                <img src={logo} alt="MinddShopp" className="h-10 w-auto" />
-              ) : (
-                <motion.span 
-                  whileHover={{ scale: 1.05 }}
-                  className="font-heading text-2xl font-bold text-primary-800 dark:text-primary-400"
-                >
-                  MinddShopp
-                </motion.span>
-              )}
+              <img 
+                src="/noBgColor.png" 
+                alt="MinddShopp" 
+                className="h-12 w-auto" 
+              />
             </Link>
           </div>
           

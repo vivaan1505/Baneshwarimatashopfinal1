@@ -64,8 +64,12 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
       <div className="relative h-full w-4/5 max-w-sm bg-white shadow-xl flex flex-col dark:bg-gray-800">
         {/* Header with close button */}
         <div className="flex items-center justify-between p-4 border-b dark:border-gray-700">
-          <Link to="/" className="font-heading text-xl font-bold text-primary-800 dark:text-primary-400" onClick={handleNavClick}>
-            MinddShopp
+          <Link to="/" onClick={handleNavClick}>
+            <img 
+              src="/noBgColor.png" 
+              alt="MinddShopp" 
+              className="h-10 w-auto" 
+            />
           </Link>
           <button 
             onClick={onClose}
