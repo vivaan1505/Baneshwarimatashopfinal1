@@ -296,6 +296,25 @@ const SUBCATEGORIES = {
     { id: 'laptop-bags', name: 'Laptop Bags', gender: 'unisex' },
     { id: 'wallets-purses', name: 'Wallets & Purses', gender: 'unisex' },
     { id: 'luggage', name: 'Luggage', gender: 'unisex' }
+  ],
+  // Bridal specific subcategories
+  bridal: [
+    { id: 'bridal-gowns', name: 'Bridal Gowns', gender: 'women' },
+    { id: 'bridal-veils', name: 'Bridal Veils', gender: 'women' },
+    { id: 'bridal-tiaras', name: 'Bridal Tiaras & Headpieces', gender: 'women' },
+    { id: 'bridal-jewelry', name: 'Bridal Jewelry Sets', gender: 'women' },
+    { id: 'bridal-earrings', name: 'Bridal Earrings', gender: 'women' },
+    { id: 'bridal-necklaces', name: 'Bridal Necklaces', gender: 'women' },
+    { id: 'bridal-bracelets', name: 'Bridal Bracelets', gender: 'women' },
+    { id: 'bridal-rings', name: 'Bridal Rings', gender: 'women' },
+    { id: 'bridal-hair-accessories', name: 'Bridal Hair Accessories', gender: 'women' },
+    { id: 'bridal-shoes', name: 'Bridal Shoes', gender: 'women' },
+    { id: 'bridal-clutches', name: 'Bridal Clutches', gender: 'women' },
+    { id: 'bridal-lingerie', name: 'Bridal Lingerie', gender: 'women' },
+    { id: 'bridesmaid-dresses', name: 'Bridesmaid Dresses', gender: 'women' },
+    { id: 'bridesmaid-accessories', name: 'Bridesmaid Accessories', gender: 'women' },
+    { id: 'groom-accessories', name: 'Groom Accessories', gender: 'men' },
+    { id: 'wedding-bands', name: 'Wedding Bands', gender: 'unisex' }
   ]
 };
 
@@ -371,13 +390,32 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
     
     // Initialize the product type based on the category
     setValue('type', mapCategoryToType(category));
+    
+    // For bridal category, set gender to women by default
+    if (category === 'bridal') {
+      setValue('gender', 'women');
+    }
+    
+    // Add the category tag for special categories
+    if (isSpecialCategory) {
+      setValue('tags', [category]);
+    }
   }, [category]);
 
   useEffect(() => {
     // Update subcategories when type or gender changes
     const type = selectedType;
     if (type) {
-      const predefinedSubcats = SUBCATEGORIES[type as keyof typeof SUBCATEGORIES] || [];
+      let predefinedSubcats: any[] = [];
+      
+      // For bridal category, use bridal-specific subcategories regardless of the product type
+      if (category === 'bridal') {
+        predefinedSubcats = SUBCATEGORIES['bridal'] || [];
+      } else {
+        // For other categories, use the subcategories for the selected product type
+        predefinedSubcats = SUBCATEGORIES[type as keyof typeof SUBCATEGORIES] || [];
+      }
+      
       const dbSubcats = dbSubcategories.filter(s => s.parent_category === type);
       
       const mergedSubcats = [...dbSubcats];
@@ -409,7 +447,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
     } else {
       setAvailableSubcategories([]);
     }
-  }, [selectedType, dbSubcategories, selectedGender]);
+  }, [selectedType, dbSubcategories, selectedGender, category]);
 
   const fetchBrands = async () => {
     try {
@@ -640,6 +678,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                   <select
                     {...register('gender', { required: 'Gender is required' })}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                    disabled={category === 'bridal'} // Disable for bridal category
                   >
                     <option value="">Select Gender</option>
                     <option value="men">Men</option>
