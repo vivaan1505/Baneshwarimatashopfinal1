@@ -96,7 +96,7 @@ SELECT
 FROM generate_series(1, 100)
 ON CONFLICT (slug) DO NOTHING;
 
--- Insert Christmas collection products
+-- Insert Festive collection products
 INSERT INTO products (
     name, slug, category_id, brand_id, description,
     price, stock_quantity, is_visible, is_featured, is_new,
@@ -143,7 +143,7 @@ FROM collections c
 CROSS JOIN products p
 WHERE 
     (c.slug = 'bridal-collection' AND p.subcategory = 'bridal') OR
-    (c.slug = 'christmas-collection' AND p.subcategory = 'christmas')
+    (c.slug = 'festive-collection' AND p.subcategory = 'christmas')
 ON CONFLICT DO NOTHING;
 
 -- Add product images with real URLs
