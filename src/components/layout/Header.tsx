@@ -132,7 +132,6 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
       <div className="container-custom">
         {/* Top announcement bar */}
         
-        
         {/* Main header */}
         <div className="flex items-center justify-between py-4">
           {/* Mobile menu toggle */}
