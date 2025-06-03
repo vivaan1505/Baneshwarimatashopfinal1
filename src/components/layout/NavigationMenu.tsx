@@ -176,18 +176,6 @@ const NavigationMenu: React.FC = () => {
           Coupons
         </Link>
       </motion.div>
-      
-      <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
-        <Link 
-          to="/size-chart" 
-          onClick={handleNavClick}
-          className="nav-link flex items-center"
-        >
-          <Ruler className="mr-1 h-4 w-4" />
-          Size Charts
-        </Link>
-      </motion.div>
-      
       <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
         <Link 
           to="/blog" 

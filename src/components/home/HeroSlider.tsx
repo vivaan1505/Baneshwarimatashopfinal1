@@ -135,8 +135,9 @@ const HeroSlider: React.FC = () => {
                 <div className={`absolute inset-0 bg-gradient-to-r from-${slide.accent}-900/90 to-${slide.accent}-800/80 dark:from-${slide.accent}-900/95 dark:to-${slide.accent}-800/85`}></div>
                 <LazyLoadImage 
                   src={slide.image_url} 
-                  alt={slide.title} 
-                  className="w-full h-full object-cover object-center"
+                  alt={slide.title}
+                  className="w-full h-full object-cover"
+                  wrapperClassName="w-full h-full"
                   effect="blur"
                   threshold={300}
                   placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
