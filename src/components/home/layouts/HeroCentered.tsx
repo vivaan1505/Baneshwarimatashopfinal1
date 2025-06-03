@@ -39,15 +39,9 @@ const HeroCentered: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link 
                 to="/new-arrivals" 
-                className="btn-accent text-base"
+                className="btn-primary"
               >
-                New Arrivals
-              </Link>
-              <Link 
-                to="/collections" 
-                className="btn bg-white text-primary-900 hover:bg-gray-100 text-base"
-              >
-                Shop Collections
+                Browse Products
               </Link>
             </div>
             
