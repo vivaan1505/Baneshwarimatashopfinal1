@@ -6,7 +6,6 @@ import { format } from 'date-fns';
 import { toast } from 'react-hot-toast';
 import { updateMetaTags, addStructuredData, generateArticleSchema, generateBreadcrumbSchema } from '../utils/seo';
 import { AdBanner } from '../components/common/AdBanner';
-import { AdBanner } from '../components/common/AdBanner';
 
 interface BlogPostData {
   id: string;
