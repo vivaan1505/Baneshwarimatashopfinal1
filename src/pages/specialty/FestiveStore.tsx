@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Gift, Star, Clock, Truck, ArrowRight, Heart, ShoppingBag } from 'lucide-react';
-import LazyLoadImage from 'react-lazy-load-image-component';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { supabase } from '../../lib/supabase';
 import { toast } from 'react-hot-toast';
