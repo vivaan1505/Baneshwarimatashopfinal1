@@ -64,7 +64,7 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-xl font-heading text-white mb-4">
               <img 
-                src="/noBgColor.png" 
+                src="/noBgWhite.png" 
                 alt="MinddShopp" 
                 className="h-10 w-auto" 
               />
@@ -267,7 +267,7 @@ const Footer: React.FC = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
               <img 
-                src="/noBgColor.png" 
+                src="/noBgWhite.png" 
                 alt="MinddShopp" 
                 className="h-6 w-auto mr-2" 
               />
