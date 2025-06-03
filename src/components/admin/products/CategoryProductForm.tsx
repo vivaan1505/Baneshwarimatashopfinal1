@@ -369,6 +369,35 @@ const SUBCATEGORIES = {
     { id: 'bridal-mehndi-henna-kits', name: 'Bridal Mehndi & Henna Kits', gender: 'women' },
     { id: 'bridal-lingerie-undergarments', name: 'Bridal Lingerie & Undergarments', gender: 'women' },
     { id: 'bridal-gift-sets-packaging', name: 'Bridal Gift Sets & Packaging', gender: 'women' }
+  ],
+  christmas: [
+    { id: 'christmas-clothing', name: 'Christmas Clothing', gender: 'unisex' },
+    { id: 'christmas-accessories', name: 'Christmas Accessories', gender: 'unisex' },
+    { id: 'christmas-jewelry', name: 'Christmas Jewelry', gender: 'unisex' },
+    { id: 'christmas-gift-sets', name: 'Christmas Gift Sets', gender: 'unisex' },
+    { id: 'christmas-beauty', name: 'Christmas Beauty Products', gender: 'unisex' },
+    { id: 'christmas-home-decor', name: 'Christmas Home Decor', gender: 'unisex' },
+    { id: 'christmas-ornaments', name: 'Christmas Ornaments', gender: 'unisex' },
+    { id: 'christmas-stockings', name: 'Christmas Stockings', gender: 'unisex' },
+    { id: 'christmas-wreaths', name: 'Christmas Wreaths', gender: 'unisex' },
+    { id: 'christmas-lights', name: 'Christmas Lights', gender: 'unisex' },
+    { id: 'christmas-candles', name: 'Christmas Candles', gender: 'unisex' },
+    { id: 'christmas-tableware', name: 'Christmas Tableware', gender: 'unisex' },
+    { id: 'christmas-gift-wrap', name: 'Christmas Gift Wrap', gender: 'unisex' },
+    { id: 'christmas-cards', name: 'Christmas Cards', gender: 'unisex' },
+    { id: 'christmas-food-treats', name: 'Christmas Food & Treats', gender: 'unisex' }
+  ],
+  sale: [
+    { id: 'sale-clothing', name: 'Sale Clothing', gender: 'unisex' },
+    { id: 'sale-footwear', name: 'Sale Footwear', gender: 'unisex' },
+    { id: 'sale-jewelry', name: 'Sale Jewelry', gender: 'unisex' },
+    { id: 'sale-beauty', name: 'Sale Beauty Products', gender: 'unisex' },
+    { id: 'sale-accessories', name: 'Sale Accessories', gender: 'unisex' },
+    { id: 'sale-bags', name: 'Sale Bags', gender: 'unisex' },
+    { id: 'clearance', name: 'Clearance Items', gender: 'unisex' },
+    { id: 'last-chance', name: 'Last Chance Items', gender: 'unisex' },
+    { id: 'limited-time-offers', name: 'Limited Time Offers', gender: 'unisex' },
+    { id: 'bundle-deals', name: 'Bundle Deals', gender: 'unisex' }
   ]
 };
 
@@ -474,12 +503,44 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
     }
   }, [selectedType, dbSubcategories, selectedGender]);
 
+  // Special handling for bridal category
+  useEffect(() => {
+    if (category === 'bridal') {
+      // Set type to clothing by default for bridal
+      setValue('type', 'clothing');
+      
+      // Use bridal subcategories
+      const bridalSubcats = SUBCATEGORIES['bridal'];
+      setAvailableSubcategories(bridalSubcats);
+      
+      // Set gender to women by default for bridal
+      setValue('gender', 'women');
+      
+      // Add bridal tag automatically
+      setValue('tags', ['bridal']);
+    } else if (category === 'christmas') {
+      // Set christmas subcategories
+      const christmasSubcats = SUBCATEGORIES['christmas'];
+      setAvailableSubcategories(christmasSubcats);
+      
+      // Add christmas tag automatically
+      setValue('tags', ['christmas']);
+    } else if (category === 'sale') {
+      // Set sale subcategories
+      const saleSubcats = SUBCATEGORIES['sale'];
+      setAvailableSubcategories(saleSubcats);
+      
+      // Add sale tag automatically
+      setValue('tags', ['sale']);
+    }
+  }, [category, setValue]);
+
   const fetchBrands = async () => {
     try {
       setLoading(true);
       let query = supabase
         .from('brands')
-        .select('*')
+        .select('id, name, slug, category')
         .eq('is_active', true)
         .order('name');
 
@@ -765,6 +826,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                   <select
                     {...register('gender', { required: 'Gender is required' })}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    disabled={category === 'bridal'} // Disable for bridal as it's always women
                   >
                     <option value="">Select Gender</option>
                     <option value="men">Men</option>
