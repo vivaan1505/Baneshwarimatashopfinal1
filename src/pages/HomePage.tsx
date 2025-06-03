@@ -541,4 +541,264 @@ const HomePage: React.FC = () => {
                   />
                   <div className="p-6">
                     <h3 className="text-xl font-heading font-medium mb-2 dark:text-white">Sustainable Fashion</h3>
-                    <p className="text-gray-600 mb-4 dark:text-gray-300">Eco-friendly options that
+                    <p className="text-gray-600 mb-4 dark:text-gray-300">Eco-friendly options that don't compromise on style</p>
+                    <Link to="/blog/sustainable-fashion" className="text-primary-600 hover:text-primary-700 flex items-center dark:text-primary-400 dark:hover:text-primary-300">
+                      Read More
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Link>
+                  </div>
+                </div>
+                
+                <div className="bg-white rounded-xl overflow-hidden shadow-md dark:bg-gray-800">
+                  <img 
+                    src="https://images.pexels.com/photos/3785147/pexels-photo-3785147.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+                    alt="Skincare Essentials" 
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-heading font-medium mb-2 dark:text-white">Skincare Essentials</h3>
+                    <p className="text-gray-600 mb-4 dark:text-gray-300">The must-have products for your beauty routine</p>
+                    <Link to="/blog/skincare-essentials" className="text-primary-600 hover:text-primary-700 flex items-center dark:text-primary-400 dark:hover:text-primary-300">
+                      Read More
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Testimonials Section */}
+          <section className="py-20 dark:bg-gray-800">
+            <div className="container-custom">
+              <div className="text-center mb-12">
+                <h2 className="font-heading text-3xl md:text-4xl font-medium mb-4 dark:text-white">What Our Customers Say</h2>
+                <p className="text-gray-600 max-w-2xl mx-auto dark:text-gray-300">
+                  Hear from our satisfied customers about their shopping experience
+                </p>
+              </div>
+              
+              <div className="relative">
+                <Swiper
+                  modules={[Navigation, Pagination, Autoplay]}
+                  navigation={{
+                    nextEl: '.testimonial-next',
+                    prevEl: '.testimonial-prev',
+                  }}
+                  pagination={{ 
+                    clickable: true,
+                    el: '.testimonial-pagination'
+                  }}
+                  autoplay={{
+                    delay: 5000,
+                    disableOnInteraction: false,
+                  }}
+                  slidesPerView={1}
+                  spaceBetween={20}
+                  breakpoints={{
+                    768: {
+                      slidesPerView: 2,
+                    },
+                    1024: {
+                      slidesPerView: 3,
+                    },
+                  }}
+                  className="py-4"
+                >
+                  {[
+                    {
+                      name: "Emily R.",
+                      role: "Loyal Customer",
+                      image: "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                      quote: "The quality of the products exceeded my expectations. The attention to detail and craftsmanship is evident in every piece I've purchased."
+                    },
+                    {
+                      name: "Michael T.",
+                      role: "Verified Buyer",
+                      image: "https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                      quote: "The customer service is impeccable. When I had an issue with my order, the team resolved it immediately and went above and beyond to ensure my satisfaction."
+                    },
+                    {
+                      name: "Sarah J.",
+                      role: "Fashion Enthusiast",
+                      image: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                      quote: "I love the curated collections and how easy it is to find exactly what I'm looking for. The website is intuitive and the shipping is always fast."
+                    },
+                    {
+                      name: "David L.",
+                      role: "Regular Shopper",
+                      image: "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                      quote: "The selection of products is amazing. I always find unique pieces that I can't find anywhere else. The quality is consistently excellent."
+                    }
+                  ].map((testimonial, index) => (
+                    <SwiperSlide key={index}>
+                      <div className="bg-white p-6 rounded-xl shadow-sm h-full dark:bg-gray-800">
+                        <div className="flex text-yellow-400 mb-4">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="w-5 h-5 fill-current" />
+                          ))}
+                        </div>
+                        <p className="text-gray-600 mb-6 dark:text-gray-300">
+                          "{testimonial.quote}"
+                        </p>
+                        <div className="flex items-center">
+                          <img 
+                            src={testimonial.image} 
+                            alt={testimonial.name} 
+                            className="w-10 h-10 rounded-full object-cover mr-3"
+                          />
+                          <div>
+                            <h4 className="font-medium dark:text-white">{testimonial.name}</h4>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{testimonial.role}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                
+                <button className="testimonial-prev absolute top-1/2 -left-4 z-10 transform -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600">
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button className="testimonial-next absolute top-1/2 -right-4 z-10 transform -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600">
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+                
+                <div className="mt-6 flex justify-center">
+                  <div className="testimonial-pagination"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Instagram-style Gallery */}
+          <section className="py-20 bg-gray-50 dark:bg-gray-900">
+            <div className="container-custom">
+              <div className="text-center mb-12">
+                <h2 className="font-heading text-3xl md:text-4xl font-medium mb-4 dark:text-white">Follow Our Style</h2>
+                <p className="text-gray-600 max-w-2xl mx-auto dark:text-gray-300">
+                  Get inspired by our latest collections and styling ideas on Instagram
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {[
+                  "https://images.pexels.com/photos/1619801/pexels-photo-1619801.jpeg?auto=compress&cs=tinysrgb&w=600",
+                  "https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=600",
+                  "https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=600",
+                  "https://images.pexels.com/photos/3785147/pexels-photo-3785147.jpeg?auto=compress&cs=tinysrgb&w=600",
+                  "https://images.pexels.com/photos/8891959/pexels-photo-8891959.jpeg?auto=compress&cs=tinysrgb&w=600",
+                  "https://images.pexels.com/photos/5709665/pexels-photo-5709665.jpeg?auto=compress&cs=tinysrgb&w=600"
+                ].map((img, index) => (
+                  <a 
+                    key={index} 
+                    href="#" 
+                    className="group relative aspect-square overflow-hidden"
+                  >
+                    <img 
+                      src={img} 
+                      alt={`Instagram post ${index + 1}`} 
+                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <span className="text-white font-medium">@minddshopp</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+              
+              <div className="text-center mt-8">
+                <a 
+                  href="https://instagram.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium dark:text-primary-400 dark:hover:text-primary-300"
+                >
+                  Follow us on Instagram
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </a>
+              </div>
+            </div>
+          </section>
+
+          {/* Features Section */}
+          <section className="py-16 dark:bg-gray-800">
+            <div className="container-custom">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mb-4 dark:bg-primary-900/30">
+                    <ShoppingBag className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                  </div>
+                  <h3 className="text-lg font-medium mb-2 dark:text-white">Free Shipping</h3>
+                  <p className="text-gray-600 dark:text-gray-300">On all orders over $75</p>
+                </div>
+                
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mb-4 dark:bg-primary-900/30">
+                    <svg className="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-medium mb-2 dark:text-white">Authentic Products</h3>
+                  <p className="text-gray-600 dark:text-gray-300">100% genuine items</p>
+                </div>
+                
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mb-4 dark:bg-primary-900/30">
+                    <Heart className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                  </div>
+                  <h3 className="text-lg font-medium mb-2 dark:text-white">30-Day Returns</h3>
+                  <p className="text-gray-600 dark:text-gray-300">Hassle-free returns</p>
+                </div>
+                
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mb-4 dark:bg-primary-900/30">
+                    <svg className="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-medium mb-2 dark:text-white">Secure Payment</h3>
+                  <p className="text-gray-600 dark:text-gray-300">Safe & encrypted</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Newsletter Section */}
+          <section className="py-20 bg-gradient-to-r from-primary-900 to-primary-800 text-white dark:from-primary-900/90 dark:to-primary-800/90">
+            <div className="container-custom">
+              <div className="max-w-3xl mx-auto text-center">
+                <h2 className="text-3xl font-heading mb-4">Join Our Community</h2>
+                <p className="mb-8 text-primary-100">
+                  Subscribe to our newsletter for exclusive offers, style tips, and early access to new collections.
+                </p>
+                
+                <form className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
+                  <input
+                    type="email"
+                    placeholder="Your email address"
+                    className="flex-grow px-4 py-3 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-accent-500"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    className="bg-accent-600 hover:bg-accent-700 px-6 py-3 rounded-md font-medium transition-colors"
+                  >
+                    Subscribe
+                  </button>
+                </form>
+                
+                <p className="mt-4 text-xs text-primary-200">
+                  By subscribing, you agree to our privacy policy and consent to receive marketing communications.
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+      );
+  }
+};
+
+export default HomePage;
+
+export default HomePage
