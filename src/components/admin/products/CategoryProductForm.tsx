@@ -336,68 +336,67 @@ const SUBCATEGORIES = {
     { id: 'engagement-dresses', name: 'Engagement Dresses', gender: 'women' },
     { id: 'mehndi-haldi-dresses', name: 'Mehndi / Haldi Dresses', gender: 'women' },
     { id: 'sangeet-dresses', name: 'Sangeet Dresses', gender: 'women' },
+    { id: 'bridal-lehengas', name: 'Bridal Lehengas', gender: 'women' },
+    { id: 'bridal-sarees', name: 'Bridal Sarees', gender: 'women' },
+    { id: 'bridal-gowns', name: 'Bridal Gowns', gender: 'women' },
+    { id: 'bridal-jumpsuits', name: 'Bridal Jumpsuits', gender: 'women' },
+    { id: 'bridal-separates', name: 'Bridal Separates', gender: 'women' },
+    { id: 'bridal-lingerie', name: 'Bridal Lingerie', gender: 'women' },
+    { id: 'bridal-robes', name: 'Bridal Robes', gender: 'women' },
     
     // Bridal Jewelry
-    { id: 'bridal-necklaces-sets', name: 'Necklaces & Sets', gender: 'women' },
-    { id: 'bridal-earrings', name: 'Earrings', gender: 'women' },
-    { id: 'bridal-bangles-bracelets', name: 'Bangles & Bracelets', gender: 'women' },
+    { id: 'bridal-necklaces-sets', name: 'Bridal Necklaces & Sets', gender: 'women' },
+    { id: 'bridal-earrings', name: 'Bridal Earrings', gender: 'women' },
+    { id: 'bridal-bangles-bracelets', name: 'Bridal Bangles & Bracelets', gender: 'women' },
     { id: 'maang-tikka-headpieces', name: 'Maang Tikka & Headpieces', gender: 'women' },
     { id: 'nose-rings-nath', name: 'Nose Rings & Nath', gender: 'women' },
     { id: 'waist-belts-kamarbandh', name: 'Waist Belts (Kamarbandh)', gender: 'women' },
+    { id: 'bridal-anklets-payal', name: 'Bridal Anklets (Payal)', gender: 'women' },
+    { id: 'bridal-rings', name: 'Bridal Rings', gender: 'women' },
+    { id: 'wedding-rings', name: 'Wedding Rings', gender: 'unisex' },
+    { id: 'engagement-rings', name: 'Engagement Rings', gender: 'women' },
+    { id: 'bridal-hair-jewelry', name: 'Bridal Hair Jewelry', gender: 'women' },
     
     // Bridal Footwear
-    { id: 'bridal-heels-sandals', name: 'Heels & Sandals', gender: 'women' },
-    { id: 'mojaris-juttis', name: 'Mojaris & Juttis', gender: 'women' },
+    { id: 'bridal-heels-sandals', name: 'Bridal Heels & Sandals', gender: 'women' },
+    { id: 'bridal-stilettos', name: 'Bridal Stilettos', gender: 'women' },
+    { id: 'bridal-wedges', name: 'Bridal Wedges', gender: 'women' },
     { id: 'bridal-flats', name: 'Bridal Flats', gender: 'women' },
+    { id: 'mojaris-juttis', name: 'Mojaris & Juttis', gender: 'women' },
+    { id: 'bridal-sandals', name: 'Bridal Sandals', gender: 'women' },
+    { id: 'bridal-pumps', name: 'Bridal Pumps', gender: 'women' },
+    { id: 'bridal-boots', name: 'Bridal Boots', gender: 'women' },
     
     // Bridal Accessories
     { id: 'veils-dupattas', name: 'Veils & Dupattas', gender: 'women' },
-    { id: 'clutches-potlis', name: 'Clutches & Potlis', gender: 'women' },
-    { id: 'bridal-hair-accessories', name: 'Hair Accessories (Pins, Combs)', gender: 'women' },
+    { id: 'bridal-clutches-potlis', name: 'Bridal Clutches & Potlis', gender: 'women' },
+    { id: 'bridal-hair-accessories', name: 'Bridal Hair Accessories', gender: 'women' },
     { id: 'bridal-gloves', name: 'Bridal Gloves', gender: 'women' },
+    { id: 'bridal-belts-sashes', name: 'Bridal Belts & Sashes', gender: 'women' },
+    { id: 'bridal-garters', name: 'Bridal Garters', gender: 'women' },
+    { id: 'bridal-tiaras-crowns', name: 'Bridal Tiaras & Crowns', gender: 'women' },
+    { id: 'bridal-hair-pins', name: 'Bridal Hair Pins', gender: 'women' },
+    { id: 'bridal-hair-combs', name: 'Bridal Hair Combs', gender: 'women' },
+    { id: 'bridal-hair-vines', name: 'Bridal Hair Vines', gender: 'women' },
     
-    // Bridal Makeup Kits
-    { id: 'bridal-foundation-concealers', name: 'Foundation & Concealers', gender: 'women' },
-    { id: 'bridal-lipsticks-lip-gloss', name: 'Lipsticks & Lip Gloss', gender: 'women' },
-    { id: 'bridal-eye-makeup', name: 'Eye Makeup (Kajal, Eyeliner, Mascara)', gender: 'women' },
+    // Bridal Makeup & Beauty
+    { id: 'bridal-makeup-kits', name: 'Bridal Makeup Kits', gender: 'women' },
+    { id: 'bridal-foundation-concealers', name: 'Bridal Foundation & Concealers', gender: 'women' },
+    { id: 'bridal-lipsticks-lip-gloss', name: 'Bridal Lipsticks & Lip Gloss', gender: 'women' },
+    { id: 'bridal-eye-makeup', name: 'Bridal Eye Makeup', gender: 'women' },
+    { id: 'bridal-skincare', name: 'Bridal Skincare', gender: 'women' },
+    { id: 'bridal-fragrances', name: 'Bridal Fragrances', gender: 'women' },
+    { id: 'bridal-nail-polish', name: 'Bridal Nail Polish', gender: 'women' },
     
     // Bridal Hair Care
-    { id: 'bridal-hair-oils-serums', name: 'Hair Oils & Serums', gender: 'women' },
+    { id: 'bridal-hair-oils-serums', name: 'Bridal Hair Oils & Serums', gender: 'women' },
     { id: 'hair-extensions-wigs', name: 'Hair Extensions & Wigs', gender: 'women' },
     
     // Other Bridal Categories
     { id: 'bridal-mehndi-henna-kits', name: 'Bridal Mehndi & Henna Kits', gender: 'women' },
-    { id: 'bridal-lingerie-undergarments', name: 'Bridal Lingerie & Undergarments', gender: 'women' },
-    { id: 'bridal-gift-sets-packaging', name: 'Bridal Gift Sets & Packaging', gender: 'women' }
-  ],
-  christmas: [
-    { id: 'christmas-clothing', name: 'Christmas Clothing', gender: 'unisex' },
-    { id: 'christmas-accessories', name: 'Christmas Accessories', gender: 'unisex' },
-    { id: 'christmas-jewelry', name: 'Christmas Jewelry', gender: 'unisex' },
-    { id: 'christmas-gift-sets', name: 'Christmas Gift Sets', gender: 'unisex' },
-    { id: 'christmas-beauty', name: 'Christmas Beauty Products', gender: 'unisex' },
-    { id: 'christmas-home-decor', name: 'Christmas Home Decor', gender: 'unisex' },
-    { id: 'christmas-ornaments', name: 'Christmas Ornaments', gender: 'unisex' },
-    { id: 'christmas-stockings', name: 'Christmas Stockings', gender: 'unisex' },
-    { id: 'christmas-wreaths', name: 'Christmas Wreaths', gender: 'unisex' },
-    { id: 'christmas-lights', name: 'Christmas Lights', gender: 'unisex' },
-    { id: 'christmas-candles', name: 'Christmas Candles', gender: 'unisex' },
-    { id: 'christmas-tableware', name: 'Christmas Tableware', gender: 'unisex' },
-    { id: 'christmas-gift-wrap', name: 'Christmas Gift Wrap', gender: 'unisex' },
-    { id: 'christmas-cards', name: 'Christmas Cards', gender: 'unisex' },
-    { id: 'christmas-food-treats', name: 'Christmas Food & Treats', gender: 'unisex' }
-  ],
-  sale: [
-    { id: 'sale-clothing', name: 'Sale Clothing', gender: 'unisex' },
-    { id: 'sale-footwear', name: 'Sale Footwear', gender: 'unisex' },
-    { id: 'sale-jewelry', name: 'Sale Jewelry', gender: 'unisex' },
-    { id: 'sale-beauty', name: 'Sale Beauty Products', gender: 'unisex' },
-    { id: 'sale-accessories', name: 'Sale Accessories', gender: 'unisex' },
-    { id: 'sale-bags', name: 'Sale Bags', gender: 'unisex' },
-    { id: 'clearance', name: 'Clearance Items', gender: 'unisex' },
-    { id: 'last-chance', name: 'Last Chance Items', gender: 'unisex' },
-    { id: 'limited-time-offers', name: 'Limited Time Offers', gender: 'unisex' },
-    { id: 'bundle-deals', name: 'Bundle Deals', gender: 'unisex' }
+    { id: 'bridal-gift-sets-packaging', name: 'Bridal Gift Sets & Packaging', gender: 'women' },
+    { id: 'bridal-shower-accessories', name: 'Bridal Shower Accessories', gender: 'women' },
+    { id: 'bridal-party-gifts', name: 'Bridal Party Gifts', gender: 'women' }
   ]
 };
 
@@ -411,10 +410,10 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
   const [images, setImages] = useState<File[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(false);
-  const [dbSubcategories, setDbSubcategories] = useState<Subcategory[]>([]);
+  const [dbSubcategories, setDbSubcategories] = useState<{id: string, name: string}[]>([]);
   const [availableSubcategories, setAvailableSubcategories] = useState<{id: string, name: string}[]>([]);
   
-  const { register, handleSubmit, watch, setValue, formState: { errors }, trigger, reset } = useForm<ProductFormData>({
+  const { register, handleSubmit, watch, setValue, reset, formState: { errors }, trigger, reset } = useForm<ProductFormData>({
     defaultValues: {
       name: '',
       price: 0,
@@ -467,6 +466,22 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
   }, [category, isOpen]);
 
   useEffect(() => {
+    // Set default values based on category
+    if (category === 'bridal') {
+      setValue('gender', 'women');
+      setValue('tags', ['bridal']);
+      
+      // For bridal, we want to show bridal-specific subcategories
+      const bridalSubcategories = SUBCATEGORIES.bridal || [];
+      setAvailableSubcategories(bridalSubcategories);
+    } else if (category === 'christmas') {
+      setValue('tags', ['christmas']);
+    } else if (category === 'sale') {
+      setValue('tags', ['sale']);
+    }
+  }, [category, setValue]);
+
+  useEffect(() => {
     const type = selectedType;
     if (type && SUBCATEGORIES[type]) {
       const predefinedSubcats = SUBCATEGORIES[type];
@@ -506,41 +521,87 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
   // Special handling for bridal category
   useEffect(() => {
     if (category === 'bridal') {
-      // Set type to clothing by default for bridal
-      setValue('type', 'clothing');
+      // Get bridal subcategories based on the selected type
+      let bridalSubcats: any[] = [];
       
-      // Use bridal subcategories
-      const bridalSubcats = SUBCATEGORIES['bridal'];
+      if (selectedType === 'clothing') {
+        bridalSubcats = SUBCATEGORIES.bridal.filter(subcat => 
+          subcat.id.includes('dress') || 
+          subcat.id.includes('gown') || 
+          subcat.id.includes('lehenga') || 
+          subcat.id.includes('saree') || 
+          subcat.id.includes('jumpsuit') || 
+          subcat.id.includes('separate') || 
+          subcat.id.includes('lingerie') || 
+          subcat.id.includes('robe')
+        );
+      } else if (selectedType === 'jewelry') {
+        bridalSubcats = SUBCATEGORIES.bridal.filter(subcat => 
+          subcat.id.includes('necklace') || 
+          subcat.id.includes('earring') || 
+          subcat.id.includes('bracelet') || 
+          subcat.id.includes('tikka') || 
+          subcat.id.includes('ring') || 
+          subcat.id.includes('anklet') || 
+          subcat.id.includes('jewelry')
+        );
+      } else if (selectedType === 'footwear') {
+        bridalSubcats = SUBCATEGORIES.bridal.filter(subcat => 
+          subcat.id.includes('heel') || 
+          subcat.id.includes('sandal') || 
+          subcat.id.includes('flat') || 
+          subcat.id.includes('boot') || 
+          subcat.id.includes('mojari') || 
+          subcat.id.includes('jutti') || 
+          subcat.id.includes('pump')
+        );
+      } else if (selectedType === 'beauty') {
+        bridalSubcats = SUBCATEGORIES.bridal.filter(subcat => 
+          subcat.id.includes('makeup') || 
+          subcat.id.includes('skincare') || 
+          subcat.id.includes('fragrance') || 
+          subcat.id.includes('nail') || 
+          subcat.id.includes('hair-oil') || 
+          subcat.id.includes('mehndi') || 
+          subcat.id.includes('henna')
+        );
+      } else if (selectedType === 'accessories') {
+        bridalSubcats = SUBCATEGORIES.bridal.filter(subcat => 
+          subcat.id.includes('veil') || 
+          subcat.id.includes('dupatta') || 
+          subcat.id.includes('hair-accessory') || 
+          subcat.id.includes('glove') || 
+          subcat.id.includes('belt') || 
+          subcat.id.includes('sash') || 
+          subcat.id.includes('garter') || 
+          subcat.id.includes('tiara') || 
+          subcat.id.includes('crown') || 
+          subcat.id.includes('pin') || 
+          subcat.id.includes('comb') || 
+          subcat.id.includes('vine')
+        );
+      } else if (selectedType === 'bags') {
+        bridalSubcats = SUBCATEGORIES.bridal.filter(subcat => 
+          subcat.id.includes('clutch') || 
+          subcat.id.includes('potli')
+        );
+      }
+      
+      // If no specific bridal subcategories found for this type, show all bridal subcategories
+      if (bridalSubcats.length === 0) {
+        bridalSubcats = SUBCATEGORIES.bridal;
+      }
+      
       setAvailableSubcategories(bridalSubcats);
-      
-      // Set gender to women by default for bridal
-      setValue('gender', 'women');
-      
-      // Add bridal tag automatically
-      setValue('tags', ['bridal']);
-    } else if (category === 'christmas') {
-      // Set christmas subcategories
-      const christmasSubcats = SUBCATEGORIES['christmas'];
-      setAvailableSubcategories(christmasSubcats);
-      
-      // Add christmas tag automatically
-      setValue('tags', ['christmas']);
-    } else if (category === 'sale') {
-      // Set sale subcategories
-      const saleSubcats = SUBCATEGORIES['sale'];
-      setAvailableSubcategories(saleSubcats);
-      
-      // Add sale tag automatically
-      setValue('tags', ['sale']);
     }
-  }, [category, setValue]);
+  }, [category, selectedType]);
 
   const fetchBrands = async () => {
     try {
       setLoading(true);
       let query = supabase
         .from('brands')
-        .select('id, name, slug, category')
+        .select('*')
         .eq('is_active', true)
         .order('name');
 
@@ -572,7 +633,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
       setDbSubcategories(data || []);
     } catch (error) {
       console.error('Error fetching subcategories:', error);
-      toast.error('Failed to load subcategories');
     }
   };
 
