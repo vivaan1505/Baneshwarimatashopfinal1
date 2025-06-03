@@ -12,7 +12,6 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import HeroSlider from '../components/home/HeroSlider';
 import { AdBanner } from '../components/common/AdBanner';
-import { AdBanner } from '../components/common/AdBanner';
 
 // Import Swiper styles
 import 'swiper/css';
