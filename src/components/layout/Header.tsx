@@ -130,16 +130,6 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
       )}
     >
       <div className="container-custom">
-        {/* Top announcement bar */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="bg-primary-800 text-white text-center py-2 text-sm dark:bg-primary-900"
-        >
-          Free shipping on all orders over $75 | Easy returns within 30 days
-        </motion.div>
-        
         {/* Main header */}
         <div className="flex items-center justify-between py-4">
           {/* Mobile menu toggle */}
@@ -335,6 +325,16 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
             </motion.button>
           </div>
         </div>
+        
+        {/* Top announcement bar */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="bg-primary-800 text-white text-center py-2 text-sm dark:bg-primary-900"
+        >
+          Free shipping on all orders over $75 | Easy returns within 30 days
+        </motion.div>
       </div>
       
       {/* Search overlay */}
