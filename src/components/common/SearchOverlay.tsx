@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { imageOptimizer } from '../../utils/imageOptimizer';
 
 interface SearchResult {
   id: string;
@@ -24,10 +25,15 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      // Focus the input when overlay opens
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
     } else {
       document.body.style.overflow = '';
       setQuery('');
@@ -127,7 +133,7 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
           name: product.name,
           type: 'product' as const,
           url: `/product/${product.id}`,
-          image: product.images?.[0]?.url,
+          image: product.images?.[0]?.url ? imageOptimizer.thumbnail(product.images[0].url) : undefined,
           description: product.description?.substring(0, 100) + (product.description?.length > 100 ? '...' : '')
         })),
         ...(blogPosts || []).map(post => ({
@@ -135,7 +141,7 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
           title: post.title,
           type: 'blog' as const,
           url: `/blog/${post.slug}`,
-          image: post.featured_image,
+          image: post.featured_image ? imageOptimizer.thumbnail(post.featured_image) : undefined,
           description: post.excerpt?.substring(0, 100) + (post.excerpt?.length > 100 ? '...' : '')
         })),
         ...(pages || []).map(page => ({
@@ -150,7 +156,7 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
           name: brand.name,
           type: 'brand' as const,
           url: `/brand/${brand.slug}`,
-          image: brand.logo_url,
+          image: brand.logo_url ? imageOptimizer.thumbnail(brand.logo_url) : undefined,
           description: brand.description?.substring(0, 100) + (brand.description?.length > 100 ? '...' : '')
         }))
       ];
@@ -194,23 +200,32 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-start justify-center pt-20">
+    <div 
+      className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-start justify-center pt-20"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="search-title"
+    >
       <div className="bg-white dark:bg-gray-800 w-full max-w-3xl rounded-lg shadow-xl overflow-hidden">
         <div className="p-4 border-b dark:border-gray-700">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" aria-hidden="true" />
             <input
+              ref={inputRef}
               type="text"
+              id="search-input"
               placeholder="Search for products, articles, brands and more..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
               className="w-full pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-              autoFocus
+              aria-label="Search"
+              autoComplete="off"
             />
             <button 
               onClick={onClose}
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+              aria-label="Close search"
             >
               <X size={20} />
             </button>
@@ -230,6 +245,10 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
                   key={`${result.type}-${result.id}`}
                   className={`p-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer ${selectedIndex === index ? 'bg-gray-50 dark:bg-gray-700' : ''}`}
                   onClick={() => handleResultClick(result)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleResultClick(result)}
+                  tabIndex={0}
+                  role="option"
+                  aria-selected={selectedIndex === index}
                 >
                   <div className="flex items-center">
                     {result.image && (
@@ -238,6 +257,7 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
                           src={result.image} 
                           alt={result.name || result.title || ''} 
                           className="w-full h-full object-cover rounded"
+                          loading="lazy"
                         />
                       </div>
                     )}

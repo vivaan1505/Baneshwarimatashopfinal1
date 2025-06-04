@@ -107,4 +107,16 @@ export default {
       strategy: 'class',
     }),
   ],
+  // Safelist critical classes that might be dynamically generated
+  safelist: [
+    'text-primary-600',
+    'text-secondary-600',
+    'text-accent-600',
+    'bg-primary-100',
+    'bg-secondary-100',
+    'bg-accent-100',
+    'text-primary-800',
+    'text-secondary-800',
+    'text-accent-800',
+  ],
 };

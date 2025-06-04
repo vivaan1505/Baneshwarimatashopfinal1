@@ -145,6 +145,7 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
       <Heart 
         size={iconSize} 
         className={`${isInWishlist ? 'fill-current' : ''} ${isInWishlist && !loading ? 'animate-pulse-slow' : ''}`} 
+        aria-hidden="true"
       />
       {showText && (
         <span className="ml-2">

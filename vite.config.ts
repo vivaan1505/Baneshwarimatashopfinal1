@@ -16,7 +16,17 @@ export default defineConfig({
         }
       }
     },
-    chunkSizeWarningLimit: 1000
+    chunkSizeWarningLimit: 1000,
+    // Disable source maps in production for smaller build size
+    sourcemap: false,
+    // Minify the output
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remove console.log statements
+        drop_debugger: true // Remove debugger statements
+      }
+    }
   },
   optimizeDeps: {
     exclude: ['lucide-react'],

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import MobileMenu from './MobileMenu';
@@ -8,10 +8,17 @@ import Chatbot from '../common/Chatbot';
 import { supabase } from '../../lib/supabase';
 import CookieConsent from '../common/CookieConsent';
 import { initializeConsentServices } from '../../utils/cookieManager';
+import { scrollToTop } from '../../utils/scroll';
 
 const Layout: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [favicon, setFavicon] = useState<string | null>(null);
+  const location = useLocation();
+
+  // Auto-scroll to top on route change
+  useEffect(() => {
+    scrollToTop(false); // Use false to avoid smooth scrolling on route changes
+  }, [location.pathname]);
 
   useEffect(() => {
     fetchFavicon();

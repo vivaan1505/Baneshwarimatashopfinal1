@@ -7,6 +7,7 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { supabase } from '../../lib/supabase';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import { imageOptimizer } from '../../utils/imageOptimizer';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -96,7 +97,7 @@ const HeroSlider: React.FC = () => {
 
   if (loading) {
     return (
-      <section className="relative h-[90vh] min-h-[600px] bg-gray-200 animate-pulse dark:bg-gray-700">
+      <section className="relative h-[90vh] min-h-[600px] bg-gray-200 animate-pulse dark:bg-gray-700" aria-label="Loading hero slider">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full animate-spin dark:border-primary-400"></div>
         </div>
@@ -109,7 +110,7 @@ const HeroSlider: React.FC = () => {
   }
 
   return (
-    <section className="relative">
+    <section className="relative" aria-label="Hero slider">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         navigation={{
@@ -134,7 +135,7 @@ const HeroSlider: React.FC = () => {
               <div className="absolute inset-0">
                 <div className={`absolute inset-0 bg-gradient-to-r from-${slide.accent}-900/90 to-${slide.accent}-800/80 dark:from-${slide.accent}-900/95 dark:to-${slide.accent}-800/85`}></div>
                 <LazyLoadImage 
-                  src={slide.image_url} 
+                  src={imageOptimizer.hero(slide.image_url)} 
                   alt={slide.title}
                   className="w-full h-full object-cover"
                   wrapperClassName="w-full h-full"
@@ -165,6 +166,7 @@ const HeroSlider: React.FC = () => {
                       <Link 
                         to={slide.cta_link.startsWith('/') ? slide.cta_link : `/${slide.cta_link}`} 
                         className={`btn-${slide.accent} text-base`}
+                        aria-label={slide.cta_text}
                       >
                         {slide.cta_text}
                       </Link>
@@ -176,10 +178,10 @@ const HeroSlider: React.FC = () => {
           </SwiperSlide>
         ))}
         
-        <div className="swiper-button-prev !text-white !w-10 !h-10 !bg-black/20 backdrop-blur-sm !rounded-full flex items-center justify-center after:!text-lg">
+        <div className="swiper-button-prev !text-white !w-10 !h-10 !bg-black/20 backdrop-blur-sm !rounded-full flex items-center justify-center after:!text-lg" aria-label="Previous slide">
           <ChevronLeft className="w-6 h-6" />
         </div>
-        <div className="swiper-button-next !text-white !w-10 !h-10 !bg-black/20 backdrop-blur-sm !rounded-full flex items-center justify-center after:!text-lg">
+        <div className="swiper-button-next !text-white !w-10 !h-10 !bg-black/20 backdrop-blur-sm !rounded-full flex items-center justify-center after:!text-lg" aria-label="Next slide">
           <ChevronRight className="w-6 h-6" />
         </div>
         
