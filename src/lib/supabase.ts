@@ -14,7 +14,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 // Create Supabase client
 export const supabase = createClient<Database>(
-  supabaseUrl || 'https://placeholder-url.supabase.co',
+  supabaseUrl || 'https://jtdnxmabkjjuesipxqoe.supabase.co',
   supabaseAnonKey || 'placeholder-key',
   {
     auth: {
