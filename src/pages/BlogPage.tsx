@@ -99,7 +99,11 @@ const BlogPage: React.FC = () => {
           const { data: { session } } = await supabase.auth.getSession();
           
           if (session?.access_token) {
-            const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/list-users`, {
+            // Log the request URL for debugging
+            const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/list-users`;
+            console.log('Fetching authors from:', apiUrl);
+
+            const response = await fetch(apiUrl, {
               method: 'POST',
               headers: {
                 'Authorization': `Bearer ${session.access_token}`,
@@ -108,35 +112,69 @@ const BlogPage: React.FC = () => {
               body: JSON.stringify({ userIds: authorIds }),
             });
             
-            if (response.ok) {
-              const users = await response.json();
-              const userMap = new Map(users.map((user: any) => [user.id, user]));
-              const postsWithAuthors = data?.map(post => ({
-                ...post,
-                author: userMap.get(post.author_id)
-              }));
-              
-              setBlogPosts(postsWithAuthors || []);
-            } else {
-              setBlogPosts(data || []);
+            if (!response.ok) {
+              // Log detailed error information
+              console.error('Error response:', {
+                status: response.status,
+                statusText: response.statusText,
+                headers: Object.fromEntries(response.headers.entries()),
+              });
+              const errorText = await response.text();
+              console.error('Error details:', errorText);
+              throw new Error(`HTTP error! status: ${response.status}`);
             }
+            
+            const users = await response.json();
+            const userMap = new Map(users.map((user: any) => [user.id, user]));
+            const postsWithAuthors = data?.map(post => ({
+              ...post,
+              author: userMap.get(post.author_id) || {
+                email: 'anonymous@example.com',
+                user_metadata: {
+                  first_name: 'Anonymous',
+                  last_name: 'User'
+                }
+              }
+            }));
+            
+            setBlogPosts(postsWithAuthors || []);
           } else {
-            setBlogPosts(data || []);
+            console.warn('No session token available');
+            setBlogPosts(data?.map(post => ({
+              ...post,
+              author: {
+                email: 'anonymous@example.com',
+                user_metadata: {
+                  first_name: 'Anonymous',
+                  last_name: 'User'
+                }
+              }
+            })) || []);
           }
         } catch (error) {
           console.error('Error fetching author details:', error);
-          setBlogPosts(data || []);
+          // Fallback to posts without author details
+          setBlogPosts(data?.map(post => ({
+            ...post,
+            author: {
+              email: 'anonymous@example.com',
+              user_metadata: {
+                first_name: 'Anonymous',
+                last_name: 'User'
+              }
+            }
+          })) || []);
         }
       } else {
         setBlogPosts(data || []);
       }
       
       if (!data || data.length === 0) {
-        importSampleBlogPosts();
+        await importSampleBlogPosts();
       }
     } catch (error) {
       console.error('Error fetching blog posts:', error);
-      importSampleBlogPosts();
+      await importSampleBlogPosts();
     } finally {
       setLoading(false);
     }
