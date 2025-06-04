@@ -156,12 +156,24 @@ export const useProducts = ({
       
       // Apply filters to static data
       if (category) {
-        filteredProducts = filteredProducts.filter(p => p.category === category);
+        filteredProducts = filteredProducts.filter(p => {
+          // Handle special categories
+          if (category === 'footwear' || category === 'clothing' || category === 'jewelry' || category === 'beauty') {
+            return p.type === category;
+          } else if (category === 'bridal') {
+            return p.tags?.includes('bridal');
+          } else if (category === 'christmas') {
+            return p.tags?.includes('christmas');
+          } else if (category === 'sale') {
+            return p.compare_at_price != null;
+          }
+          // Regular category filtering using slug
+          return p.category?.slug === category;
+        });
       }
       
       if (gender) {
-        // This assumes your static data has a gender property
-        // filteredProducts = filteredProducts.filter(p => p.gender === gender);
+        filteredProducts = filteredProducts.filter(p => p.gender === gender);
       }
       
       if (isNew) {
