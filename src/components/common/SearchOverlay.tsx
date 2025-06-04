@@ -12,6 +12,10 @@ interface SearchResult {
   url: string;
   image?: string;
   description?: string;
+  price?: number;
+  brand?: {
+    name: string;
+  };
 }
 
 interface SearchOverlayProps {
@@ -71,7 +75,8 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
           slug,
           description,
           price,
-          images:product_images(url)
+          images:product_images(url),
+          brand:brands(name)
         `)
         .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
         .eq('is_visible', true)
@@ -134,7 +139,9 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
           type: 'product' as const,
           url: `/product/${product.id}`,
           image: product.images?.[0]?.url ? imageOptimizer.thumbnail(product.images[0].url) : undefined,
-          description: product.description?.substring(0, 100) + (product.description?.length > 100 ? '...' : '')
+          description: product.description?.substring(0, 100) + (product.description?.length > 100 ? '...' : ''),
+          price: product.price,
+          brand: product.brand
         })),
         ...(blogPosts || []).map(post => ({
           id: post.id,

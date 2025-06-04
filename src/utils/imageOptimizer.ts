@@ -71,9 +71,9 @@ export function generatePlaceholder(width = 1, height = 1): string {
  * Optimizes image for specific use cases
  */
 export const imageOptimizer = {
-  thumbnail: (url: string) => optimizeImageUrl(url, { width: 300, height: 300 }),
-  product: (url: string) => optimizeImageUrl(url, { width: 600, height: 600 }),
-  hero: (url: string) => optimizeImageUrl(url, { width: 1600, height: 900 }),
+  thumbnail: (url: string) => optimizeImageUrl(url, { width: 300, height: 300, fit: 'cover' }),
+  product: (url: string) => optimizeImageUrl(url, { width: 600, height: 600, fit: 'cover' }),
+  hero: (url: string) => optimizeImageUrl(url, { width: 1600, height: 900, fit: 'cover' }),
   banner: (url: string) => optimizeImageUrl(url, { width: 1200, height: 400 }),
   avatar: (url: string) => optimizeImageUrl(url, { width: 100, height: 100, fit: 'crop' }),
   blog: (url: string) => optimizeImageUrl(url, { width: 800, height: 450 }),

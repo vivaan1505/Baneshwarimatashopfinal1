@@ -7,6 +7,7 @@ import { supabase } from '../lib/supabase';
 import { Star, Truck, Package, RefreshCw } from 'lucide-react';
 import { updateMetaTags, addStructuredData, generateProductSchema, generateBreadcrumbSchema } from '../utils/seo';
 import ProductCard from '../components/common/ProductCard';
+import { imageOptimizer } from '../utils/imageOptimizer';
 
 interface ProductVariant {
   id: string;
@@ -98,7 +99,7 @@ const ProductPage: React.FC = () => {
           name: productData.name,
           description: productData.description || '',
           price: productData.price,
-          imageUrl: productData.images?.[0]?.url || '',
+          imageUrl: productData.images?.[0]?.url ? imageOptimizer.product(productData.images[0].url) : '',
           brand: productData.brand,
           rating: productData.rating,
           reviewCount: productData.review_count
@@ -274,6 +275,8 @@ const ProductPage: React.FC = () => {
                 src={product.images?.[selectedImageIndex]?.url || '/placeholder-product.jpg'}
                 alt={product.name}
                 className="w-full h-full object-cover"
+                width="600"
+                height="600"
               />
               {product.is_new && (
                 <span className="absolute top-4 left-4 inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-900/50 dark:text-primary-300">
@@ -299,11 +302,15 @@ const ProductPage: React.FC = () => {
                         ? 'border-primary-500 dark:border-primary-400' 
                         : 'border-transparent'
                     }`}
+                    aria-label={`View image ${index + 1}`}
                   >
                     <img
                       src={image.url}
                       alt={`${product.name} - View ${index + 1}`}
                       className="w-full h-full object-cover"
+                      width="120"
+                      height="120"
+                      loading="lazy"
                     />
                   </button>
                 ))}
@@ -371,6 +378,7 @@ const ProductPage: React.FC = () => {
                       className={`w-5 h-5 ${
                         i < Math.floor(product.rating) ? 'fill-current' : 'text-gray-300 dark:text-gray-600'
                       }`}
+                      aria-hidden="true"
                     />
                   ))}
                 </div>
@@ -405,6 +413,7 @@ const ProductPage: React.FC = () => {
                               ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400'
                               : 'border-gray-300 text-gray-700 hover:border-primary-500 dark:border-gray-600 dark:text-gray-300'
                           }`}
+                          aria-label={`Select ${option.name}: ${value}`}
                         >
                           {value}
                         </button>
@@ -422,6 +431,7 @@ const ProductPage: React.FC = () => {
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   className="px-3 py-2 text-gray-600 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200"
+                  aria-label="Decrease quantity"
                 >
                   -
                 </button>
@@ -431,10 +441,12 @@ const ProductPage: React.FC = () => {
                   value={quantity}
                   onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
                   className="w-full text-center border-x focus:outline-none dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                  aria-label="Quantity"
                 />
                 <button
                   onClick={() => setQuantity(quantity + 1)}
                   className="px-3 py-2 text-gray-600 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200"
+                  aria-label="Increase quantity"
                 >
                   +
                 </button>
@@ -472,6 +484,7 @@ const ProductPage: React.FC = () => {
                 onClick={handleAddToCart}
                 disabled={(selectedVariant ? selectedVariant.stock_quantity : product.stock_quantity) <= 0}
                 className="flex-1 btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Add to cart"
               >
                 Add to Cart
               </button>
@@ -485,7 +498,7 @@ const ProductPage: React.FC = () => {
             {/* Shipping & Returns */}
             <div className="border-t pt-6 space-y-4 dark:border-gray-700">
               <div className="flex">
-                <Truck className="w-5 h-5 text-gray-500 mr-3 flex-shrink-0 dark:text-gray-400" />
+                <Truck className="w-5 h-5 text-gray-500 mr-3 flex-shrink-0 dark:text-gray-400" aria-hidden="true" />
                 <div>
                   <h3 className="text-sm font-medium text-gray-900 dark:text-white">Free Shipping</h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400">On orders over $75. Estimated delivery: 3-5 business days.</p>
@@ -493,7 +506,7 @@ const ProductPage: React.FC = () => {
               </div>
               
               <div className="flex">
-                <RefreshCw className="w-5 h-5 text-gray-500 mr-3 flex-shrink-0 dark:text-gray-400" />
+                <RefreshCw className="w-5 h-5 text-gray-500 mr-3 flex-shrink-0 dark:text-gray-400" aria-hidden="true" />
                 <div>
                   <h3 className="text-sm font-medium text-gray-900 dark:text-white">Easy Returns</h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400">30-day return policy. See our <Link to="/returns" className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">return policy</Link> for details.</p>
@@ -501,7 +514,7 @@ const ProductPage: React.FC = () => {
               </div>
               
               <div className="flex">
-                <Package className="w-5 h-5 text-gray-500 mr-3 flex-shrink-0 dark:text-gray-400" />
+                <Package className="w-5 h-5 text-gray-500 mr-3 flex-shrink-0 dark:text-gray-400" aria-hidden="true" />
                 <div>
                   <h3 className="text-sm font-medium text-gray-900 dark:text-white">Secure Packaging</h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Your items will be carefully packaged to ensure safe delivery.</p>
