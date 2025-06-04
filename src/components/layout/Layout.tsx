@@ -28,6 +28,9 @@ const Layout: React.FC = () => {
     if (hasConsent) {
       initializeConsentServices();
     }
+    
+    // Add preload links for critical resources
+    addPreloadLinks();
   }, []);
 
   const fetchFavicon = async () => {
@@ -63,6 +66,23 @@ const Layout: React.FC = () => {
     } catch (error) {
       console.error('Error fetching favicon:', error);
     }
+  };
+
+  const addPreloadLinks = () => {
+    // Preload critical fonts
+    const fontPreloadLinks = [
+      { href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap', as: 'style' },
+      { href: 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap', as: 'style' }
+    ];
+
+    fontPreloadLinks.forEach(link => {
+      const preloadLink = document.createElement('link');
+      preloadLink.rel = 'preload';
+      preloadLink.href = link.href;
+      preloadLink.as = link.as;
+      preloadLink.crossOrigin = 'anonymous';
+      document.head.appendChild(preloadLink);
+    });
   };
 
   const toggleMobileMenu = () => {

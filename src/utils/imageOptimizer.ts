@@ -52,6 +52,25 @@ export function optimizeImageUrl(url: string, options: ImageOptions = {}): strin
     }
   }
   
+  // Check if it's a Supabase URL
+  if (url.includes('supabase.co')) {
+    // For Supabase Storage URLs, we can't modify them directly
+    // But we can add a cache-busting parameter to ensure proper caching
+    try {
+      const urlObj = new URL(url);
+      
+      // Add a cache parameter if not already present
+      if (!urlObj.searchParams.has('_cache')) {
+        urlObj.searchParams.set('_cache', 'v1');
+      }
+      
+      return urlObj.toString();
+    } catch (e) {
+      console.warn('Failed to optimize Supabase URL:', e);
+      return url;
+    }
+  }
+  
   // Add more image providers as needed
   
   return url;
