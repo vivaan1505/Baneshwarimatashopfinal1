@@ -117,13 +117,8 @@ const BlogPostsPage: React.FC = () => {
 
       if (postsError) throw postsError;
 
-      // Get unique author IDs
       const authorIds = [...new Set(postsData?.map(post => post.author_id) || [])];
-
-      // Fetch user details for all authors
       const userDetails = await fetchUserDetails(authorIds);
-
-      // Merge user details with posts
       const postsWithAuthors = postsData?.map(post => ({
         ...post,
         author: userDetails[post.author_id],
@@ -155,7 +150,6 @@ const BlogPostsPage: React.FC = () => {
 
   const createDefaultCategories = async () => {
     try {
-      // Check if categories already exist
       const { data: existingCategories, error: checkError } = await supabase
         .from('blog_categories')
         .select('count')
@@ -163,7 +157,6 @@ const BlogPostsPage: React.FC = () => {
 
       if (checkError && checkError.code !== 'PGRST116') throw checkError;
 
-      // If no categories exist, create default ones
       if (!existingCategories || existingCategories.count === 0) {
         const defaultCategories = [
           { name: 'Fashion Trends', slug: 'fashion-trends', description: 'Latest trends in fashion' },
@@ -180,7 +173,6 @@ const BlogPostsPage: React.FC = () => {
 
         if (insertError) throw insertError;
         
-        // Fetch the updated categories
         fetchCategories();
       }
     } catch (error) {
@@ -190,43 +182,34 @@ const BlogPostsPage: React.FC = () => {
 
   const importSampleBlogPosts = async () => {
     try {
-      // Check if we already have blog posts
       const { count, error: countError } = await supabase
         .from('blog_posts')
         .select('*', { count: 'exact', head: true });
       
       if (countError) throw countError;
       
-      // If we already have posts, don't import sample ones
       if (count && count > 0) return;
       
-      // Import sample blog posts from the data file
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       
-      // First get the categories to link posts to
       const { data: categories, error: catError } = await supabase
         .from('blog_categories')
         .select('id, name');
         
       if (catError) throw catError;
       
-      // Import from local data
       try {
-        // Dynamic import of the blog posts data
         const { BLOG_POSTS } = await import('../../data/blog');
         
-        // Process each blog post
         for (const post of BLOG_POSTS) {
-          // Find matching category
           const category = categories?.find(c => c.name === post.category);
-          
           if (!category) continue;
           
-          // Create the blog post
+          // Use upsert instead of insert
           const { data: newPost, error: postError } = await supabase
             .from('blog_posts')
-            .insert({
+            .upsert({
               title: post.title,
               slug: post.slug,
               content: post.content,
@@ -237,29 +220,40 @@ const BlogPostsPage: React.FC = () => {
               published_at: new Date().toISOString(),
               meta_title: post.title,
               meta_description: post.excerpt
+            }, {
+              onConflict: 'slug',
+              ignoreDuplicates: false
             })
             .select()
             .single();
             
           if (postError) {
-            console.error('Error creating sample post:', postError);
+            console.error('Error creating/updating sample post:', postError);
             continue;
           }
           
-          // Link post to category
-          const { error: linkError } = await supabase
+          // Check if category association already exists
+          const { data: existingCategory } = await supabase
             .from('blog_post_categories')
-            .insert({
-              post_id: newPost.id,
-              category_id: category.id
-            });
-            
-          if (linkError) {
-            console.error('Error linking post to category:', linkError);
+            .select('*')
+            .eq('post_id', newPost.id)
+            .eq('category_id', category.id)
+            .single();
+          
+          if (!existingCategory) {
+            const { error: linkError } = await supabase
+              .from('blog_post_categories')
+              .insert({
+                post_id: newPost.id,
+                category_id: category.id
+              });
+              
+            if (linkError) {
+              console.error('Error linking post to category:', linkError);
+            }
           }
         }
         
-        // Refresh posts
         fetchPosts();
       } catch (importError) {
         console.error('Error importing blog posts:', importError);
@@ -295,7 +289,6 @@ const BlogPostsPage: React.FC = () => {
     if (!confirm('Are you sure you want to delete this blog post?')) return;
 
     try {
-      // First delete the category associations
       const { error: categoriesError } = await supabase
         .from('blog_post_categories')
         .delete()
@@ -303,7 +296,6 @@ const BlogPostsPage: React.FC = () => {
 
       if (categoriesError) throw categoriesError;
 
-      // Then delete the post
       const { error } = await supabase
         .from('blog_posts')
         .delete()

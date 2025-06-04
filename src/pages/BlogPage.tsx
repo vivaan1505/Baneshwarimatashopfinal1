@@ -44,7 +44,6 @@ const BlogPage: React.FC = () => {
     fetchBlogPosts();
     fetchCategories();
     
-    // Update meta tags for SEO and social sharing
     updateMetaTags(
       'MinddShopp Blog | Fashion Trends, Style Tips & Beauty Insights',
       'Explore the latest in fashion trends, styling tips, beauty advice, and product insights on the MinddShopp blog.',
@@ -52,7 +51,6 @@ const BlogPage: React.FC = () => {
       window.location.href
     );
     
-    // Add structured data
     const webPageSchema = generateWebPageSchema({
       title: 'MinddShopp Blog | Fashion Trends, Style Tips & Beauty Insights',
       description: 'Explore the latest in fashion trends, styling tips, beauty advice, and product insights on the MinddShopp blog.',
@@ -62,7 +60,6 @@ const BlogPage: React.FC = () => {
     addStructuredData(webPageSchema);
   }, []);
 
-  // Update meta tags when category filter changes
   useEffect(() => {
     if (initialRenderRef.current) {
       initialRenderRef.current = false;
@@ -95,17 +92,13 @@ const BlogPage: React.FC = () => {
 
       if (error) throw error;
       
-      // Get unique author IDs
       const authorIds = [...new Set((data || []).map(post => post.author_id))];
       
-      // Fetch author details if there are any posts
       if (authorIds.length > 0) {
         try {
-          // Get the current session for the auth token
           const { data: { session } } = await supabase.auth.getSession();
           
           if (session?.access_token) {
-            // Fetch user data from the Edge Function
             const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/list-users`, {
               method: 'POST',
               headers: {
@@ -117,11 +110,7 @@ const BlogPage: React.FC = () => {
             
             if (response.ok) {
               const users = await response.json();
-              
-              // Create a map of user data
               const userMap = new Map(users.map((user: any) => [user.id, user]));
-              
-              // Add author data to posts
               const postsWithAuthors = data?.map(post => ({
                 ...post,
                 author: userMap.get(post.author_id)
@@ -129,11 +118,9 @@ const BlogPage: React.FC = () => {
               
               setBlogPosts(postsWithAuthors || []);
             } else {
-              // If we can't get author details, still set the posts
               setBlogPosts(data || []);
             }
           } else {
-            // If no session, just set the posts without author details
             setBlogPosts(data || []);
           }
         } catch (error) {
@@ -144,13 +131,11 @@ const BlogPage: React.FC = () => {
         setBlogPosts(data || []);
       }
       
-      // If no blog posts are found, import sample ones from data file
       if (!data || data.length === 0) {
         importSampleBlogPosts();
       }
     } catch (error) {
       console.error('Error fetching blog posts:', error);
-      // Try to import sample blog posts if fetching fails
       importSampleBlogPosts();
     } finally {
       setLoading(false);
@@ -173,18 +158,15 @@ const BlogPage: React.FC = () => {
   
   const importSampleBlogPosts = async () => {
     try {
-      // Get the current user
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       
-      // Check if we have categories
       const { data: categories, error: catError } = await supabase
         .from('blog_categories')
         .select('id, name');
         
       if (catError) throw catError;
       
-      // If no categories, create default ones
       if (!categories || categories.length === 0) {
         const defaultCategories = [
           { name: 'Fashion Trends', slug: 'fashion-trends', description: 'Latest trends in fashion' },
@@ -202,16 +184,13 @@ const BlogPage: React.FC = () => {
           
         if (insertError) throw insertError;
         
-        // Use the newly created categories
         if (newCategories) {
           await importBlogPostsWithCategories(user.id, newCategories);
         }
       } else {
-        // Use existing categories
         await importBlogPostsWithCategories(user.id, categories);
       }
       
-      // Refresh the blog posts
       fetchBlogPosts();
     } catch (error) {
       console.error('Error importing sample blog posts:', error);
@@ -220,20 +199,15 @@ const BlogPage: React.FC = () => {
   
   const importBlogPostsWithCategories = async (userId: string, categories: any[]) => {
     try {
-      // Import from local data
       const { BLOG_POSTS } = await import('../data/blog');
       
-      // Process each blog post
       for (const post of BLOG_POSTS) {
-        // Find matching category
         const category = categories.find(c => c.name === post.category);
-        
         if (!category) continue;
         
-        // Create the blog post
         const { data: newPost, error: postError } = await supabase
           .from('blog_posts')
-          .insert({
+          .upsert({
             title: post.title,
             slug: post.slug,
             content: post.content,
@@ -244,25 +218,36 @@ const BlogPage: React.FC = () => {
             published_at: new Date().toISOString(),
             meta_title: post.title,
             meta_description: post.excerpt
+          }, {
+            onConflict: 'slug',
+            ignoreDuplicates: false
           })
           .select()
           .single();
           
         if (postError) {
-          console.error('Error creating sample post:', postError);
+          console.error('Error creating/updating sample post:', postError);
           continue;
         }
         
-        // Link post to category
-        const { error: linkError } = await supabase
+        const { data: existingCategory } = await supabase
           .from('blog_post_categories')
-          .insert({
-            post_id: newPost.id,
-            category_id: category.id
-          });
-          
-        if (linkError) {
-          console.error('Error linking post to category:', linkError);
+          .select('*')
+          .eq('post_id', newPost.id)
+          .eq('category_id', category.id)
+          .single();
+        
+        if (!existingCategory) {
+          const { error: linkError } = await supabase
+            .from('blog_post_categories')
+            .insert({
+              post_id: newPost.id,
+              category_id: category.id
+            });
+            
+          if (linkError) {
+            console.error('Error linking post to category:', linkError);
+          }
         }
       }
     } catch (error) {
@@ -270,7 +255,6 @@ const BlogPage: React.FC = () => {
     }
   };
 
-  // Filter posts based on search and category
   const filteredPosts = blogPosts.filter(post => {
     const matchesSearch = 
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -282,7 +266,6 @@ const BlogPage: React.FC = () => {
     return matchesSearch && matchesCategory;
   });
 
-  // Get author name from post
   const getAuthorName = (post: BlogPost) => {
     if (post.author?.user_metadata?.first_name && post.author?.user_metadata?.last_name) {
       return `${post.author.user_metadata.first_name} ${post.author.user_metadata.last_name}`;
@@ -290,7 +273,6 @@ const BlogPage: React.FC = () => {
     return post.author?.email?.split('@')[0] || 'Anonymous';
   };
 
-  // Get formatted date
   const getFormattedDate = (dateString: string) => {
     try {
       return format(new Date(dateString), 'MMM d, yyyy');
@@ -299,7 +281,6 @@ const BlogPage: React.FC = () => {
     }
   };
 
-  // Get category color class
   const getCategoryColorClass = (categoryName: string) => {
     const colorMap: Record<string, string> = {
       'Fashion Trends': 'primary',
@@ -315,7 +296,6 @@ const BlogPage: React.FC = () => {
     return colorMap[categoryName] || 'primary';
   };
 
-  // Toggle expanded post
   const toggleExpandPost = (postId: string) => {
     if (expandedPost === postId) {
       setExpandedPost(null);
