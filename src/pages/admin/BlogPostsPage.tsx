@@ -63,6 +63,8 @@ const BlogPostsPage: React.FC = () => {
   useEffect(() => {
     fetchPosts();
     fetchCategories();
+    createDefaultCategories();
+    importSampleBlogPosts();
   }, []);
 
   const fetchUserDetails = async (authorIds: string[]): Promise<Record<string, User>> => {
@@ -148,6 +150,122 @@ const BlogPostsPage: React.FC = () => {
     } catch (error) {
       console.error('Error fetching categories:', error);
       toast.error('Failed to load categories. Please try again later.');
+    }
+  };
+
+  const createDefaultCategories = async () => {
+    try {
+      // Check if categories already exist
+      const { data: existingCategories, error: checkError } = await supabase
+        .from('blog_categories')
+        .select('count')
+        .single();
+
+      if (checkError && checkError.code !== 'PGRST116') throw checkError;
+
+      // If no categories exist, create default ones
+      if (!existingCategories || existingCategories.count === 0) {
+        const defaultCategories = [
+          { name: 'Fashion Trends', slug: 'fashion-trends', description: 'Latest trends in fashion' },
+          { name: 'Product Care', slug: 'product-care', description: 'How to care for your products' },
+          { name: 'Bridal', slug: 'bridal', description: 'Everything for your special day' },
+          { name: 'Beauty Tips', slug: 'beauty-tips', description: 'Beauty advice and tutorials' },
+          { name: 'Style Guide', slug: 'style-guide', description: 'Styling tips and advice' },
+          { name: 'Product Reviews', slug: 'product-reviews', description: 'Reviews of our products' }
+        ];
+
+        const { error: insertError } = await supabase
+          .from('blog_categories')
+          .insert(defaultCategories);
+
+        if (insertError) throw insertError;
+        
+        // Fetch the updated categories
+        fetchCategories();
+      }
+    } catch (error) {
+      console.error('Error creating default categories:', error);
+    }
+  };
+
+  const importSampleBlogPosts = async () => {
+    try {
+      // Check if we already have blog posts
+      const { count, error: countError } = await supabase
+        .from('blog_posts')
+        .select('*', { count: 'exact', head: true });
+      
+      if (countError) throw countError;
+      
+      // If we already have posts, don't import sample ones
+      if (count && count > 0) return;
+      
+      // Import sample blog posts from the data file
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      
+      // First get the categories to link posts to
+      const { data: categories, error: catError } = await supabase
+        .from('blog_categories')
+        .select('id, name');
+        
+      if (catError) throw catError;
+      
+      // Import from local data
+      try {
+        // Dynamic import of the blog posts data
+        const { BLOG_POSTS } = await import('../../data/blog');
+        
+        // Process each blog post
+        for (const post of BLOG_POSTS) {
+          // Find matching category
+          const category = categories?.find(c => c.name === post.category);
+          
+          if (!category) continue;
+          
+          // Create the blog post
+          const { data: newPost, error: postError } = await supabase
+            .from('blog_posts')
+            .insert({
+              title: post.title,
+              slug: post.slug,
+              content: post.content,
+              excerpt: post.excerpt,
+              featured_image: post.imageUrl,
+              author_id: user.id,
+              status: 'published',
+              published_at: new Date().toISOString(),
+              meta_title: post.title,
+              meta_description: post.excerpt
+            })
+            .select()
+            .single();
+            
+          if (postError) {
+            console.error('Error creating sample post:', postError);
+            continue;
+          }
+          
+          // Link post to category
+          const { error: linkError } = await supabase
+            .from('blog_post_categories')
+            .insert({
+              post_id: newPost.id,
+              category_id: category.id
+            });
+            
+          if (linkError) {
+            console.error('Error linking post to category:', linkError);
+          }
+        }
+        
+        // Refresh posts
+        fetchPosts();
+      } catch (importError) {
+        console.error('Error importing blog posts:', importError);
+      }
+    } catch (error) {
+      console.error('Error checking for existing blog posts:', error);
     }
   };
 
