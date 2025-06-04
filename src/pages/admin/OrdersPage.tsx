@@ -110,7 +110,6 @@ const OrdersPage: React.FC = () => {
     } catch (error) {
       console.error('Error fetching orders:', error);
       setError('Failed to load orders. Please try again later.');
-      toast.error('Failed to load orders');
       
       // Use sample data in development mode
       if (import.meta.env.DEV) {
