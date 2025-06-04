@@ -43,12 +43,12 @@ const FeaturedCollectionsLayout: React.FC = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
                     <div className="absolute bottom-0 left-0 right-0 p-8">
                       <span className="inline-block px-4 py-1 bg-white/90 text-secondary-800 rounded-full text-sm font-medium mb-4">
-                        NEW COLLECTION
+                        BRIDAL COLLECTION
                       </span>
                       <h2 className="text-3xl font-heading font-medium text-white mb-2">
                         Bridal Boutique
                       </h2>
-                      <p className="text-gray-200 mb-4">
+                      <p className="text-gray-200 mb-4 line-clamp-2">
                         Everything you need for your perfect day
                       </p>
                       <span className="inline-flex items-center text-white group-hover:text-secondary-300 transition-colors">
@@ -81,7 +81,7 @@ const FeaturedCollectionsLayout: React.FC = () => {
                       <h2 className="text-3xl font-heading font-medium text-white mb-2">
                         Festive Collections
                       </h2>
-                      <p className="text-gray-200 mb-4">
+                      <p className="text-gray-200 mb-4 line-clamp-2">
                         Discover perfect gifts for everyone
                       </p>
                       <span className="inline-flex items-center text-white group-hover:text-accent-300 transition-colors">
