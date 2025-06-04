@@ -135,14 +135,14 @@ const BridalBoutique: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <section className="relative min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative h-[60vh] min-h-[500px] bg-secondary-50">
-        <div className="absolute inset-0">
+      <div className="relative h-[60vh] min-h-[500px]">
+        <div className="absolute inset-0 z-0">
           <LazyLoadImage 
             src="https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
             alt="Bridal Collection"
-            className="w-full h-500px object-cover"
+            className="w-full h-full object-cover"
             effect="blur"
             threshold={300}
             placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
@@ -150,7 +150,7 @@ const BridalBoutique: React.FC = () => {
           <div className="absolute inset-0 bg-black bg-opacity-40"></div>
         </div>
         
-        <div className="relative container-custom h-full flex items-center">
+        <div className="relative z-10 container-custom h-full flex items-center">
           <div className="max-w-2xl text-white">
             <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
               Bridal Boutique
@@ -161,20 +161,20 @@ const BridalBoutique: React.FC = () => {
             <div className="flex flex-wrap gap-4">
               <a 
                 href="#collections" 
-                className="btn-accent transition-all duration-300 hover:shadow-lg"
+                className="btn-accent transition-all duration-300 hover:shadow-lg hover:-translate-y-1 relative z-20"
               >
                 View Collections
               </a>
               <a 
                 href="#partner-services" 
-                className="btn bg-white text-secondary-900 hover:bg-gray-100 transition-all duration-300 hover:shadow-lg"
+                className="btn bg-white text-secondary-900 hover:bg-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 relative z-20"
               >
                 Partner Services
               </a>
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Categories Grid */}
       <section className="py-16" id="collections">
@@ -183,20 +183,23 @@ const BridalBoutique: React.FC = () => {
             Complete Your Bridal Look
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Bridal Footwear */}
-            <Link to="/footwear?category=bridal-footwear" className="card group transition-all duration-300 hover:-translate-y-1">
-              <div className="relative overflow-hidden">
+            <Link 
+              to="/footwear?category=bridal-footwear" 
+              className="relative cursor-pointer hover:opacity-90 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+            >
+              <div className="relative h-[250px] overflow-hidden rounded-lg">
                 <LazyLoadImage 
                   src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                   alt="Bridal Footwear"
-                  className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                   effect="blur"
                   threshold={300}
                   placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
-                  <div className="absolute bottom-4 left-4">
+                  <div className="absolute bottom-4 left-4 p-4">
                     <h3 className="text-xl font-heading text-white mb-1">Bridal Footwear</h3>
                     <p className="text-gray-200 text-sm">Elegant heels & comfortable flats</p>
                   </div>
@@ -205,18 +208,21 @@ const BridalBoutique: React.FC = () => {
             </Link>
 
             {/* Bridal Jewelry */}
-            <Link to="/jewelry?category=bridal-jewelry" className="card group transition-all duration-300 hover:-translate-y-1">
-              <div className="relative overflow-hidden">
+            <Link 
+              to="/jewelry?category=bridal-jewelry" 
+              className="relative cursor-pointer hover:opacity-90 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+            >
+              <div className="relative h-[250px] overflow-hidden rounded-lg">
                 <LazyLoadImage 
                   src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                   alt="Bridal Jewelry"
-                  className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                   effect="blur"
                   threshold={300}
                   placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
-                  <div className="absolute bottom-4 left-4">
+                  <div className="absolute bottom-4 left-4 p-4">
                     <h3 className="text-xl font-heading text-white mb-1">Bridal Jewelry</h3>
                     <p className="text-gray-200 text-sm">Stunning sets & accessories</p>
                   </div>
@@ -225,18 +231,21 @@ const BridalBoutique: React.FC = () => {
             </Link>
 
             {/* Bridal Accessories */}
-            <Link to="/accessories?category=bridal-accessories" className="card group transition-all duration-300 hover:-translate-y-1">
-              <div className="relative overflow-hidden">
+            <Link 
+              to="/accessories?category=bridal-accessories" 
+              className="relative cursor-pointer hover:opacity-90 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+            >
+              <div className="relative h-[250px] overflow-hidden rounded-lg">
                 <LazyLoadImage 
                   src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                   alt="Bridal Accessories"
-                  className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                   effect="blur"
                   threshold={300}
                   placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
-                  <div className="absolute bottom-4 left-4">
+                  <div className="absolute bottom-4 left-4 p-4">
                     <h3 className="text-xl font-heading text-white mb-1">Bridal Accessories</h3>
                     <p className="text-gray-200 text-sm">Veils, clutches & more</p>
                   </div>
@@ -259,14 +268,14 @@ const BridalBoutique: React.FC = () => {
               bridalProducts.map((product) => (
                 <div 
                   key={product.id} 
-                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+                  className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                   onClick={() => handleProductClick(product.id)}
                 >
-                  <div className="relative overflow-hidden">
+                  <div className="relative h-[250px] overflow-hidden">
                     <LazyLoadImage 
                       src={product.images?.[0]?.url || "https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
                       alt={product.name}
-                      className="w-full h-64 object-cover"
+                      className="w-full h-full object-cover"
                       effect="blur"
                       threshold={300}
                       placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
@@ -285,7 +294,7 @@ const BridalBoutique: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-semibold">${product.price.toFixed(2)}</span>
                       <button 
-                        className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200"
+                        className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200 relative z-20"
                         onClick={(e) => handleAddToCart(product, e)}
                         aria-label="Add to cart"
                       >
@@ -299,14 +308,14 @@ const BridalBoutique: React.FC = () => {
               // Fallback products if no data from backend
               <>
                 <div 
-                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md" 
+                  className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg" 
                   onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174015")}
                 >
-                  <div className="relative overflow-hidden">
+                  <div className="relative h-[250px] overflow-hidden">
                     <LazyLoadImage 
                       src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                       alt="Crystal Embellished Heels"
-                      className="w-full h-64 object-cover"
+                      className="w-full h-full object-cover"
                       effect="blur"
                       threshold={300}
                       placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
@@ -325,7 +334,7 @@ const BridalBoutique: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-semibold">$299.99</span>
                       <button 
-                        className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200"
+                        className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200 relative z-20"
                         onClick={(e) => handleAddToCart({
                           id: "123e4567-e89b-12d3-a456-426614174015",
                           name: "Crystal Embellished Heels",
@@ -343,14 +352,14 @@ const BridalBoutique: React.FC = () => {
                 </div>
 
                 <div 
-                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md" 
+                  className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg" 
                   onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174016")}
                 >
-                  <div className="relative overflow-hidden">
+                  <div className="relative h-[250px] overflow-hidden">
                     <LazyLoadImage 
                       src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                       alt="Pearl Drop Earrings"
-                      className="w-full h-64 object-cover"
+                      className="w-full h-full object-cover"
                       effect="blur"
                       threshold={300}
                       placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
@@ -369,7 +378,7 @@ const BridalBoutique: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-semibold">$199.99</span>
                       <button 
-                        className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200"
+                        className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200 relative z-20"
                         onClick={(e) => handleAddToCart({
                           id: "123e4567-e89b-12d3-a456-426614174016",
                           name: "Pearl Drop Earrings",
@@ -387,14 +396,14 @@ const BridalBoutique: React.FC = () => {
                 </div>
 
                 <div 
-                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md" 
+                  className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg" 
                   onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174017")}
                 >
-                  <div className="relative overflow-hidden">
+                  <div className="relative h-[250px] overflow-hidden">
                     <LazyLoadImage 
                       src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                       alt="Lace Trim Veil"
-                      className="w-full h-64 object-cover"
+                      className="w-full h-full object-cover"
                       effect="blur"
                       threshold={300}
                       placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
@@ -413,7 +422,7 @@ const BridalBoutique: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-semibold">$249.99</span>
                       <button 
-                        className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200"
+                        className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200 relative z-20"
                         onClick={(e) => handleAddToCart({
                           id: "123e4567-e89b-12d3-a456-426614174017",
                           name: "Lace Trim Veil",
@@ -431,14 +440,14 @@ const BridalBoutique: React.FC = () => {
                 </div>
 
                 <div 
-                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md" 
+                  className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg" 
                   onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174018")}
                 >
-                  <div className="relative overflow-hidden">
+                  <div className="relative h-[250px] overflow-hidden">
                     <LazyLoadImage 
                       src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                       alt="Crystal Hair Pins"
-                      className="w-full h-64 object-cover"
+                      className="w-full h-full object-cover"
                       effect="blur"
                       threshold={300}
                       placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
@@ -457,7 +466,7 @@ const BridalBoutique: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-semibold">$89.99</span>
                       <button 
-                        className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200"
+                        className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200 relative z-20"
                         onClick={(e) => handleAddToCart({
                           id: "123e4567-e89b-12d3-a456-426614174018",
                           name: "Crystal Hair Pins",
@@ -532,7 +541,7 @@ const BridalBoutique: React.FC = () => {
                           href={service.website.startsWith('http') ? service.website : `https://${service.website}`}
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="btn-outline flex items-center transition-all duration-300 hover:-translate-y-1"
+                          className="btn-outline flex items-center transition-all duration-300 hover:-translate-y-1 relative z-20"
                         >
                           Visit Website
                           <ExternalLink className="ml-1 h-4 w-4" />
@@ -541,14 +550,14 @@ const BridalBoutique: React.FC = () => {
                           href={service.booking_url.startsWith('http') ? service.booking_url : `https://${service.booking_url}`}
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="btn-secondary w-full text-center mt-3 transition-all duration-300 hover:-translate-y-1"
+                          className="btn-secondary w-full text-center mt-3 transition-all duration-300 hover:-translate-y-1 relative z-20"
                         >
                           Schedule Your Bridal Appointment
                         </a>
                       </div>
                     </div>
                     
-                    <div className="relative h-64 lg:h-auto">
+                    <div className="relative h-[250px] lg:h-auto">
                       <LazyLoadImage 
                         src="https://images.pexels.com/photos/3997391/pexels-photo-3997391.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                         alt={`${service.name} Salon`}
@@ -579,14 +588,14 @@ const BridalBoutique: React.FC = () => {
             </p>
             <Link 
               to="/contact"
-              className="btn-secondary transition-all duration-300 hover:-translate-y-1 hover:shadow-lg inline-block"
+              className="btn-secondary transition-all duration-300 hover:-translate-y-1 hover:shadow-lg inline-block relative z-20"
             >
               Schedule Appointment
             </Link>
           </div>
         </div>
       </section>
-    </div>
+    </section>
   );
 };
 
