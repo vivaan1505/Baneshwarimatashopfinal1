@@ -129,6 +129,11 @@ const BridalBoutique: React.FC = () => {
     toast.success('Added to cart!');
   };
 
+  const handleWishlistClick = (event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent the product click handler from firing
+    // Wishlist functionality would be implemented here
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -154,12 +159,15 @@ const BridalBoutique: React.FC = () => {
               Discover our exquisite collection of bridal wear, accessories, and beauty essentials for your perfect day
             </p>
             <div className="flex flex-wrap gap-4">
-              <a href="#collections" className="btn-accent">
+              <a 
+                href="#collections" 
+                className="btn-accent transition-all duration-300 hover:shadow-lg"
+              >
                 View Collections
               </a>
               <a 
                 href="#partner-services" 
-                className="btn bg-white text-secondary-900 hover:bg-gray-100"
+                className="btn bg-white text-secondary-900 hover:bg-gray-100 transition-all duration-300 hover:shadow-lg"
               >
                 Partner Services
               </a>
@@ -177,7 +185,7 @@ const BridalBoutique: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Bridal Footwear */}
-            <div className="card group">
+            <Link to="/footwear?category=bridal-footwear" className="card group transition-all duration-300 hover:-translate-y-1">
               <div className="relative overflow-hidden">
                 <LazyLoadImage 
                   src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
@@ -194,10 +202,10 @@ const BridalBoutique: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
 
             {/* Bridal Jewelry */}
-            <div className="card group">
+            <Link to="/jewelry?category=bridal-jewelry" className="card group transition-all duration-300 hover:-translate-y-1">
               <div className="relative overflow-hidden">
                 <LazyLoadImage 
                   src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
@@ -214,10 +222,10 @@ const BridalBoutique: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
 
             {/* Bridal Accessories */}
-            <div className="card group">
+            <Link to="/accessories?category=bridal-accessories" className="card group transition-all duration-300 hover:-translate-y-1">
               <div className="relative overflow-hidden">
                 <LazyLoadImage 
                   src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
@@ -234,7 +242,7 @@ const BridalBoutique: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </section>
@@ -251,7 +259,7 @@ const BridalBoutique: React.FC = () => {
               bridalProducts.map((product) => (
                 <div 
                   key={product.id} 
-                  className="card group cursor-pointer"
+                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
                   onClick={() => handleProductClick(product.id)}
                 >
                   <div className="relative overflow-hidden">
@@ -264,20 +272,22 @@ const BridalBoutique: React.FC = () => {
                       placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
                     <button 
-                      className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600"
-                      onClick={(e) => e.stopPropagation()}
+                      className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600 transition-colors duration-200 z-10"
+                      onClick={(e) => handleWishlistClick(e)}
+                      aria-label="Add to wishlist"
                     >
                       <Heart size={20} />
                     </button>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-heading text-lg mb-2">{product.name}</h3>
+                    <h3 className="font-heading text-lg mb-2 group-hover:text-secondary-600 transition-colors">{product.name}</h3>
                     <p className="text-gray-600 text-sm mb-2">{product.brand?.name || 'Luxury Brand'}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-semibold">${product.price.toFixed(2)}</span>
                       <button 
-                        className="p-2 text-secondary-600 hover:text-secondary-700"
+                        className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200"
                         onClick={(e) => handleAddToCart(product, e)}
+                        aria-label="Add to cart"
                       >
                         <ShoppingBag size={20} />
                       </button>
@@ -288,7 +298,10 @@ const BridalBoutique: React.FC = () => {
             ) : (
               // Fallback products if no data from backend
               <>
-                <div className="card group cursor-pointer" onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174015")}>
+                <div 
+                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md" 
+                  onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174015")}
+                >
                   <div className="relative overflow-hidden">
                     <LazyLoadImage 
                       src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
@@ -298,17 +311,21 @@ const BridalBoutique: React.FC = () => {
                       threshold={300}
                       placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
-                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600" onClick={(e) => e.stopPropagation()}>
+                    <button 
+                      className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600 transition-colors duration-200 z-10"
+                      onClick={(e) => handleWishlistClick(e)}
+                      aria-label="Add to wishlist"
+                    >
                       <Heart size={20} />
                     </button>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-heading text-lg mb-2">Crystal Embellished Heels</h3>
+                    <h3 className="font-heading text-lg mb-2 group-hover:text-secondary-600 transition-colors">Crystal Embellished Heels</h3>
                     <p className="text-gray-600 text-sm mb-2">Perfect for your special day</p>
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-semibold">$299.99</span>
                       <button 
-                        className="p-2 text-secondary-600 hover:text-secondary-700"
+                        className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200"
                         onClick={(e) => handleAddToCart({
                           id: "123e4567-e89b-12d3-a456-426614174015",
                           name: "Crystal Embellished Heels",
@@ -317,6 +334,7 @@ const BridalBoutique: React.FC = () => {
                           images: [{ url: "https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" }],
                           stock_quantity: 10
                         }, e)}
+                        aria-label="Add to cart"
                       >
                         <ShoppingBag size={20} />
                       </button>
@@ -324,7 +342,10 @@ const BridalBoutique: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="card group cursor-pointer" onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174016")}>
+                <div 
+                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md" 
+                  onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174016")}
+                >
                   <div className="relative overflow-hidden">
                     <LazyLoadImage 
                       src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
@@ -334,17 +355,21 @@ const BridalBoutique: React.FC = () => {
                       threshold={300}
                       placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
-                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600" onClick={(e) => e.stopPropagation()}>
+                    <button 
+                      className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600 transition-colors duration-200 z-10"
+                      onClick={(e) => handleWishlistClick(e)}
+                      aria-label="Add to wishlist"
+                    >
                       <Heart size={20} />
                     </button>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-heading text-lg mb-2">Pearl Drop Earrings</h3>
+                    <h3 className="font-heading text-lg mb-2 group-hover:text-secondary-600 transition-colors">Pearl Drop Earrings</h3>
                     <p className="text-gray-600 text-sm mb-2">Elegant pearl and crystal design</p>
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-semibold">$199.99</span>
                       <button 
-                        className="p-2 text-secondary-600 hover:text-secondary-700"
+                        className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200"
                         onClick={(e) => handleAddToCart({
                           id: "123e4567-e89b-12d3-a456-426614174016",
                           name: "Pearl Drop Earrings",
@@ -353,6 +378,7 @@ const BridalBoutique: React.FC = () => {
                           images: [{ url: "https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" }],
                           stock_quantity: 15
                         }, e)}
+                        aria-label="Add to cart"
                       >
                         <ShoppingBag size={20} />
                       </button>
@@ -360,7 +386,10 @@ const BridalBoutique: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="card group cursor-pointer" onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174017")}>
+                <div 
+                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md" 
+                  onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174017")}
+                >
                   <div className="relative overflow-hidden">
                     <LazyLoadImage 
                       src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
@@ -370,17 +399,21 @@ const BridalBoutique: React.FC = () => {
                       threshold={300}
                       placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
-                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600" onClick={(e) => e.stopPropagation()}>
+                    <button 
+                      className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600 transition-colors duration-200 z-10"
+                      onClick={(e) => handleWishlistClick(e)}
+                      aria-label="Add to wishlist"
+                    >
                       <Heart size={20} />
                     </button>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-heading text-lg mb-2">Lace Trim Veil</h3>
+                    <h3 className="font-heading text-lg mb-2 group-hover:text-secondary-600 transition-colors">Lace Trim Veil</h3>
                     <p className="text-gray-600 text-sm mb-2">Cathedral length with lace detail</p>
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-semibold">$249.99</span>
                       <button 
-                        className="p-2 text-secondary-600 hover:text-secondary-700"
+                        className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200"
                         onClick={(e) => handleAddToCart({
                           id: "123e4567-e89b-12d3-a456-426614174017",
                           name: "Lace Trim Veil",
@@ -389,6 +422,7 @@ const BridalBoutique: React.FC = () => {
                           images: [{ url: "https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" }],
                           stock_quantity: 8
                         }, e)}
+                        aria-label="Add to cart"
                       >
                         <ShoppingBag size={20} />
                       </button>
@@ -396,7 +430,10 @@ const BridalBoutique: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="card group cursor-pointer" onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174018")}>
+                <div 
+                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md" 
+                  onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174018")}
+                >
                   <div className="relative overflow-hidden">
                     <LazyLoadImage 
                       src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
@@ -406,17 +443,21 @@ const BridalBoutique: React.FC = () => {
                       threshold={300}
                       placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
-                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600" onClick={(e) => e.stopPropagation()}>
+                    <button 
+                      className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600 transition-colors duration-200 z-10"
+                      onClick={(e) => handleWishlistClick(e)}
+                      aria-label="Add to wishlist"
+                    >
                       <Heart size={20} />
                     </button>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-heading text-lg mb-2">Crystal Hair Pins</h3>
+                    <h3 className="font-heading text-lg mb-2 group-hover:text-secondary-600 transition-colors">Crystal Hair Pins</h3>
                     <p className="text-gray-600 text-sm mb-2">Set of 6 decorative pins</p>
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-semibold">$89.99</span>
                       <button 
-                        className="p-2 text-secondary-600 hover:text-secondary-700"
+                        className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200"
                         onClick={(e) => handleAddToCart({
                           id: "123e4567-e89b-12d3-a456-426614174018",
                           name: "Crystal Hair Pins",
@@ -425,6 +466,7 @@ const BridalBoutique: React.FC = () => {
                           images: [{ url: "https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" }],
                           stock_quantity: 20
                         }, e)}
+                        aria-label="Add to cart"
                       >
                         <ShoppingBag size={20} />
                       </button>
@@ -456,7 +498,7 @@ const BridalBoutique: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {partnerServices.map(service => (
-                <div key={service.id} className="bg-white rounded-xl overflow-hidden shadow-lg">
+                <div key={service.id} className="bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl">
                   <div className="grid grid-cols-1 lg:grid-cols-2">
                     <div className="p-8 lg:p-12">
                       <div className="flex items-center gap-2 text-secondary-600 mb-4">
@@ -490,7 +532,7 @@ const BridalBoutique: React.FC = () => {
                           href={service.website.startsWith('http') ? service.website : `https://${service.website}`}
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="btn-outline flex items-center"
+                          className="btn-outline flex items-center transition-all duration-300 hover:-translate-y-1"
                         >
                           Visit Website
                           <ExternalLink className="ml-1 h-4 w-4" />
@@ -499,7 +541,7 @@ const BridalBoutique: React.FC = () => {
                           href={service.booking_url.startsWith('http') ? service.booking_url : `https://${service.booking_url}`}
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="btn-secondary w-full text-center mt-3"
+                          className="btn-secondary w-full text-center mt-3 transition-all duration-300 hover:-translate-y-1"
                         >
                           Schedule Your Bridal Appointment
                         </a>
@@ -537,7 +579,7 @@ const BridalBoutique: React.FC = () => {
             </p>
             <Link 
               to="/contact"
-              className="btn-secondary"
+              className="btn-secondary transition-all duration-300 hover:-translate-y-1 hover:shadow-lg inline-block"
             >
               Schedule Appointment
             </Link>
