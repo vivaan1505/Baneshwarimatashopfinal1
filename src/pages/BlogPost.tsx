@@ -65,10 +65,12 @@ const BlogPost: React.FC = () => {
 
       if (error) {
         if (error.code === 'PGRST116') {
-          // Post not found
+          // Post not found - handle silently
           setLoading(false);
+          setPost(null);
           return;
         }
+        // Only throw error for non-PGRST116 errors
         throw error;
       }
       
