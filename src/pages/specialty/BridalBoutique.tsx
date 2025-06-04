@@ -137,12 +137,12 @@ const BridalBoutique: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative h-[60vh] min-h-[200px] bg-secondary-50">
+      <section className="relative h-[60vh] min-h-[500px] bg-secondary-50">
         <div className="absolute inset-0">
           <LazyLoadImage 
             src="https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
             alt="Bridal Collection"
-            className="w-full h-full object-cover"
+            className="w-full h-500px object-cover"
             effect="blur"
             threshold={300}
             placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
