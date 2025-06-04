@@ -50,7 +50,7 @@ const BlogPost: React.FC = () => {
     try {
       setLoading(true);
       
-      // Fetch the blog post
+      // Fetch the blog post using maybeSingle() instead of single()
       const { data, error } = await supabase
         .from('blog_posts')
         .select(`
@@ -61,21 +61,15 @@ const BlogPost: React.FC = () => {
         `)
         .eq('slug', postSlug)
         .eq('status', 'published')
-        .single();
+        .maybeSingle();
 
       if (error) {
-        if (error.code === 'PGRST116') {
-          // Post not found - handle silently
-          setLoading(false);
-          setPost(null);
-          return;
-        }
-        // Only throw error for non-PGRST116 errors
         throw error;
       }
       
       if (!data) {
         setLoading(false);
+        setPost(null);
         return;
       }
       
