@@ -13,10 +13,14 @@ export const PRODUCTS: Product[] = [
     description: 'Elegant silk evening gown with delicate beading and flowing silhouette',
     price: 3500.00,
     imageUrl: 'https://images.pexels.com/photos/1755385/pexels-photo-1755385.jpeg',
-    category: 'clothing',
+    category: {
+      id: 'clothing',
+      name: 'Clothing',
+      slug: 'clothing'
+    },
     rating: 4.9,
-    reviewCount: 15,
-    isNew: true,
+    review_count: 15,
+    is_new: true,
     stock_quantity: 5
   },
   {
@@ -30,9 +34,13 @@ export const PRODUCTS: Product[] = [
     description: 'Classic wool suit with modern cut and premium Italian fabric',
     price: 4200.00,
     imageUrl: 'https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg',
-    category: 'clothing',
+    category: {
+      id: 'clothing',
+      name: 'Clothing',
+      slug: 'clothing'
+    },
     rating: 4.8,
-    reviewCount: 12,
+    review_count: 12,
     stock_quantity: 8
   },
 
@@ -48,10 +56,14 @@ export const PRODUCTS: Product[] = [
     description: 'Elegant pumps with crystal embellishments and 4-inch heel',
     price: 995.00,
     imageUrl: 'https://images.pexels.com/photos/3782786/pexels-photo-3782786.jpeg',
-    category: 'footwear',
+    category: {
+      id: 'footwear',
+      name: 'Footwear',
+      slug: 'footwear'
+    },
     rating: 4.7,
-    reviewCount: 28,
-    isNew: true,
+    review_count: 28,
+    is_new: true,
     stock_quantity: 12
   },
   {
@@ -65,9 +77,13 @@ export const PRODUCTS: Product[] = [
     description: 'Handcrafted leather oxfords with Goodyear welted soles',
     price: 1450.00,
     imageUrl: 'https://images.pexels.com/photos/1461048/pexels-photo-1461048.jpeg',
-    category: 'footwear',
+    category: {
+      id: 'footwear',
+      name: 'Footwear',
+      slug: 'footwear'
+    },
     rating: 4.9,
-    reviewCount: 16,
+    review_count: 16,
     stock_quantity: 6
   },
 
@@ -83,10 +99,14 @@ export const PRODUCTS: Product[] = [
     description: '18K white gold tennis bracelet with round brilliant diamonds',
     price: 15000.00,
     imageUrl: 'https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg',
-    category: 'jewelry',
+    category: {
+      id: 'jewelry',
+      name: 'Jewelry',
+      slug: 'jewelry'
+    },
     rating: 5.0,
-    reviewCount: 8,
-    isNew: true,
+    review_count: 8,
+    is_new: true,
     stock_quantity: 3
   },
   {
@@ -100,9 +120,13 @@ export const PRODUCTS: Product[] = [
     description: 'Classic Akoya pearl strand with 18K white gold clasp',
     price: 8500.00,
     imageUrl: 'https://images.pexels.com/photos/1454171/pexels-photo-1454171.jpeg',
-    category: 'jewelry',
+    category: {
+      id: 'jewelry',
+      name: 'Jewelry',
+      slug: 'jewelry'
+    },
     rating: 4.8,
-    reviewCount: 11,
+    review_count: 11,
     stock_quantity: 4
   },
 
@@ -118,10 +142,14 @@ export const PRODUCTS: Product[] = [
     description: 'Complete luxury skincare routine with Miracle Broth™',
     price: 950.00,
     imageUrl: 'https://images.pexels.com/photos/3785147/pexels-photo-3785147.jpeg',
-    category: 'beauty',
+    category: {
+      id: 'beauty',
+      name: 'Beauty',
+      slug: 'beauty'
+    },
     rating: 4.7,
-    reviewCount: 45,
-    isNew: true,
+    review_count: 45,
+    is_new: true,
     stock_quantity: 20
   },
   {
@@ -135,9 +163,13 @@ export const PRODUCTS: Product[] = [
     description: 'Exclusive blend of rare ingredients in signature fragrance',
     price: 350.00,
     imageUrl: 'https://images.pexels.com/photos/965989/pexels-photo-965989.jpeg',
-    category: 'beauty',
+    category: {
+      id: 'beauty',
+      name: 'Beauty',
+      slug: 'beauty'
+    },
     rating: 4.9,
-    reviewCount: 32,
+    review_count: 32,
     stock_quantity: 15
   },
 
@@ -153,10 +185,14 @@ export const PRODUCTS: Product[] = [
     description: 'Hand-beaded silk wedding gown with cathedral train',
     price: 12000.00,
     imageUrl: 'https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg',
-    category: 'bridal',
+    category: {
+      id: 'bridal',
+      name: 'Bridal',
+      slug: 'bridal'
+    },
     rating: 5.0,
-    reviewCount: 6,
-    isNew: true,
+    review_count: 6,
+    is_new: true,
     stock_quantity: 2
   },
   {
@@ -170,9 +206,13 @@ export const PRODUCTS: Product[] = [
     description: 'Diamond and pearl tiara with vintage-inspired design',
     price: 6500.00,
     imageUrl: 'https://images.pexels.com/photos/265906/pexels-photo-265906.jpeg',
-    category: 'bridal',
+    category: {
+      id: 'bridal',
+      name: 'Bridal',
+      slug: 'bridal'
+    },
     rating: 4.9,
-    reviewCount: 4,
+    review_count: 4,
     stock_quantity: 3
   },
 
@@ -188,10 +228,14 @@ export const PRODUCTS: Product[] = [
     description: 'Limited edition holiday watch with diamond accents',
     price: 25000.00,
     imageUrl: 'https://images.pexels.com/photos/9981133/pexels-photo-9981133.jpeg',
-    category: 'christmas',
+    category: {
+      id: 'christmas',
+      name: 'Christmas',
+      slug: 'christmas'
+    },
     rating: 5.0,
-    reviewCount: 3,
-    isNew: true,
+    review_count: 3,
+    is_new: true,
     stock_quantity: 5
   },
   {
@@ -205,9 +249,13 @@ export const PRODUCTS: Product[] = [
     description: 'Limited edition holiday beauty collection in luxury packaging',
     price: 550.00,
     imageUrl: 'https://images.pexels.com/photos/6621472/pexels-photo-6621472.jpeg',
-    category: 'christmas',
+    category: {
+      id: 'christmas',
+      name: 'Christmas',
+      slug: 'christmas'
+    },
     rating: 4.8,
-    reviewCount: 15,
+    review_count: 15,
     stock_quantity: 25
   },
 
@@ -225,9 +273,13 @@ export const PRODUCTS: Product[] = [
     discountedPrice: 1960.00,
     discount: 30,
     imageUrl: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg',
-    category: 'sale',
+    category: {
+      id: 'sale',
+      name: 'Sale',
+      slug: 'sale'
+    },
     rating: 4.7,
-    reviewCount: 28,
+    review_count: 28,
     stock_quantity: 4
   },
   {
@@ -243,13 +295,17 @@ export const PRODUCTS: Product[] = [
     discountedPrice: 299.00,
     discount: 35,
     imageUrl: 'https://images.pexels.com/photos/701877/pexels-photo-701877.jpeg',
-    category: 'sale',
+    category: {
+      id: 'sale',
+      name: 'Sale',
+      slug: 'sale'
+    },
     rating: 4.6,
-    reviewCount: 22,
+    review_count: 22,
     stock_quantity: 8
   }
 ];
 
 export const FEATURED_PRODUCTS = PRODUCTS.filter(product => 
-  product.isNew || product.discount > 0
+  product.is_new || product.discount > 0
 );
