@@ -46,60 +46,6 @@ const PRODUCT_TAGS = [
   { value: 'kids', label: 'Kids', color: 'bg-green-100 text-green-800' }
 ];
 
-// Luxury fashion brands
-const LUXURY_BRANDS = [
-  { value: 'gucci', label: 'Gucci' },
-  { value: 'chanel', label: 'Chanel' },
-  { value: 'dior', label: 'Dior' },
-  { value: 'saint-laurent', label: 'Saint Laurent (YSL)' },
-  { value: 'hermes', label: 'Hermès' },
-  { value: 'prada', label: 'Prada' },
-  { value: 'fendi', label: 'Fendi' },
-  { value: 'balenciaga', label: 'Balenciaga' },
-  { value: 'givenchy', label: 'Givenchy' },
-  { value: 'valentino', label: 'Valentino' },
-  { value: 'burberry', label: 'Burberry' },
-  { value: 'versace', label: 'Versace' },
-  { value: 'dolce-gabbana', label: 'Dolce & Gabbana' },
-  { value: 'tom-ford', label: 'Tom Ford' },
-  { value: 'alexander-mcqueen', label: 'Alexander McQueen' },
-  { value: 'loewe', label: 'Loewe' },
-  { value: 'celine', label: 'Celine' },
-  { value: 'bottega-veneta', label: 'Bottega Veneta' },
-  { value: 'off-white', label: 'Off-White' },
-  { value: 'maison-margiela', label: 'Maison Margiela' },
-  { value: 'ralph-lauren-purple-label', label: 'Ralph Lauren Purple Label' },
-  { value: 'giorgio-armani', label: 'Giorgio Armani' },
-  { value: 'brunello-cucinelli', label: 'Brunello Cucinelli' },
-  { value: 'kenzo', label: 'Kenzo' },
-  { value: 'lanvin', label: 'Lanvin' }
-];
-
-// Luxury beauty brands
-const BEAUTY_BRANDS = [
-  { value: 'la-mer', label: 'La Mer' },
-  { value: 'estee-lauder', label: 'Estée Lauder' },
-  { value: 'dior-beauty', label: 'Dior Beauty' },
-  { value: 'chanel-beauty', label: 'Chanel Beauty' },
-  { value: 'lancome', label: 'Lancôme' },
-  { value: 'cle-de-peau-beaute', label: 'Clé de Peau Beauté' },
-  { value: 'giorgio-armani-beauty', label: 'Giorgio Armani Beauty' },
-  { value: 'tom-ford-beauty', label: 'Tom Ford Beauty' },
-  { value: 'ysl-beauty', label: 'Yves Saint Laurent Beauty' },
-  { value: 'guerlain', label: 'Guerlain' },
-  { value: 'sisley-paris', label: 'Sisley Paris' },
-  { value: 'shiseido', label: 'Shiseido' },
-  { value: 'sk-ii', label: 'SK-II' },
-  { value: 'helena-rubinstein', label: 'Helena Rubinstein' },
-  { value: 'givenchy-beauty', label: 'Givenchy Beauty' },
-  { value: 'valmont', label: 'Valmont' },
-  { value: 'la-prairie', label: 'La Prairie' },
-  { value: 'augustinus-bader', label: 'Augustinus Bader' },
-  { value: 'oribe', label: 'Oribe' },
-  { value: 'byredo', label: 'Byredo' }
-];
-
-// Define subcategories for each product type
 const SUBCATEGORIES = {
   footwear: [
     // Men's Footwear
@@ -350,7 +296,6 @@ const SUBCATEGORIES = {
     { id: 'wallets-purses', name: 'Wallets & Purses', gender: 'unisex' },
     { id: 'luggage', name: 'Luggage', gender: 'unisex' }
   ],
-  // Bridal specific subcategories
   bridal: [
     { id: 'bridal-gowns', name: 'Bridal Gowns', gender: 'women' },
     { id: 'bridal-veils', name: 'Bridal Veils', gender: 'women' },
@@ -453,31 +398,25 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
     fetchBrands();
     fetchSubcategories();
     
-    // Initialize the product type based on the category
     setValue('type', mapCategoryToType(category));
     
-    // For bridal category, set gender to women by default
     if (category === 'bridal') {
       setValue('gender', 'women');
     }
     
-    // Add the category tag for special categories
     if (isSpecialCategory) {
       setValue('tags', [category]);
     }
   }, [category]);
 
   useEffect(() => {
-    // Update subcategories when type or gender changes
     const type = selectedType;
     if (type) {
       let predefinedSubcats: any[] = [];
       
-      // For bridal category, use bridal-specific subcategories regardless of the product type
       if (category === 'bridal') {
         predefinedSubcats = SUBCATEGORIES['bridal'] || [];
       } else {
-        // For other categories, use the subcategories for the selected product type
         predefinedSubcats = SUBCATEGORIES[type as keyof typeof SUBCATEGORIES] || [];
       }
       
@@ -562,6 +501,13 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
     }
   });
 
+  const getBrandOptions = () => {
+    return brands.map(brand => ({
+      value: brand.id,
+      label: brand.name
+    }));
+  };
+
   const handleBrandChange = async (option: any) => {
     if (option?.__isNew__) {
       setValue('brand_id', '');
@@ -621,13 +567,11 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         productData.type = category as any;
       }
 
-      // Generate slug from name
       const slug = productData.name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '');
 
-      // Insert product
       const { data: product, error: productError } = await supabase
         .from('products')
         .insert([{
@@ -642,7 +586,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
 
       if (productError) throw productError;
 
-      // Upload images
       if (images.length > 0) {
         const imagePromises = images.map(async (file, index) => {
           const fileExt = file.name.split('.').pop();
@@ -689,27 +632,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
   };
 
   if (!isOpen) return null;
-
-  // Get the appropriate brand options based on the category
-  const getBrandOptions = () => {
-    if (category === 'beauty') {
-      return [
-        ...BEAUTY_BRANDS,
-        ...brands.map(brand => ({
-          value: brand.id,
-          label: brand.name
-        }))
-      ];
-    } else {
-      return [
-        ...LUXURY_BRANDS,
-        ...brands.map(brand => ({
-          value: brand.id,
-          label: brand.name
-        }))
-      ];
-    }
-  };
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -766,7 +688,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                   <select
                     {...register('gender', { required: 'Gender is required' })}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                    disabled={category === 'bridal'} // Disable for bridal category
+                    disabled={category === 'bridal'}
                   >
                     <option value="">Select Gender</option>
                     <option value="men">Men</option>
