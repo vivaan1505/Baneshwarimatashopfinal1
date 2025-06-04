@@ -4,6 +4,7 @@ import { Search, Calendar, User, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
 import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
+import { imageOptimizer } from '../utils/imageOptimizer';
 
 interface BlogPost {
   id: string;
@@ -417,12 +418,15 @@ const BlogPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPosts.map((post) => (
               <article key={post.id} className="card group dark:bg-gray-800">
-                <div className="relative">
+                <Link to={`/blog/${post.slug}`} className="block">
                   <div className="relative overflow-hidden h-56">
                     <img 
-                      src={post.featured_image || 'https://via.placeholder.com/600x400?text=No+Image'} 
+                      src={post.featured_image ? imageOptimizer.blog(post.featured_image) : 'https://via.placeholder.com/600x400?text=No+Image'} 
                       alt={post.title} 
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      width="600"
+                      height="400"
                     />
                     {post.categories.length > 0 && (
                       <div className="absolute top-4 left-4">
@@ -432,54 +436,67 @@ const BlogPage: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  
-                  <div className="p-6">
-                    <div className="flex items-center text-sm text-gray-500 mb-3 dark:text-gray-400">
-                      <div className="flex items-center">
-                        <User size={14} className="mr-1" />
-                        <span>{getAuthorName(post)}</span>
-                      </div>
-                      <span className="mx-2">•</span>
-                      <div className="flex items-center">
-                        <Calendar size={14} className="mr-1" />
-                        <span>{getFormattedDate(post.published_at || post.created_at)}</span>
-                      </div>
+                </Link>
+                
+                <div className="p-6">
+                  <div className="flex items-center text-sm text-gray-500 mb-3 dark:text-gray-400">
+                    <div className="flex items-center">
+                      <User size={14} className="mr-1" aria-hidden="true" />
+                      <span>{getAuthorName(post)}</span>
                     </div>
-                    
-                    <h2 className="text-xl font-heading font-medium mb-2 group-hover:text-primary-700 transition-colors dark:text-white dark:group-hover:text-primary-400">
-                      {post.title}
-                    </h2>
-                    
-                    <p className="text-gray-600 mb-4 line-clamp-2 dark:text-gray-300">
-                      {post.excerpt}
-                    </p>
-                    
-                    <button 
-                      onClick={() => toggleExpandPost(post.id)}
-                      className="inline-flex items-center text-primary-700 hover:text-primary-800 font-medium text-sm transition-colors dark:text-primary-400 dark:hover:text-primary-300"
-                    >
-                      {expandedPost === post.id ? 'Close' : 'Read More'}
-                    </button>
+                    <span className="mx-2">•</span>
+                    <div className="flex items-center">
+                      <Calendar size={14} className="mr-1" aria-hidden="true" />
+                      <span>{getFormattedDate(post.published_at || post.created_at)}</span>
+                    </div>
                   </div>
+                  
+                  <Link to={`/blog/${post.slug}`} className="block group">
+                    <h3 className="text-xl font-medium font-heading mb-2 group-hover:text-primary-700 transition-colors dark:text-white dark:group-hover:text-primary-400">
+                      {post.title}
+                    </h3>
+                  </Link>
+                  
+                  <p className="text-gray-600 mb-4 line-clamp-2 dark:text-gray-300">
+                    {post.excerpt}
+                  </p>
+                  
+                  <button 
+                    onClick={() => toggleExpandPost(post.id)}
+                    className="inline-flex items-center text-primary-700 hover:text-primary-800 font-medium text-sm transition-colors dark:text-primary-400 dark:hover:text-primary-300"
+                    aria-expanded={expandedPost === post.id}
+                    aria-controls={`expanded-post-${post.id}`}
+                  >
+                    {expandedPost === post.id ? 'Close' : 'Read More'}
+                  </button>
                 </div>
 
                 {/* Expanded Post Modal */}
                 {expandedPost === post.id && (
-                  <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
+                  <div 
+                    id={`expanded-post-${post.id}`}
+                    className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby={`post-title-${post.id}`}
+                  >
                     <div className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                       <div className="relative">
                         {post.featured_image && (
                           <div className="h-64 md:h-80">
                             <img 
-                              src={post.featured_image} 
+                              src={imageOptimizer.blog(post.featured_image)} 
                               alt={post.title} 
                               className="w-full h-full object-cover"
+                              width="800"
+                              height="400"
                             />
                           </div>
                         )}
                         <button 
                           onClick={() => setExpandedPost(null)}
                           className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md text-gray-700 hover:text-gray-900 dark:bg-gray-700 dark:text-gray-300 dark:hover:text-white"
+                          aria-label="Close"
                         >
                           <X size={20} />
                         </button>
@@ -488,12 +505,12 @@ const BlogPage: React.FC = () => {
                       <div className="p-6 md:p-8">
                         <div className="flex items-center text-sm text-gray-500 mb-4 dark:text-gray-400">
                           <div className="flex items-center">
-                            <User size={14} className="mr-1" />
+                            <User size={14} className="mr-1" aria-hidden="true" />
                             <span>{getAuthorName(post)}</span>
                           </div>
                           <span className="mx-2">•</span>
                           <div className="flex items-center">
-                            <Calendar size={14} className="mr-1" />
+                            <Calendar size={14} className="mr-1" aria-hidden="true" />
                             <span>{getFormattedDate(post.published_at || post.created_at)}</span>
                           </div>
                           {post.categories.length > 0 && (
@@ -506,7 +523,10 @@ const BlogPage: React.FC = () => {
                           )}
                         </div>
                         
-                        <h2 className="text-2xl md:text-3xl font-heading font-bold mb-4 dark:text-white">
+                        <h2 
+                          id={`post-title-${post.id}`}
+                          className="text-2xl md:text-3xl font-heading font-bold mb-4 dark:text-white"
+                        >
                           {post.title}
                         </h2>
                         

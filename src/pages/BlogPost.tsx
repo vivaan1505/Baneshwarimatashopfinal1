@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
 import { toast } from 'react-hot-toast';
 import { updateMetaTags, addStructuredData, generateArticleSchema, generateBreadcrumbSchema } from '../utils/seo';
+import { imageOptimizer } from '../utils/imageOptimizer';
 
 interface BlogPostData {
   id: string;
@@ -93,12 +94,46 @@ const BlogPost: React.FC = () => {
             const users = await response.json();
             if (users.length > 0) {
               data.author = users[0];
+            } else {
+              // Fallback author data if user not found
+              data.author = {
+                email: 'author@minddshopp.com',
+                user_metadata: {
+                  first_name: 'MinddShopp',
+                  last_name: 'Author'
+                }
+              };
             }
+          } else {
+            // Fallback author data if fetch fails
+            data.author = {
+              email: 'author@minddshopp.com',
+              user_metadata: {
+                first_name: 'MinddShopp',
+                last_name: 'Author'
+              }
+            };
           }
+        } else {
+          // Fallback author data if no session
+          data.author = {
+            email: 'author@minddshopp.com',
+            user_metadata: {
+              first_name: 'MinddShopp',
+              last_name: 'Author'
+            }
+          };
         }
       } catch (error) {
         console.error('Error fetching author details:', error);
         // Continue without author details
+        data.author = {
+          email: 'author@minddshopp.com',
+          user_metadata: {
+            first_name: 'MinddShopp',
+            last_name: 'Author'
+          }
+        };
       }
       
       setPost(data);
@@ -108,7 +143,7 @@ const BlogPost: React.FC = () => {
         updateMetaTags(
           `${data.title} | MinddShopp Blog`,
           data.excerpt || 'Read our latest blog post at MinddShopp',
-          data.featured_image,
+          data.featured_image ? imageOptimizer.blog(data.featured_image) : `${window.location.origin}/icon-512.png`,
           window.location.href
         );
         
@@ -116,7 +151,7 @@ const BlogPost: React.FC = () => {
         const articleSchema = generateArticleSchema({
           title: data.title,
           description: data.excerpt || '',
-          imageUrl: data.featured_image || '',
+          imageUrl: data.featured_image ? imageOptimizer.blog(data.featured_image) : '',
           datePublished: data.published_at || data.created_at,
           dateModified: data.updated_at,
           authorName: data.author ? 
@@ -198,7 +233,10 @@ const BlogPost: React.FC = () => {
       'Style Guide': 'secondary',
       'Beauty Tips': 'accent',
       'Lifestyle': 'success',
-      'Interviews': 'warning'
+      'Interviews': 'warning',
+      'Product Reviews': 'primary',
+      'Product Care': 'secondary',
+      'Bridal': 'accent'
     };
     
     return colorMap[categoryName] || 'primary';
@@ -260,21 +298,29 @@ const BlogPost: React.FC = () => {
   // If expanded view is active, render a modal-like view
   if (isExpanded) {
     return (
-      <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div 
+        className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="expanded-post-title"
+      >
         <div className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
           <div className="relative">
             {post.featured_image && (
               <div className="h-64 md:h-80">
                 <img 
-                  src={post.featured_image} 
+                  src={imageOptimizer.blog(post.featured_image)} 
                   alt={post.title} 
                   className="w-full h-full object-cover"
+                  width="800"
+                  height="400"
                 />
               </div>
             )}
             <button 
               onClick={toggleExpanded}
               className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md text-gray-700 hover:text-gray-900 dark:bg-gray-700 dark:text-gray-300 dark:hover:text-white"
+              aria-label="Close full article view"
             >
               <X size={20} />
             </button>
@@ -283,12 +329,12 @@ const BlogPost: React.FC = () => {
           <div className="p-6 md:p-8">
             <div className="flex items-center text-sm text-gray-500 mb-4 dark:text-gray-400">
               <div className="flex items-center">
-                <User size={14} className="mr-1" />
+                <User size={14} className="mr-1" aria-hidden="true" />
                 <span>{getAuthorName(post)}</span>
               </div>
               <span className="mx-2">•</span>
               <div className="flex items-center">
-                <Calendar size={14} className="mr-1" />
+                <Calendar size={14} className="mr-1" aria-hidden="true" />
                 <span>{getFormattedDate(post.published_at || post.created_at)}</span>
               </div>
               {post.categories.length > 0 && (
@@ -301,7 +347,10 @@ const BlogPost: React.FC = () => {
               )}
             </div>
             
-            <h2 className="text-2xl md:text-3xl font-heading font-bold mb-4 dark:text-white">
+            <h2 
+              id="expanded-post-title"
+              className="text-2xl md:text-3xl font-heading font-bold mb-4 dark:text-white"
+            >
               {post.title}
             </h2>
             
@@ -324,9 +373,9 @@ const BlogPost: React.FC = () => {
               
               <button 
                 onClick={sharePost}
-                className="btn-primary flex items-center"
+                className="btn-primary flex items-center ml-4"
               >
-                <Share className="mr-2 h-4 w-4" />
+                <Share className="mr-2 h-4 w-4" aria-hidden="true" />
                 Share
               </button>
             </div>
@@ -340,17 +389,17 @@ const BlogPost: React.FC = () => {
     <article className="py-12">
       <div className="container-custom">
         {/* Breadcrumbs */}
-        <nav className="mb-8">
+        <nav className="mb-8" aria-label="Breadcrumb">
           <ol className="flex items-center text-sm">
             <li className="flex items-center">
               <Link to="/" className="text-gray-500 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-400">Home</Link>
-              <svg className="mx-2 w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="mx-2 w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
               </svg>
             </li>
             <li className="flex items-center">
               <Link to="/blog" className="text-gray-500 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-400">Blog</Link>
-              <svg className="mx-2 w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="mx-2 w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
               </svg>
             </li>
@@ -363,7 +412,7 @@ const BlogPost: React.FC = () => {
           to="/blog" 
           className="inline-flex items-center text-sm text-primary-700 hover:text-primary-800 mb-8 dark:text-primary-400 dark:hover:text-primary-300"
         >
-          <ArrowLeft size={16} className="mr-1" />
+          <ArrowLeft size={16} className="mr-1" aria-hidden="true" />
           Back to Blog
         </Link>
 
@@ -371,9 +420,11 @@ const BlogPost: React.FC = () => {
         {post.featured_image && (
           <div className="relative aspect-[21/9] rounded-xl overflow-hidden mb-8">
             <img 
-              src={post.featured_image} 
+              src={imageOptimizer.blog(post.featured_image)} 
               alt={post.title}
               className="absolute inset-0 w-full h-full object-cover"
+              width="1200"
+              height="600"
             />
           </div>
         )}
@@ -387,11 +438,11 @@ const BlogPost: React.FC = () => {
               </span>
             )}
             <div className="flex items-center">
-              <Calendar size={16} className="mr-1" />
+              <Calendar size={16} className="mr-1" aria-hidden="true" />
               {getFormattedDate(post.published_at || post.created_at)}
             </div>
             <div className="flex items-center">
-              <User size={16} className="mr-1" />
+              <User size={16} className="mr-1" aria-hidden="true" />
               {getAuthorName(post)}
             </div>
           </div>
@@ -413,6 +464,8 @@ const BlogPost: React.FC = () => {
             <button
               onClick={toggleExpanded}
               className="btn-primary"
+              aria-expanded="false"
+              aria-controls="full-article"
             >
               Read Full Article
             </button>
@@ -423,7 +476,7 @@ const BlogPost: React.FC = () => {
         {post.categories.length > 0 && (
           <div className="max-w-3xl mx-auto mt-12 pt-8 border-t dark:border-gray-700">
             <div className="flex items-center flex-wrap gap-2">
-              <Tag size={16} className="text-gray-600 dark:text-gray-400" />
+              <Tag size={16} className="text-gray-600 dark:text-gray-400" aria-hidden="true" />
               {post.categories.map(cat => (
                 <Link 
                   key={cat.category.slug}
@@ -442,14 +495,17 @@ const BlogPost: React.FC = () => {
           <button 
             onClick={sharePost}
             className="btn-outline px-4 py-2 text-sm flex items-center"
+            aria-label="Share this post"
           >
-            <Share className="mr-2 h-4 w-4" />
+            <Share className="mr-2 h-4 w-4" aria-hidden="true" />
             Share This Post
           </button>
           
           <button
             onClick={toggleExpanded}
             className="btn-primary px-4 py-2 text-sm"
+            aria-expanded="false"
+            aria-controls="full-article"
           >
             Read Full Article
           </button>
@@ -464,9 +520,12 @@ const BlogPost: React.FC = () => {
                 <article key={relatedPost.id} className="card group dark:bg-gray-800">
                   <div className="relative overflow-hidden h-48">
                     <img 
-                      src={relatedPost.featured_image || 'https://via.placeholder.com/600x400?text=No+Image'} 
+                      src={relatedPost.featured_image ? imageOptimizer.thumbnail(relatedPost.featured_image) : 'https://via.placeholder.com/600x400?text=No+Image'} 
                       alt={relatedPost.title} 
                       className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                      width="400"
+                      height="300"
                     />
                   </div>
                   
