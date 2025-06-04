@@ -94,7 +94,7 @@ const CareersPage: React.FC = () => {
         .from('jobs')
         .select('*')
         .eq('status', 'published')
-        .lte('expires_at', new Date().toISOString())
+        .gte('expires_at', new Date().toISOString())
         .order('created_at', { ascending: false });
 
       if (error) throw error;
