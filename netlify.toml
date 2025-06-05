@@ -23,6 +23,7 @@
 [template.environment]
   VITE_SUPABASE_URL = "Set your Supabase URL here"
   VITE_SUPABASE_ANON_KEY = "Set your Supabase anon key here"
+  SITE_URL = "https://minddshopp.com"
 
 # Custom domain configuration
 [context.production]
@@ -61,3 +62,35 @@
   for = "/icon-*.png"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Build hooks for sitemap generation
+[build.processing]
+  skip_processing = false
+
+[build.processing.html]
+  pretty_urls = true
+
+# Post-processing command to generate sitemap
+[build.processing.sitemap]
+  filename = "sitemap.xml"
+
+# Build plugins
+[[plugins]]
+  package = "@netlify/plugin-sitemap"
+  
+  [plugins.inputs]
+  buildDir = "dist"
+  prettyURLs = true
+  trailingSlash = false
+  exclude = [
+    # Exclude admin pages
+    "/admin/*",
+    # Exclude account pages
+    "/account/*",
+    # Exclude auth pages
+    "/auth/*",
+    # Exclude checkout pages
+    "/checkout",
+    # Exclude 404 page
+    "/404"
+  ]
