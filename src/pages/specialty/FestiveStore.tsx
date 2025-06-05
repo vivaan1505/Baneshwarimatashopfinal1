@@ -8,6 +8,34 @@ import { toast } from 'react-hot-toast';
 import { useCartStore } from '../../stores/cartStore';
 import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../../utils/seo';
 
+// Festival tag options
+const festivalTagOptions = [
+  { value: 'christmas', label: 'Christmas', color: 'bg-red-100 text-red-800' },
+  { value: 'diwali', label: 'Diwali', color: 'bg-yellow-100 text-yellow-800' },
+  { value: 'eid', label: 'Eid', color: 'bg-green-100 text-green-800' },
+  { value: 'hanukkah', label: 'Hanukkah', color: 'bg-blue-100 text-blue-800' },
+  { value: 'chinese_new_year', label: 'Chinese New Year', color: 'bg-orange-100 text-orange-800' },
+  { value: 'ramadan', label: 'Ramadan', color: 'bg-green-200 text-green-900' },
+  { value: 'easter', label: 'Easter', color: 'bg-pink-100 text-pink-800' },
+  { value: 'thanksgiving', label: 'Thanksgiving', color: 'bg-orange-200 text-orange-900' },
+  { value: 'halloween', label: 'Halloween', color: 'bg-purple-100 text-purple-800' },
+  { value: 'holi', label: 'Holi', color: 'bg-fuchsia-100 text-fuchsia-800' },
+  { value: 'vesak', label: 'Vesak', color: 'bg-yellow-200 text-yellow-900' },
+  { value: 'passover', label: 'Passover', color: 'bg-blue-200 text-blue-900' },
+  { value: 'kwanzaa', label: 'Kwanzaa', color: 'bg-green-300 text-green-900' },
+  { value: 'songkran', label: 'Songkran', color: 'bg-sky-100 text-sky-800' },
+  { value: 'nowruz', label: 'Nowruz', color: 'bg-green-100 text-green-800' },
+  { value: 'lunar_new_year', label: 'Lunar New Year', color: 'bg-amber-100 text-amber-800' },
+  { value: 'mid_autumn_festival', label: 'Mid-Autumn Festival', color: 'bg-yellow-300 text-yellow-900' },
+  { value: 'yam', label: 'Yam Festival', color: 'bg-lime-100 text-lime-800' },
+  { value: 'intiraymi', label: 'Inti Raymi', color: 'bg-orange-300 text-orange-900' },
+  { value: 'las_posadas', label: 'Las Posadas', color: 'bg-cyan-100 text-cyan-800' },
+  { value: 'obon', label: 'Obon', color: 'bg-rose-100 text-rose-800' },
+  { value: 'mardi_gras', label: 'Mardi Gras', color: 'bg-violet-100 text-violet-800' },
+  { value: 'bastille_day', label: 'Bastille Day', color: 'bg-blue-300 text-blue-900' },
+  { value: 'st_patricks', label: "St. Patrick's Day", color: 'bg-green-400 text-green-900' }
+];
+
 interface Product {
   id: string;
   name: string;
@@ -23,6 +51,7 @@ interface Product {
 const FestiveStore: React.FC = () => {
   const [festiveProducts, setFestiveProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedFestival, setSelectedFestival] = useState<string>('christmas');
   const navigate = useNavigate();
   const { addItem } = useCartStore();
   const metaUpdatedRef = useRef(false);
@@ -42,9 +71,11 @@ const FestiveStore: React.FC = () => {
     });
     addStructuredData(webPageSchema);
     metaUpdatedRef.current = true;
-  }, []);
+    // eslint-disable-next-line
+  }, [selectedFestival]);
 
   const fetchFestiveProducts = async () => {
+    setLoading(true);
     try {
       const { data, error } = await supabase
         .from('products')
@@ -57,7 +88,7 @@ const FestiveStore: React.FC = () => {
           stock_quantity,
           brand:brands(name)
         `)
-        .contains('tags', ['christmas'])
+        .contains('tags', [selectedFestival])
         .eq('is_visible', true)
         .limit(8);
 
@@ -93,6 +124,21 @@ const FestiveStore: React.FC = () => {
 
   return (
     <div className="bg-gradient-to-br from-yellow-50 via-rose-50 to-fuchsia-50 min-h-screen dark:from-gray-900 dark:via-gray-950 dark:to-black">
+      {/* Festival Tag Filter */}
+      <section className="container-custom pt-10">
+        <div className="flex gap-3 mb-8 flex-wrap justify-center">
+          {festivalTagOptions.map(opt => (
+            <button
+              key={opt.value}
+              className={`px-4 py-1 rounded-full font-medium ${opt.color} ${selectedFestival === opt.value ? 'ring-2 ring-fuchsia-600' : ''} transition`}
+              onClick={() => setSelectedFestival(opt.value)}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </section>
+
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-40">
