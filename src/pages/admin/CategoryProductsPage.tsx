@@ -24,17 +24,20 @@ const CategoryProductsPage: React.FC = () => {
   const [sortField, setSortField] = useState<'name' | 'price' | 'stock_quantity' | 'created_at'>('created_at');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
-  
+  // Track products with missing category or category.slug
+  const [productsMissingCategory, setProductsMissingCategory] = useState<any[]>([]);
+
   useEffect(() => {
     if (category) {
       fetchCategoryProducts(category);
     }
+    // eslint-disable-next-line
   }, [category]);
 
   const fetchCategoryProducts = async (categorySlug: string) => {
     try {
       setLoading(true);
-      
+
       let query = supabase
         .from('products')
         .select(`
@@ -43,7 +46,7 @@ const CategoryProductsPage: React.FC = () => {
           category:categories(*),
           images:product_images(*)
         `);
-      
+
       // Handle different category types
       if (categorySlug === 'bridal') {
         query = query.contains('tags', ['bridal']);
@@ -55,11 +58,18 @@ const CategoryProductsPage: React.FC = () => {
         // For regular categories like clothing, footwear, etc.
         query = query.eq('type', categorySlug);
       }
-      
+
       const { data, error } = await query.order('created_at', { ascending: false });
-      
+
       if (error) throw error;
       setProducts(data || []);
+
+      // Check for products missing category or category.slug
+      const missingCategory = (data || []).filter(
+        p => !p.category || !p.category.slug
+      );
+      setProductsMissingCategory(missingCategory);
+
     } catch (error) {
       console.error('Error fetching category products:', error);
       toast.error('Failed to load products');
@@ -78,8 +88,8 @@ const CategoryProductsPage: React.FC = () => {
   };
 
   const handleSelectProduct = (productId: string) => {
-    setSelectedProducts(prev => 
-      prev.includes(productId) 
+    setSelectedProducts(prev =>
+      prev.includes(productId)
         ? prev.filter(id => id !== productId)
         : [...prev, productId]
     );
@@ -87,8 +97,8 @@ const CategoryProductsPage: React.FC = () => {
 
   const handleSelectAll = () => {
     setSelectedProducts(
-      selectedProducts.length === products.length 
-        ? [] 
+      selectedProducts.length === products.length
+        ? []
         : products.map(p => p.id)
     );
   };
@@ -149,7 +159,7 @@ const CategoryProductsPage: React.FC = () => {
 
       // Create a new workbook
       const workbook = XLSX.utils.book_new();
-      
+
       // Prepare data for export
       const exportData = productsToExport.map(product => {
         // Base fields for all products
@@ -203,17 +213,17 @@ const CategoryProductsPage: React.FC = () => {
 
       // Create a worksheet
       const worksheet = XLSX.utils.json_to_sheet(exportData);
-      
+
       // Add the worksheet to the workbook
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Products');
-      
+
       // Generate Excel file
       const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
       const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      
+
       // Save the file
       saveAs(blob, `${category || 'products'}_export_${new Date().toISOString().split('T')[0]}.xlsx`);
-      
+
       toast.success(`Exported ${exportData.length} products`);
     } catch (error) {
       console.error('Error exporting products:', error);
@@ -224,7 +234,7 @@ const CategoryProductsPage: React.FC = () => {
   const filteredProducts = products.filter(product => {
     const searchLower = searchQuery.toLowerCase();
     return (
-      product.name.toLowerCase().includes(searchLower) ||
+      product.name?.toLowerCase().includes(searchLower) ||
       (product.brand?.name?.toLowerCase() || '').includes(searchLower) ||
       (product.sku?.toLowerCase() || '').includes(searchLower)
     );
@@ -232,7 +242,7 @@ const CategoryProductsPage: React.FC = () => {
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     const direction = sortDirection === 'asc' ? 1 : -1;
-    
+
     switch (sortField) {
       case 'name':
         return direction * (a.name || '').localeCompare(b.name || '');
@@ -251,6 +261,24 @@ const CategoryProductsPage: React.FC = () => {
 
   return (
     <div>
+      {/* Warning for missing category/slug */}
+      {productsMissingCategory.length > 0 && (
+        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 dark:bg-yellow-900 dark:text-yellow-200">
+          <strong>Warning:</strong> {productsMissingCategory.length} products are missing a category or category slug.<br />
+          <span>These products will not appear in category-specific listings:</span>
+          <ul className="list-disc ml-5 mt-2">
+            {productsMissingCategory.slice(0, 10).map(p => (
+              <li key={p.id || p.sku}>
+                {p.name || <span className="italic text-gray-500">No Name</span>} (SKU: {p.sku || "N/A"})
+              </li>
+            ))}
+            {productsMissingCategory.length > 10 && (
+              <li>...and {productsMissingCategory.length - 10} more.</li>
+            )}
+          </ul>
+        </div>
+      )}
+
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold dark:text-white">
           {category.charAt(0).toUpperCase() + category.slice(1)} Products
@@ -280,7 +308,7 @@ const CategoryProductsPage: React.FC = () => {
             </>
           ) : (
             <>
-              <button 
+              <button
                 onClick={() => setIsAddModalOpen(true)}
                 className="btn-primary flex items-center"
               >
@@ -321,7 +349,7 @@ const CategoryProductsPage: React.FC = () => {
               />
             </div>
           </div>
-          
+
           <div className="flex items-center border rounded-md dark:border-gray-600">
             <button
               onClick={() => setViewMode('grid')}
@@ -348,7 +376,7 @@ const CategoryProductsPage: React.FC = () => {
           <p className="mt-2">Loading...</p>
         </div>
       ) : viewMode === 'grid' ? (
-        <ProductGrid 
+        <ProductGrid
           products={sortedProducts}
           selectedProducts={selectedProducts}
           onSelect={handleSelectProduct}
@@ -357,7 +385,7 @@ const CategoryProductsPage: React.FC = () => {
           onRefetch={() => fetchCategoryProducts(category)}
         />
       ) : (
-        <ProductList 
+        <ProductList
           products={sortedProducts}
           selectedProducts={selectedProducts}
           onSelect={handleSelectProduct}
