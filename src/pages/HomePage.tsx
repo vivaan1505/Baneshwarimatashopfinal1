@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu as MenuIcon, Search, ShoppingBag, User, Heart, Ticket } from 'lucide-react';
 import NavigationMenu from '../components/layout/NavigationMenu';
-import CartDrawer from '../cart/CartDrawer';
+import CartDrawer from '../components/cart/CartDrawer';
 import { useCartStore } from '../../stores/cartStore';
 import { useAuthStore } from '../../stores/authStore';
 import { cn } from '../../utils/cn';
