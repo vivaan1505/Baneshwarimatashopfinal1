@@ -24,11 +24,14 @@
   VITE_SUPABASE_URL = "Set your Supabase URL here"
   VITE_SUPABASE_ANON_KEY = "Set your Supabase anon key here"
 
+# Custom domain configuration
+[context.production]
+  # Custom domain
+  custom_domain = "minddshopp.com"
+
 # Custom headers for security and performance
 [[headers]]
   # Define which paths this specific [[headers]] block will cover
-  for = "/*"
-  [[headers]]
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"

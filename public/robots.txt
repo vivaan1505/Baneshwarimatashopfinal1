@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://melodic-cobbler-eefed1.netlify.app/sitemap.xml
+Sitemap: https://minddshopp.com/sitemap.xml
 
 # Disallow admin pages
 User-agent: *
