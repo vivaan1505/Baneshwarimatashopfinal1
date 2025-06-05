@@ -90,10 +90,60 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
     }
   };
 
-  // ... rest of your code remains unchanged ...
+  // --- EXPORT PRODUCTS HANDLER ---
+  const handleExportProducts = async () => {
+    try {
+      let productsToExport = sortedProducts;
+      if (selectedProducts.length > 0) {
+        productsToExport = sortedProducts.filter(p => selectedProducts.includes(p.id));
+      }
 
-  // (code omitted for brevity: handleSort, handleSelectProduct, handleSelectAll,
-  // handleDeleteSelected, handleToggleVisibility, handleEdit, handleExportProducts, etc.)
+      // Prepare data for export
+      const exportData = productsToExport.map(product => ({
+        id: product.id,
+        name: product.name,
+        slug: product.slug,
+        sku: product.sku || '',
+        type: product.type || '',
+        price: product.price,
+        compare_at_price: product.compare_at_price || '',
+        stock_quantity: product.stock_quantity || 0,
+        description: product.description || '',
+        brand_name: product.brand?.name || '',
+        brand_id: product.brand?.id || '',
+        category_id: product.category?.id || '',
+        category_name: product.category?.name || '',
+        is_visible: product.is_visible ? 'true' : 'false',
+        is_featured: product.is_featured ? 'true' : 'false',
+        is_new: product.is_new ? 'true' : 'false',
+        gender: product.gender || '',
+        tags: Array.isArray(product.tags) ? product.tags.join(',') : '',
+        materials: Array.isArray(product.materials) ? product.materials.join(',') : '',
+        care_instructions: product.care_instructions || '',
+        subcategory: product.subcategory || '',
+        created_at: product.created_at || '',
+        updated_at: product.updated_at || ''
+      }));
+
+      // Create a workbook and worksheet
+      const workbook = XLSX.utils.book_new();
+      const worksheet = XLSX.utils.json_to_sheet(exportData);
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Products');
+
+      // Create and save file
+      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+      saveAs(blob, `${category || 'products'}_export_${new Date().toISOString().split('T')[0]}.xlsx`);
+      toast.success(`Exported ${exportData.length} products`);
+    } catch (error) {
+      console.error('Error exporting products:', error);
+      toast.error('Failed to export products');
+    }
+  };
+  // --- END EXPORT PRODUCTS HANDLER ---
+
+  // ... rest of your code remains unchanged ...
 
   const filteredProducts = products.filter(product => {
     const searchLower = searchQuery.toLowerCase();
@@ -152,7 +202,6 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
       )}
 
       {/* ...rest of your toolbar, filters, product grid/list, and modal... */}
-      {/* (your existing code unchanged below this line) */}
 
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold dark:text-white">
