@@ -44,7 +44,7 @@ const BridalBoutique: React.FC = () => {
   useEffect(() => {
     fetchPartnerServices();
     fetchBridalProducts();
-    
+
     // Update meta tags for SEO and social sharing
     updateMetaTags(
       'Bridal Boutique | MinddShopp - Luxury Wedding Collection',
@@ -52,16 +52,16 @@ const BridalBoutique: React.FC = () => {
       'https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       window.location.href
     );
-    
+
     // Add structured data
     const webPageSchema = generateWebPageSchema({
       title: 'Bridal Boutique | MinddShopp - Luxury Wedding Collection',
       description: 'Discover our exquisite bridal collection featuring wedding gowns, accessories, jewelry, and beauty essentials for your perfect day.',
       url: window.location.href
     });
-    
+
     addStructuredData(webPageSchema);
-    
+
     metaUpdatedRef.current = true;
   }, []);
 
@@ -112,12 +112,12 @@ const BridalBoutique: React.FC = () => {
 
   const handleAddToCart = (product: Product, event: React.MouseEvent) => {
     event.stopPropagation(); // Prevent the product click handler from firing
-    
+
     if (product.stock_quantity <= 0) {
       toast.error('This product is out of stock');
       return;
     }
-    
+
     addItem({
       productId: product.id,
       name: product.name,
@@ -125,7 +125,7 @@ const BridalBoutique: React.FC = () => {
       quantity: 1,
       image: product.images?.[0]?.url || ''
     });
-    
+
     toast.success('Added to cart!');
   };
 
@@ -138,51 +138,51 @@ const BridalBoutique: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="relative bg-secondary-50">
-  <div className="absolute inset-0">
-    <img
-      src="https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-      alt="Bridal Collection"
-      className="w-full h-full object-cover"
-    />
-    <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-  </div>
-  <div className="container-custom relative py-20 md:py-32 flex items-center">
-    <div className="max-w-2xl text-white">
-      <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
-        Bridal Boutique
-      </h1>
-      <p className="text-xl mb-8 text-gray-100">
-        Discover our exquisite collection of bridal wear, accessories, and beauty essentials for your perfect day
-      </p>
-      <div className="flex flex-wrap gap-4">
-        <a 
-          href="#collections" 
-          className="btn-accent transition-all duration-300 hover:shadow-lg"
-        >
-          View Collections
-        </a>
-        <a 
-          href="#partner-services" 
-          className="btn bg-white text-secondary-900 hover:bg-gray-100 transition-all duration-300 hover:shadow-lg"
-        >
-          Partner Services
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
+        <div className="absolute inset-0">
+          <img
+            src="https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+            alt="Bridal Collection"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        </div>
+        <div className="container-custom relative py-20 md:py-32 flex items-center">
+          <div className="max-w-2xl text-white">
+            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
+              Bridal Boutique
+            </h1>
+            <p className="text-xl mb-8 text-gray-100">
+              Discover our exquisite collection of bridal wear, accessories, and beauty essentials for your perfect day
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <a
+                href="#collections"
+                className="btn-accent transition-all duration-300 hover:shadow-lg"
+              >
+                View Collections
+              </a>
+              <a
+                href="#partner-services"
+                className="btn bg-white text-secondary-900 hover:bg-gray-100 transition-all duration-300 hover:shadow-lg"
+              >
+                Partner Services
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* Categories Grid */}
       <section className="py-16" id="collections">
         <div className="container-custom">
           <h2 className="text-3xl md:text-4xl font-heading text-center mb-12">
             Complete Your Bridal Look
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Bridal Footwear */}
             <Link to="/footwear?category=bridal-footwear" className="card group transition-all duration-300 hover:-translate-y-1">
               <div className="relative overflow-hidden">
-                <LazyLoadImage 
+                <LazyLoadImage
                   src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                   alt="Bridal Footwear"
                   className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
@@ -202,7 +202,7 @@ const BridalBoutique: React.FC = () => {
             {/* Bridal Jewelry */}
             <Link to="/jewelry?category=bridal-jewelry" className="card group transition-all duration-300 hover:-translate-y-1">
               <div className="relative overflow-hidden">
-                <LazyLoadImage 
+                <LazyLoadImage
                   src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                   alt="Bridal Jewelry"
                   className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
@@ -222,7 +222,7 @@ const BridalBoutique: React.FC = () => {
             {/* Bridal Accessories */}
             <Link to="/accessories?category=bridal-accessories" className="card group transition-all duration-300 hover:-translate-y-1">
               <div className="relative overflow-hidden">
-                <LazyLoadImage 
+                <LazyLoadImage
                   src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                   alt="Bridal Accessories"
                   className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
@@ -248,17 +248,17 @@ const BridalBoutique: React.FC = () => {
           <h2 className="text-3xl md:text-4xl font-heading text-center mb-12">
             Trending Bridal Picks
           </h2>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {bridalProducts.length > 0 ? (
               bridalProducts.map((product) => (
-                <div 
-                  key={product.id} 
+                <div
+                  key={product.id}
                   className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
                   onClick={() => handleProductClick(product.id)}
                 >
                   <div className="relative overflow-hidden">
-                    <LazyLoadImage 
+                    <LazyLoadImage
                       src={product.images?.[0]?.url || "https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
                       alt={product.name}
                       className="w-full h-64 object-cover"
@@ -266,7 +266,7 @@ const BridalBoutique: React.FC = () => {
                       threshold={300}
                       placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
-                    <button 
+                    <button
                       className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600 transition-colors duration-200 z-10"
                       onClick={(e) => handleWishlistClick(e)}
                       aria-label="Add to wishlist"
@@ -279,7 +279,7 @@ const BridalBoutique: React.FC = () => {
                     <p className="text-gray-600 text-sm mb-2">{product.brand?.name || 'Luxury Brand'}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-semibold">${product.price.toFixed(2)}</span>
-                      <button 
+                      <button
                         className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200"
                         onClick={(e) => handleAddToCart(product, e)}
                         aria-label="Add to cart"
@@ -293,12 +293,12 @@ const BridalBoutique: React.FC = () => {
             ) : (
               // Fallback products if no data from backend
               <>
-                <div 
-                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md" 
+                <div
+                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
                   onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174015")}
                 >
                   <div className="relative overflow-hidden">
-                    <LazyLoadImage 
+                    <LazyLoadImage
                       src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                       alt="Crystal Embellished Heels"
                       className="w-full h-64 object-cover"
@@ -306,7 +306,7 @@ const BridalBoutique: React.FC = () => {
                       threshold={300}
                       placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
-                    <button 
+                    <button
                       className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600 transition-colors duration-200 z-10"
                       onClick={(e) => handleWishlistClick(e)}
                       aria-label="Add to wishlist"
@@ -319,7 +319,7 @@ const BridalBoutique: React.FC = () => {
                     <p className="text-gray-600 text-sm mb-2">Perfect for your special day</p>
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-semibold">$299.99</span>
-                      <button 
+                      <button
                         className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200"
                         onClick={(e) => handleAddToCart({
                           id: "123e4567-e89b-12d3-a456-426614174015",
@@ -337,12 +337,12 @@ const BridalBoutique: React.FC = () => {
                   </div>
                 </div>
 
-                <div 
-                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md" 
+                <div
+                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
                   onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174016")}
                 >
                   <div className="relative overflow-hidden">
-                    <LazyLoadImage 
+                    <LazyLoadImage
                       src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                       alt="Pearl Drop Earrings"
                       className="w-full h-64 object-cover"
@@ -350,7 +350,7 @@ const BridalBoutique: React.FC = () => {
                       threshold={300}
                       placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
-                    <button 
+                    <button
                       className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600 transition-colors duration-200 z-10"
                       onClick={(e) => handleWishlistClick(e)}
                       aria-label="Add to wishlist"
@@ -363,7 +363,7 @@ const BridalBoutique: React.FC = () => {
                     <p className="text-gray-600 text-sm mb-2">Elegant pearl and crystal design</p>
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-semibold">$199.99</span>
-                      <button 
+                      <button
                         className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200"
                         onClick={(e) => handleAddToCart({
                           id: "123e4567-e89b-12d3-a456-426614174016",
@@ -381,12 +381,12 @@ const BridalBoutique: React.FC = () => {
                   </div>
                 </div>
 
-                <div 
-                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md" 
+                <div
+                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
                   onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174017")}
                 >
                   <div className="relative overflow-hidden">
-                    <LazyLoadImage 
+                    <LazyLoadImage
                       src="https://images.pexels.com/photos/313707/pexels-photo-313707.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                       alt="Lace Trim Veil"
                       className="w-full h-64 object-cover"
@@ -394,7 +394,7 @@ const BridalBoutique: React.FC = () => {
                       threshold={300}
                       placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
-                    <button 
+                    <button
                       className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600 transition-colors duration-200 z-10"
                       onClick={(e) => handleWishlistClick(e)}
                       aria-label="Add to wishlist"
@@ -407,7 +407,7 @@ const BridalBoutique: React.FC = () => {
                     <p className="text-gray-600 text-sm mb-2">Cathedral length with lace detail</p>
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-semibold">$249.99</span>
-                      <button 
+                      <button
                         className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200"
                         onClick={(e) => handleAddToCart({
                           id: "123e4567-e89b-12d3-a456-426614174017",
@@ -425,12 +425,12 @@ const BridalBoutique: React.FC = () => {
                   </div>
                 </div>
 
-                <div 
-                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md" 
+                <div
+                  className="card group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
                   onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174018")}
                 >
                   <div className="relative overflow-hidden">
-                    <LazyLoadImage 
+                    <LazyLoadImage
                       src="https://images.pexels.com/photos/1721937/pexels-photo-1721937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                       alt="Crystal Hair Pins"
                       className="w-full h-64 object-cover"
@@ -438,7 +438,7 @@ const BridalBoutique: React.FC = () => {
                       threshold={300}
                       placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
                     />
-                    <button 
+                    <button
                       className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-secondary-600 transition-colors duration-200 z-10"
                       onClick={(e) => handleWishlistClick(e)}
                       aria-label="Add to wishlist"
@@ -451,7 +451,7 @@ const BridalBoutique: React.FC = () => {
                     <p className="text-gray-600 text-sm mb-2">Set of 6 decorative pins</p>
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-semibold">$89.99</span>
-                      <button 
+                      <button
                         className="p-2 text-secondary-600 hover:text-secondary-700 transition-colors duration-200"
                         onClick={(e) => handleAddToCart({
                           id: "123e4567-e89b-12d3-a456-426614174018",
@@ -480,7 +480,7 @@ const BridalBoutique: React.FC = () => {
           <h2 className="text-3xl md:text-4xl font-heading text-center mb-12">
             Our Bridal Partners
           </h2>
-          
+
           {loading ? (
             <div className="text-center py-8">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-secondary-600"></div>
@@ -506,7 +506,7 @@ const BridalBoutique: React.FC = () => {
                       <p className="text-gray-600 mb-6">
                         {service.description}
                       </p>
-                      
+
                       <div className="space-y-4 mb-8">
                         <div className="flex items-center gap-3">
                           <MapPin className="w-5 h-5 text-secondary-600" />
@@ -521,20 +521,20 @@ const BridalBoutique: React.FC = () => {
                           <span>{service.hours}</span>
                         </div>
                       </div>
-                      
+
                       <div className="flex flex-wrap gap-3">
-                        <a 
+                        <a
                           href={service.website.startsWith('http') ? service.website : `https://${service.website}`}
-                          target="_blank" 
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="btn-outline flex items-center transition-all duration-300 hover:-translate-y-1"
                         >
                           Visit Website
                           <ExternalLink className="ml-1 h-4 w-4" />
                         </a>
-                        <a 
+                        <a
                           href={service.booking_url.startsWith('http') ? service.booking_url : `https://${service.booking_url}`}
-                          target="_blank" 
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="btn-secondary w-full text-center mt-3 transition-all duration-300 hover:-translate-y-1"
                         >
@@ -542,9 +542,9 @@ const BridalBoutique: React.FC = () => {
                         </a>
                       </div>
                     </div>
-                    
+
                     <div className="relative h-64 lg:h-auto">
-                      <LazyLoadImage 
+                      <LazyLoadImage
                         src="https://images.pexels.com/photos/3997391/pexels-photo-3997391.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                         alt={`${service.name} Salon`}
                         className="absolute inset-0 w-full h-full object-cover"
@@ -569,10 +569,10 @@ const BridalBoutique: React.FC = () => {
               Book Your Bridal Consultation
             </h2>
             <p className="text-gray-600 mb-8">
-              Our bridal specialists are here to help you find the perfect pieces for your special day. 
+              Our bridal specialists are here to help you find the perfect pieces for your special day.
               Schedule a personalized consultation at our boutique.
             </p>
-            <Link 
+            <Link
               to="/contact"
               className="btn-secondary transition-all duration-300 hover:-translate-y-1 hover:shadow-lg inline-block"
             >
