@@ -205,15 +205,6 @@ const NavigationMenu: React.FC = () => {
             <div className="py-1">
               <motion.div variants={itemVariants}>
                 <Link 
-                  to="/about" 
-                  onClick={handleNavClick}
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
-                >
-                  About Us
-                </Link>
-              </motion.div>
-              <motion.div variants={itemVariants}>
-                <Link 
                   to="/careers" 
                   onClick={handleNavClick}
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
