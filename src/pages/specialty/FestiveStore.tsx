@@ -29,24 +29,18 @@ const FestiveStore: React.FC = () => {
 
   useEffect(() => {
     fetchFestiveProducts();
-    
-    // Update meta tags for SEO and social sharing
     updateMetaTags(
       'Festive Store | MinddShopp - Holiday Collection 2025',
       'Discover perfect gifts for everyone on your list. From festive fashion to luxury beauty sets, our holiday collection has everything you need for the season.',
       'https://images.pexels.com/photos/717988/pexels-photo-717988.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       window.location.href
     );
-    
-    // Add structured data
     const webPageSchema = generateWebPageSchema({
       title: 'Festive Store | MinddShopp - Holiday Collection 2025',
       description: 'Discover perfect gifts for everyone on your list. From festive fashion to luxury beauty sets, our holiday collection has everything you need for the season.',
       url: window.location.href
     });
-    
     addStructuredData(webPageSchema);
-    
     metaUpdatedRef.current = true;
   }, []);
 
@@ -65,7 +59,7 @@ const FestiveStore: React.FC = () => {
         `)
         .contains('tags', ['christmas'])
         .eq('is_visible', true)
-        .limit(4);
+        .limit(8);
 
       if (error) throw error;
       const validProducts = (data || []).filter(product => product && product.id);
@@ -82,13 +76,11 @@ const FestiveStore: React.FC = () => {
   };
 
   const handleAddToCart = (product: Product, event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent the product click handler from firing
-    
+    event.stopPropagation();
     if (product.stock_quantity <= 0) {
       toast.error('This product is out of stock');
       return;
     }
-    
     addItem({
       productId: product.id,
       name: product.name,
@@ -96,44 +88,45 @@ const FestiveStore: React.FC = () => {
       quantity: 1,
       image: product.images?.[0]?.url || ''
     });
-    
     toast.success('Added to cart!');
   };
 
   return (
-    <div>
+    <div className="bg-gradient-to-br from-yellow-50 via-rose-50 to-fuchsia-50 min-h-screen dark:from-gray-900 dark:via-gray-950 dark:to-black">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-accent-900 to-accent-800 text-white">
-        <div className="absolute inset-0 opacity-20">
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-40">
           <img 
             src="https://images.pexels.com/photos/717988/pexels-photo-717988.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
             alt="Festive decorations" 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover scale-105"
           />
+          <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-700/60 via-white/60 to-yellow-200/40 backdrop-blur-sm" />
         </div>
-        <div className="container-custom relative z-10 py-20 md:py-32">
-          <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block px-4 py-1 bg-accent-700 rounded-full text-sm font-medium mb-6">
+        <div className="container-custom relative z-10 py-24 flex flex-col items-center justify-center min-h-[60vh]">
+          <div className="bg-white/80 dark:bg-gray-900/70 rounded-2xl shadow-xl px-6 py-12 md:px-16 text-center backdrop-blur-md max-w-2xl">
+            <span className="inline-block px-4 py-1 bg-fuchsia-600 text-white rounded-full text-sm font-semibold mb-6 tracking-wide shadow">
               Holiday Season 2025
             </span>
-            <h1 className="font-heading text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="font-heading text-5xl md:text-6xl font-extrabold mb-6 text-fuchsia-700 dark:text-fuchsia-300 drop-shadow">
               Festive Collections
             </h1>
-            <p className="text-lg md:text-xl mb-8 text-accent-100">
-              Discover perfect gifts for everyone on your list. From festive fashion to luxury beauty sets.
+            <p className="text-xl md:text-2xl mb-10 text-fuchsia-900 dark:text-fuchsia-100">
+              Discover perfect gifts for everyone. From festive fashion to luxury beauty sets.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link 
                 to="/festive-store/gift-guides" 
-                className="btn bg-white text-accent-900 hover:bg-accent-50"
+                className="px-6 py-3 bg-fuchsia-600 hover:bg-fuchsia-700 text-white rounded-full font-semibold flex items-center shadow transition"
               >
                 <Gift className="w-5 h-5 mr-2" />
                 Gift Guides
               </Link>
               <Link 
                 to="/festive-store/gift-guides#special-offers" 
-                className="btn bg-accent-700 text-white hover:bg-accent-600"
+                className="px-6 py-3 bg-white hover:bg-fuchsia-50 text-fuchsia-700 rounded-full font-semibold shadow flex items-center transition"
               >
+                <ArrowRight className="w-5 h-5 mr-2" />
                 View Special Offers
               </Link>
             </div>
@@ -142,387 +135,123 @@ const FestiveStore: React.FC = () => {
       </section>
 
       {/* Features */}
-      <section className="py-12 bg-accent-50">
+      <section className="py-14 bg-gradient-to-r from-fuchsia-50 via-yellow-50 to-rose-50 dark:from-gray-900 dark:via-gray-950 dark:to-black">
         <div className="container-custom">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="flex items-center gap-4 p-6 bg-white rounded-lg shadow-sm">
-              <Gift className="w-10 h-10 text-accent-600" />
-              <div>
-                <h3 className="font-medium">Gift Wrapping</h3>
-                <p className="text-sm text-gray-600">Complimentary service</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 p-6 bg-white rounded-lg shadow-sm">
-              <Star className="w-10 h-10 text-accent-600" />
-              <div>
-                <h3 className="font-medium">Gift Cards</h3>
-                <p className="text-sm text-gray-600">The perfect choice</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 p-6 bg-white rounded-lg shadow-sm">
-              <Clock className="w-10 h-10 text-accent-600" />
-              <div>
-                <h3 className="font-medium">Extended Returns</h3>
-                <p className="text-sm text-gray-600">Until January 31st</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 p-6 bg-white rounded-lg shadow-sm">
-              <Truck className="w-10 h-10 text-accent-600" />
-              <div>
-                <h3 className="font-medium">Fast Delivery</h3>
-                <p className="text-sm text-gray-600">Order by December 20</p>
-              </div>
-            </div>
+            <FeatureCard icon={<Gift className="w-9 h-9 text-fuchsia-600" />} title="Gift Wrapping" desc="Complimentary service" />
+            <FeatureCard icon={<Star className="w-9 h-9 text-fuchsia-600" />} title="Gift Cards" desc="The perfect choice" />
+            <FeatureCard icon={<Clock className="w-9 h-9 text-fuchsia-600" />} title="Extended Returns" desc="Until January 31st" />
+            <FeatureCard icon={<Truck className="w-9 h-9 text-fuchsia-600" />} title="Fast Delivery" desc="Order by December 20" />
           </div>
         </div>
       </section>
 
       {/* Gift Categories */}
-      <section className="py-16" id="gift-guides">
+      <section className="py-20" id="gift-guides">
         <div className="container-custom">
-          <h2 className="text-3xl font-heading font-bold text-center mb-12">Shop by Category</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="group relative overflow-hidden rounded-lg cursor-pointer" onClick={() => navigate('/beauty')}>
-              <img 
-                src="https://images.pexels.com/photos/3782786/pexels-photo-3782786.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                alt="Luxury Beauty Sets" 
-                className="w-full h-80 object-cover transform group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-                <div className="p-6">
-                  <h3 className="text-xl font-heading text-white mb-2">Luxury Beauty Sets</h3>
-                  <span className="text-accent-300 group-hover:text-accent-200 flex items-center">
-                    Shop Now
-                    <span className="ml-2">→</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="group relative overflow-hidden rounded-lg cursor-pointer" onClick={() => navigate('/jewelry')}>
-              <img 
-                src="https://images.pexels.com/photos/1927259/pexels-photo-1927259.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                alt="Festive Jewelry" 
-                className="w-full h-80 object-cover transform group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-                <div className="p-6">
-                  <h3 className="text-xl font-heading text-white mb-2">Festive Jewelry</h3>
-                  <span className="text-accent-300 group-hover:text-accent-200 flex items-center">
-                    Shop Now
-                    <span className="ml-2">→</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="group relative overflow-hidden rounded-lg cursor-pointer" onClick={() => navigate('/clothing')}>
-              <img 
-                src="https://images.pexels.com/photos/1619801/pexels-photo-1619801.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                alt="Winter Fashion" 
-                className="w-full h-80 object-cover transform group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-                <div className="p-6">
-                  <h3 className="text-xl font-heading text-white mb-2">Winter Fashion</h3>
-                  <span className="text-accent-300 group-hover:text-accent-200 flex items-center">
-                    Shop Now
-                    <span className="ml-2">→</span>
-                  </span>
-                </div>
-              </div>
-            </div>
+          <h2 className="text-4xl font-heading font-extrabold text-center mb-16 text-fuchsia-700 dark:text-fuchsia-300">
+            Shop by Category
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <GiftCategory
+              img="https://images.pexels.com/photos/3782786/pexels-photo-3782786.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+              title="Luxury Beauty Sets"
+              onClick={() => navigate('/beauty')}
+            />
+            <GiftCategory
+              img="https://images.pexels.com/photos/1927259/pexels-photo-1927259.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+              title="Festive Jewelry"
+              onClick={() => navigate('/jewelry')}
+            />
+            <GiftCategory
+              img="https://images.pexels.com/photos/1619801/pexels-photo-1619801.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+              title="Winter Fashion"
+              onClick={() => navigate('/clothing')}
+            />
           </div>
         </div>
       </section>
 
       {/* Special Offers */}
-      <section className="py-16 bg-accent-50" id="special-offers">
+      <section className="py-20 bg-gradient-to-r from-fuchsia-50 via-yellow-50 to-rose-50 dark:from-gray-900 dark:via-gray-950 dark:to-black" id="special-offers">
         <div className="container-custom">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-heading font-bold mb-4">Special Holiday Offers</h2>
-            <p className="text-gray-600">Limited time deals on our most popular gift items</p>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-heading font-extrabold mb-4 text-fuchsia-700 dark:text-fuchsia-300">Special Holiday Offers</h2>
+            <p className="text-gray-700 dark:text-gray-200">Limited-time deals on our most popular gift items</p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white rounded-lg overflow-hidden shadow-sm">
-              <div className="p-6">
-                <span className="inline-block px-3 py-1 bg-accent-100 text-accent-800 rounded-full text-sm font-medium mb-4">
-                  Save 25%
-                </span>
-                <h3 className="text-xl font-heading font-bold mb-2">Beauty Gift Sets</h3>
-                <p className="text-gray-600 mb-4">
-                  Luxury skincare and makeup collections perfectly packaged for gifting
-                </p>
-                <Link 
-                  to="/festive-store/gift-guides" 
-                  className="text-accent-700 hover:text-accent-800 font-medium flex items-center"
-                >
-                  View Gift Guide
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-lg overflow-hidden shadow-sm">
-              <div className="p-6">
-                <span className="inline-block px-3 py-1 bg-accent-100 text-accent-800 rounded-full text-sm font-medium mb-4">
-                  Buy 2 Get 1 Free
-                </span>
-                <h3 className="text-xl font-heading font-bold mb-2">Designer Fragrances</h3>
-                <p className="text-gray-600 mb-4">
-                  Select luxury perfumes and colognes for everyone on your list
-                </p>
-                <Link 
-                  to="/festive-store/gift-guides#special-offers" 
-                  className="text-accent-700 hover:text-accent-800 font-medium flex items-center"
-                >
-                  View Special Offers
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-lg overflow-hidden shadow-sm">
-              <div className="p-6">
-                <span className="inline-block px-3 py-1 bg-accent-100 text-accent-800 rounded-full text-sm font-medium mb-4">
-                  Free Gift
-                </span>
-                <h3 className="text-xl font-heading font-bold mb-2">Jewelry Collections</h3>
-                <p className="text-gray-600 mb-4">
-                  Receive a complimentary jewelry box with purchases over $200
-                </p>
-                <Link 
-                  to="/festive-store/gift-guides" 
-                  className="text-accent-700 hover:text-accent-800 font-medium flex items-center"
-                >
-                  Shop Collections
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Link>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <OfferCard
+              badge="Save 25%"
+              title="Beauty Gift Sets"
+              desc="Luxury skincare and makeup collections, perfectly packaged for gifting."
+              link="/festive-store/gift-guides"
+              linkText="View Gift Guide"
+            />
+            <OfferCard
+              badge="Buy 2 Get 1 Free"
+              title="Designer Fragrances"
+              desc="Select luxury perfumes and colognes for everyone on your list."
+              link="/festive-store/gift-guides#special-offers"
+              linkText="View Special Offers"
+            />
+            <OfferCard
+              badge="Free Gift"
+              title="Jewelry Collections"
+              desc="Receive a complimentary jewelry box with purchases over $200."
+              link="/festive-store/gift-guides"
+              linkText="Shop Collections"
+            />
           </div>
         </div>
       </section>
 
       {/* Featured Products */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="container-custom">
-          <h2 className="text-3xl font-heading font-bold text-center mb-12">Featured Products</h2>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {festiveProducts.length > 0 ? (
+          <h2 className="text-4xl font-heading font-extrabold text-center mb-16 text-fuchsia-700 dark:text-fuchsia-300">
+            Featured Products
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {loading ? Array(4).fill(0).map((_, i) => (
+              <ProductSkeleton key={i} />
+            )) : (festiveProducts.length > 0 ? (
               festiveProducts.map((product) => (
-                <div 
-                  key={product.id} 
-                  className="card group cursor-pointer"
+                <ProductCard
+                  key={product.id}
+                  product={product}
                   onClick={() => handleProductClick(product.id)}
-                >
-                  <div className="relative overflow-hidden">
-                    <LazyLoadImage 
-                      src={product.images?.[0]?.url || "https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg"}
-                      alt={product.name}
-                      className="w-full h-64 object-cover"
-                      effect="blur"
-                      threshold={300}
-                      placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
-                    />
-                    <button 
-                      className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-accent-600"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Heart size={20} />
-                    </button>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-heading text-lg mb-2">{product.name}</h3>
-                    <p className="text-gray-600 text-sm mb-2">{product.brand?.name || 'Festive Collection'}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-semibold">${product.price.toFixed(2)}</span>
-                      <button 
-                        className="p-2 text-accent-600 hover:text-accent-700"
-                        onClick={(e) => handleAddToCart(product, e)}
-                      >
-                        <ShoppingBag size={20} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                  onAddToCart={handleAddToCart}
+                />
               ))
             ) : (
-              // Fallback products if no data from backend
-              <>
-                <div className="card group cursor-pointer" onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174019")}>
-                  <div className="relative overflow-hidden">
-                    <LazyLoadImage 
-                      src="https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg"
-                      alt="Holiday Gift Set"
-                      className="w-full h-64 object-cover"
-                      effect="blur"
-                      threshold={300}
-                      placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
-                    />
-                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-accent-600" onClick={(e) => e.stopPropagation()}>
-                      <Heart size={20} />
-                    </button>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-heading text-lg mb-2">Holiday Gift Set</h3>
-                    <p className="text-gray-600 text-sm mb-2">Luxury skincare collection</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-semibold">$149.99</span>
-                      <button 
-                        className="p-2 text-accent-600 hover:text-accent-700"
-                        onClick={(e) => handleAddToCart({
-                          id: "123e4567-e89b-12d3-a456-426614174019",
-                          name: "Holiday Gift Set",
-                          price: 149.99,
-                          description: "Luxury skincare collection",
-                          images: [{ url: "https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg" }],
-                          stock_quantity: 12
-                        }, e)}
-                      >
-                        <ShoppingBag size={20} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="card group cursor-pointer" onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174020")}>
-                  <div className="relative overflow-hidden">
-                    <LazyLoadImage 
-                      src="https://images.pexels.com/photos/264771/pexels-photo-264771.jpeg"
-                      alt="Festive Watch"
-                      className="w-full h-64 object-cover"
-                      effect="blur"
-                      threshold={300}
-                      placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
-                    />
-                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-accent-600" onClick={(e) => e.stopPropagation()}>
-                      <Heart size={20} />
-                    </button>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-heading text-lg mb-2">Festive Watch</h3>
-                    <p className="text-gray-600 text-sm mb-2">Limited edition timepiece</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-semibold">$299.99</span>
-                      <button 
-                        className="p-2 text-accent-600 hover:text-accent-700"
-                        onClick={(e) => handleAddToCart({
-                          id: "123e4567-e89b-12d3-a456-426614174020",
-                          name: "Festive Watch",
-                          price: 299.99,
-                          description: "Limited edition timepiece",
-                          images: [{ url: "https://images.pexels.com/photos/264771/pexels-photo-264771.jpeg" }],
-                          stock_quantity: 8
-                        }, e)}
-                      >
-                        <ShoppingBag size={20} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="card group cursor-pointer" onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174021")}>
-                  <div className="relative overflow-hidden">
-                    <LazyLoadImage 
-                      src="https://images.pexels.com/photos/1303092/pexels-photo-1303092.jpeg"
-                      alt="Festive Candle Set"
-                      className="w-full h-64 object-cover"
-                      effect="blur"
-                      threshold={300}
-                      placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
-                    />
-                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-accent-600" onClick={(e) => e.stopPropagation()}>
-                      <Heart size={20} />
-                    </button>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-heading text-lg mb-2">Festive Candle Set</h3>
-                    <p className="text-gray-600 text-sm mb-2">Luxury scented candles</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-semibold">$79.99</span>
-                      <button 
-                        className="p-2 text-accent-600 hover:text-accent-700"
-                        onClick={(e) => handleAddToCart({
-                          id: "123e4567-e89b-12d3-a456-426614174021",
-                          name: "Festive Candle Set",
-                          price: 79.99,
-                          description: "Luxury scented candles",
-                          images: [{ url: "https://images.pexels.com/photos/1303092/pexels-photo-1303092.jpeg" }],
-                          stock_quantity: 15
-                        }, e)}
-                      >
-                        <ShoppingBag size={20} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="card group cursor-pointer" onClick={() => handleProductClick("123e4567-e89b-12d3-a456-426614174022")}>
-                  <div className="relative overflow-hidden">
-                    <LazyLoadImage 
-                      src="https://images.pexels.com/photos/1303086/pexels-photo-1303086.jpeg"
-                      alt="Holiday Sweater"
-                      className="w-full h-64 object-cover"
-                      effect="blur"
-                      threshold={300}
-                      placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
-                    />
-                    <button className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-accent-600" onClick={(e) => e.stopPropagation()}>
-                      <Heart size={20} />
-                    </button>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-heading text-lg mb-2">Holiday Sweater</h3>
-                    <p className="text-gray-600 text-sm mb-2">Premium cashmere blend</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-semibold">$129.99</span>
-                      <button 
-                        className="p-2 text-accent-600 hover:text-accent-700"
-                        onClick={(e) => handleAddToCart({
-                          id: "123e4567-e89b-12d3-a456-426614174022",
-                          name: "Holiday Sweater",
-                          price: 129.99,
-                          description: "Premium cashmere blend",
-                          images: [{ url: "https://images.pexels.com/photos/1303086/pexels-photo-1303086.jpeg" }],
-                          stock_quantity: 10
-                        }, e)}
-                      >
-                        <ShoppingBag size={20} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
+              FallbackFestiveProducts(handleProductClick, handleAddToCart)
+            ))}
           </div>
         </div>
       </section>
 
       {/* Gift Guide CTA */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="container-custom">
-          <div className="bg-accent-900 rounded-xl overflow-hidden">
+          <div className="bg-gradient-to-r from-fuchsia-700 via-fuchsia-600 to-pink-600 rounded-2xl overflow-hidden shadow-xl">
             <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="p-8 md:p-12 lg:p-16 flex items-center">
+              <div className="p-10 md:p-16 flex items-center">
                 <div>
-                  <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
+                  <h2 className="text-4xl md:text-5xl font-heading font-extrabold text-white mb-4">
                     Need Help Finding the Perfect Gift?
                   </h2>
-                  <p className="text-accent-100 mb-6">
+                  <p className="text-fuchsia-100 mb-8 text-lg">
                     Our holiday gift guide makes it easy to find something special for everyone on your list.
                   </p>
                   <Link 
                     to="/festive-store/gift-guides" 
-                    className="btn bg-white text-accent-900 hover:bg-accent-50"
+                    className="px-7 py-3 bg-white text-fuchsia-700 hover:bg-fuchsia-50 rounded-full font-bold transition"
                   >
                     View Gift Guide
                   </Link>
                 </div>
               </div>
-              <div className="relative h-64 lg:h-auto">
+              <div className="relative h-72 lg:h-auto">
                 <LazyLoadImage 
                   src="https://images.pexels.com/photos/1666067/pexels-photo-1666067.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                   alt="Holiday gifts" 
@@ -539,5 +268,182 @@ const FestiveStore: React.FC = () => {
     </div>
   );
 };
+
+// Feature Card
+const FeatureCard = ({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) => (
+  <div className="flex items-center gap-4 p-7 bg-white/80 dark:bg-gray-900 rounded-xl shadow-md">
+    {icon}
+    <div>
+      <h3 className="font-semibold text-lg dark:text-white">{title}</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-300">{desc}</p>
+    </div>
+  </div>
+);
+
+// Gift Category Card
+const GiftCategory = ({ img, title, onClick }: { img: string, title: string, onClick: () => void }) => (
+  <div
+    className="group relative overflow-hidden rounded-2xl cursor-pointer shadow-lg transition-all duration-300 hover:-translate-y-1"
+    onClick={onClick}
+  >
+    <img 
+      src={img}
+      alt={title}
+      className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500"
+    />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end">
+      <div className="p-7">
+        <h3 className="text-2xl font-bold text-white mb-2 drop-shadow">{title}</h3>
+        <span className="text-fuchsia-200 group-hover:text-white flex items-center font-semibold text-lg transition-colors">
+          Shop Now
+          <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+        </span>
+      </div>
+    </div>
+  </div>
+);
+
+// Special Offer Card
+const OfferCard = ({
+  badge,
+  title,
+  desc,
+  link,
+  linkText,
+}: {
+  badge: string;
+  title: string;
+  desc: string;
+  link: string;
+  linkText: string;
+}) => (
+  <div className="bg-white/90 dark:bg-gray-900 rounded-2xl overflow-hidden shadow-lg transition hover:shadow-xl p-8 flex flex-col justify-between">
+    <div>
+      <span className="inline-block px-4 py-1 bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-900 dark:text-fuchsia-200 rounded-full text-xs font-bold mb-4 uppercase tracking-wide shadow">
+        {badge}
+      </span>
+      <h3 className="text-2xl font-extrabold font-heading mb-2 text-fuchsia-700 dark:text-fuchsia-200">{title}</h3>
+      <p className="text-gray-700 dark:text-gray-300 mb-6">{desc}</p>
+    </div>
+    <Link to={link} className="inline-flex items-center font-semibold text-fuchsia-700 hover:text-fuchsia-900 dark:text-fuchsia-200 dark:hover:text-white mt-auto transition-colors">
+      {linkText}
+      <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+    </Link>
+  </div>
+);
+
+// Product Card
+const ProductCard = ({
+  product,
+  onClick,
+  onAddToCart,
+}: {
+  product: Product;
+  onClick: () => void;
+  onAddToCart: (product: Product, event: React.MouseEvent) => void;
+}) => (
+  <div
+    className="bg-white/90 dark:bg-gray-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-fuchsia-200 transition-all duration-300 cursor-pointer flex flex-col"
+    onClick={onClick}
+  >
+    <div className="relative overflow-hidden">
+      <LazyLoadImage
+        src={product.images?.[0]?.url || "https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg"}
+        alt={product.name}
+        className="w-full h-64 object-cover"
+        effect="blur"
+        threshold={300}
+        placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
+      />
+      <button
+        className="absolute top-4 right-4 p-2 bg-white rounded-full text-gray-700 hover:text-fuchsia-600 shadow transition"
+        onClick={e => e.stopPropagation()}
+        title="Wishlist"
+      >
+        <Heart size={22} />
+      </button>
+    </div>
+    <div className="p-6 flex-1 flex flex-col justify-between">
+      <div>
+        <h3 className="font-heading text-xl font-bold mb-2 dark:text-white">{product.name}</h3>
+        <p className="text-gray-600 text-sm mb-2 dark:text-gray-300">{product.brand?.name || 'Festive Collection'}</p>
+      </div>
+      <div className="flex items-center justify-between mt-2">
+        <span className="text-2xl font-extrabold text-fuchsia-700 dark:text-fuchsia-300">${product.price.toFixed(2)}</span>
+        <button
+          className="p-2 bg-fuchsia-100 text-fuchsia-700 hover:bg-fuchsia-200 hover:text-fuchsia-900 rounded-full transition"
+          onClick={e => onAddToCart(product, e)}
+          title="Add to cart"
+        >
+          <ShoppingBag size={20} />
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+// Product Skeleton for loading state
+const ProductSkeleton = () => (
+  <div className="bg-white/90 dark:bg-gray-900 rounded-2xl shadow-lg p-6 animate-pulse">
+    <div className="h-64 bg-gray-200 rounded-xl mb-4 dark:bg-gray-800"></div>
+    <div className="h-5 bg-gray-200 rounded w-3/4 mb-2 dark:bg-gray-700"></div>
+    <div className="h-4 bg-gray-200 rounded w-1/2 mb-4 dark:bg-gray-700"></div>
+    <div className="h-6 bg-gray-200 rounded w-1/4 dark:bg-gray-700"></div>
+  </div>
+);
+
+// Fallback products for demo
+const FallbackFestiveProducts = (
+  handleProductClick: (id: string) => void,
+  handleAddToCart: (product: Product, e: React.MouseEvent) => void
+) => (
+  <>
+    {[
+      {
+        id: "123e4567-e89b-12d3-a456-426614174019",
+        name: "Holiday Gift Set",
+        price: 149.99,
+        description: "Luxury skincare collection",
+        images: [{ url: "https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg" }],
+        stock_quantity: 12,
+        brand: { name: "Festive Collection" }
+      },
+      {
+        id: "123e4567-e89b-12d3-a456-426614174020",
+        name: "Festive Watch",
+        price: 299.99,
+        description: "Limited edition timepiece",
+        images: [{ url: "https://images.pexels.com/photos/264771/pexels-photo-264771.jpeg" }],
+        stock_quantity: 8,
+        brand: { name: "Festive Collection" }
+      },
+      {
+        id: "123e4567-e89b-12d3-a456-426614174021",
+        name: "Festive Candle Set",
+        price: 79.99,
+        description: "Luxury scented candles",
+        images: [{ url: "https://images.pexels.com/photos/1303092/pexels-photo-1303092.jpeg" }],
+        stock_quantity: 15,
+        brand: { name: "Festive Collection" }
+      },
+      {
+        id: "123e4567-e89b-12d3-a456-426614174022",
+        name: "Holiday Sweater",
+        price: 129.99,
+        description: "Premium cashmere blend",
+        images: [{ url: "https://images.pexels.com/photos/1303086/pexels-photo-1303086.jpeg" }],
+        stock_quantity: 10,
+        brand: { name: "Festive Collection" }
+      }
+    ].map(product => (
+      <ProductCard
+        key={product.id}
+        product={product}
+        onClick={() => handleProductClick(product.id)}
+        onAddToCart={handleAddToCart}
+      />
+    ))}
+  </>
+);
 
 export default FestiveStore;
