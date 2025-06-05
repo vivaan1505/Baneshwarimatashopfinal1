@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, Search, ShoppingBag, User, Heart, Menu as MenuIcon, X, Ticket } from 'lucide-react';
+import { Menu as MenuIcon, Search, ShoppingBag, User, Heart, Ticket } from 'lucide-react';
 import NavigationMenu from './NavigationMenu';
 import CartDrawer from '../cart/CartDrawer';
 import { useCartStore } from '../../stores/cartStore';
@@ -23,7 +23,6 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
   const [cartOpen, setCartOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [wishlistCount, setWishlistCount] = useState(0);
-  const [logo, setLogo] = useState<string | null>(null);
   const location = useLocation();
   const { items } = useCartStore();
   const { user, signOut } = useAuthStore();
@@ -32,7 +31,6 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -45,7 +43,6 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
         setProfileMenuOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [profileMenuOpen]);
@@ -63,12 +60,8 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
     } else {
       setWishlistCount(0);
     }
+    // eslint-disable-next-line
   }, [user, location.pathname]);
-
-  // Fetch active logo
-  useEffect(() => {
-    fetchActiveLogo();
-  }, []);
 
   const fetchWishlistCount = async () => {
     try {
@@ -76,35 +69,10 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
         .from('wishlists')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', user?.id);
-
       if (error) throw error;
       setWishlistCount(count || 0);
     } catch (error) {
       console.error('Error fetching wishlist count:', error);
-    }
-  };
-
-  const fetchActiveLogo = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('site_branding')
-        .select('url')
-        .eq('type', 'logo')
-        .eq('is_active', true)
-        .eq('theme', 'default')
-        .eq('color_scheme', 'default')
-        .maybeSingle();
-
-      if (error) {
-        console.error('Error fetching logo:', error);
-        return;
-      }
-
-      if (data) {
-        setLogo(data.url);
-      }
-    } catch (error) {
-      console.error('Error fetching logo:', error);
     }
   };
 
@@ -130,9 +98,6 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
       )}
     >
       <div className="container-custom">
-        {/* Top announcement bar */}
-        
-        {/* Main header */}
         <div className="flex items-center justify-between py-4">
           {/* Mobile menu toggle */}
           <div className="lg:hidden">
@@ -206,10 +171,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
               </Link>
             </motion.div>
             
-            {/* Theme toggle */}
             <ThemeToggle />
-            
-            {/* Theme manager */}
             <ThemeManagerButton />
             
             {/* User Profile Menu */}
@@ -230,7 +192,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 dark:bg-gray-800 dark:ring-gray-700"
+                  className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-lg py-1 ring-1 ring-black ring-opacity-5 dark:bg-gray-800 dark:ring-gray-700"
                 >
                   {user ? (
                     <>
@@ -324,10 +286,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
         </div>
       </div>
       
-      {/* Search overlay */}
       <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
-
-      {/* Cart Drawer */}
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
     </motion.header>
   );
