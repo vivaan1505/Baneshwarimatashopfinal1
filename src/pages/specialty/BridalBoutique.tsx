@@ -137,45 +137,40 @@ const BridalBoutique: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative h-[60vh] min-h-[500px] bg-secondary-50">
-        <div className="absolute inset-0">
-          <LazyLoadImage 
-            src="https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            alt="Bridal Collection"
-            className="w-full h-full object-cover"
-            effect="blur"
-            threshold={300}
-            placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E"
-          />
-          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-        </div>
-        
-        <div className="relative container-custom h-full flex items-center">
-          <div className="max-w-2xl text-white">
-            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
-              Bridal Boutique
-            </h1>
-            <p className="text-xl mb-8 text-gray-100">
-              Discover our exquisite collection of bridal wear, accessories, and beauty essentials for your perfect day
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <a 
-                href="#collections" 
-                className="btn-accent transition-all duration-300 hover:shadow-lg"
-              >
-                View Collections
-              </a>
-              <a 
-                href="#partner-services" 
-                className="btn bg-white text-secondary-900 hover:bg-gray-100 transition-all duration-300 hover:shadow-lg"
-              >
-                Partner Services
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      <section className="relative bg-secondary-50">
+  <div className="absolute inset-0">
+    <img
+      src="https://images.pexels.com/photos/1855586/pexels-photo-1855586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+      alt="Bridal Collection"
+      className="w-full h-full object-cover"
+    />
+    <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+  </div>
+  <div className="container-custom relative py-20 md:py-32 flex items-center">
+    <div className="max-w-2xl text-white">
+      <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
+        Bridal Boutique
+      </h1>
+      <p className="text-xl mb-8 text-gray-100">
+        Discover our exquisite collection of bridal wear, accessories, and beauty essentials for your perfect day
+      </p>
+      <div className="flex flex-wrap gap-4">
+        <a 
+          href="#collections" 
+          className="btn-accent transition-all duration-300 hover:shadow-lg"
+        >
+          View Collections
+        </a>
+        <a 
+          href="#partner-services" 
+          className="btn bg-white text-secondary-900 hover:bg-gray-100 transition-all duration-300 hover:shadow-lg"
+        >
+          Partner Services
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
       {/* Categories Grid */}
       <section className="py-16" id="collections">
         <div className="container-custom">
