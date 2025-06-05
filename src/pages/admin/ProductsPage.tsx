@@ -31,6 +31,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
 
   useEffect(() => {
     fetchProducts();
+    // eslint-disable-next-line
   }, [category, selectedCategory]);
 
   const fetchProducts = async () => {
@@ -143,7 +144,83 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
   };
   // --- END EXPORT PRODUCTS HANDLER ---
 
-  // ... rest of your code remains unchanged ...
+  // --- SELECT PRODUCT HANDLER ---
+  const handleSelectProduct = (productId: string) => {
+    setSelectedProducts(prev =>
+      prev.includes(productId)
+        ? prev.filter(id => id !== productId)
+        : [...prev, productId]
+    );
+  };
+
+  const handleSelectAll = () => {
+    setSelectedProducts(
+      selectedProducts.length === products.length
+        ? []
+        : products.map(p => p.id)
+    );
+  };
+
+  // --- TOGGLE VISIBILITY HANDLER (stub) ---
+  const handleToggleVisibility = async (productIds: string[], visible: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('products')
+        .update({ is_visible: visible })
+        .in('id', productIds);
+
+      if (error) throw error;
+
+      toast.success(`${productIds.length} products ${visible ? 'enabled' : 'disabled'}`);
+      fetchProducts();
+    } catch (error) {
+      console.error('Error updating product visibility:', error);
+      toast.error('Failed to update product visibility');
+    }
+  };
+
+  // --- DELETE SELECTED HANDLER (stub) ---
+  const handleDeleteSelected = async () => {
+    if (!window.confirm(`Are you sure you want to delete ${selectedProducts.length} selected products?`)) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .in('id', selectedProducts);
+
+      if (error) throw error;
+
+      toast.success(`${selectedProducts.length} products deleted successfully`);
+      setSelectedProducts([]);
+      fetchProducts();
+    } catch (error) {
+      console.error('Error deleting products:', error);
+      toast.error('Failed to delete products');
+    }
+  };
+
+  // --- EDIT HANDLER (stub, for completeness, if needed) ---
+  const handleEdit = (productId: string) => {
+    if (onEdit) {
+      const product = products.find(p => p.id === productId);
+      if (product) {
+        onEdit(product);
+      }
+    }
+  };
+
+  // --- SORT HANDLER (stub, for completeness, if needed) ---
+  const handleSort = (field: typeof sortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('desc');
+    }
+  };
 
   const filteredProducts = products.filter(product => {
     const searchLower = searchQuery.toLowerCase();
@@ -164,7 +241,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
       case 'stock_quantity':
         return direction * ((a.stock_quantity || 0) - (b.stock_quantity || 0));
       case 'created_at':
-        return direction * (new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime());
+        return direction * (new Date(a.created_at || 0).getTime() - (new Date(b.created_at || 0).getTime()));
       default:
         return 0;
     }
@@ -200,8 +277,6 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
           </ul>
         </div>
       )}
-
-      {/* ...rest of your toolbar, filters, product grid/list, and modal... */}
 
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold dark:text-white">
