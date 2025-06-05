@@ -137,18 +137,15 @@ const BeautyPage: React.FC = () => {
   // Convert back to array
   const categories = [...Array.from(categorySet).map(cat => JSON.parse(cat))];
   
-  // Add predefined categories only if they don't already exist
+  // Add specified beauty categories
   const predefinedCategories = [
     { id: 'skincare', name: 'Skincare' },
     { id: 'makeup', name: 'Makeup' },
     { id: 'fragrances', name: 'Fragrances' },
-    { id: 'hair-care', name: 'Hair Care' },
-    { id: 'bath-body', name: 'Bath & Body' },
-    { id: 'tools-accessories', name: 'Tools & Accessories' },
-    { id: 'mens-grooming', name: 'Men\'s Grooming' },
-    { id: 'gift-sets', name: 'Gift Sets' }
+    { id: 'hair-care', name: 'Hair Care' }
   ];
   
+  // Add predefined categories only if they don't already exist
   predefinedCategories.forEach(cat => {
     if (!categories.some(existing => existing.id === cat.id)) {
       categories.push(cat);
@@ -156,7 +153,7 @@ const BeautyPage: React.FC = () => {
   });
 
   return (
-    <div className="py-8">
+    <div className="py-8 bg-gradient-to-br from-white via-blue-50 to-pink-50 min-h-screen dark:from-gray-900 dark:via-gray-950 dark:to-black">
       <div className="container-custom">
         {/* Breadcrumbs */}
         <nav className="mb-6">
@@ -172,63 +169,67 @@ const BeautyPage: React.FC = () => {
         </nav>
 
         {/* Category Header */}
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-heading font-bold mb-4 dark:text-white">Beauty Collection</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto dark:text-gray-300">
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl md:text-5xl font-heading font-extrabold mb-4 text-fuchsia-700 dark:text-white">Beauty Collection</h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto dark:text-gray-300">
             Discover our premium selection of beauty products, crafted with the finest ingredients and attention to detail.
           </p>
         </div>
 
         {/* Popular Categories */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <Link to="/beauty?category=skincare" className="relative overflow-hidden rounded-lg aspect-square group">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+          <Link to="/beauty?category=skincare" className="relative overflow-hidden rounded-xl aspect-square group shadow-md">
             <img 
               src="https://images.pexels.com/photos/3785147/pexels-photo-3785147.jpeg" 
               alt="Skincare" 
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-              <div className="p-4">
-                <h3 className="text-lg font-medium text-white">Skincare</h3>
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-white mb-1 drop-shadow">Skincare</h3>
+                <p className="text-sm text-gray-200">Premium skincare essentials</p>
               </div>
             </div>
           </Link>
           
-          <Link to="/beauty?category=makeup" className="relative overflow-hidden rounded-lg aspect-square group">
+          <Link to="/beauty?category=makeup" className="relative overflow-hidden rounded-xl aspect-square group shadow-md">
             <img 
               src="https://images.pexels.com/photos/4938502/pexels-photo-4938502.jpeg" 
               alt="Makeup" 
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-              <div className="p-4">
-                <h3 className="text-lg font-medium text-white">Makeup</h3>
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-white mb-1 drop-shadow">Makeup</h3>
+                <p className="text-sm text-gray-200">Luxury cosmetics</p>
               </div>
             </div>
           </Link>
           
-          <Link to="/beauty?category=fragrances" className="relative overflow-hidden rounded-lg aspect-square group">
+          <Link to="/beauty?category=fragrances" className="relative overflow-hidden rounded-xl aspect-square group shadow-md">
             <img 
               src="https://images.pexels.com/photos/965989/pexels-photo-965989.jpeg" 
               alt="Fragrances" 
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-              <div className="p-4">
-                <h3 className="text-lg font-medium text-white">Fragrances</h3>
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-white mb-1 drop-shadow">Fragrances</h3>
+                <p className="text-sm text-gray-200">Signature scents</p>
               </div>
             </div>
           </Link>
           
-          <Link to="/beauty?category=hair-care" className="relative overflow-hidden rounded-lg aspect-square group">
+          <Link to="/beauty?category=hair-care" className="relative overflow-hidden rounded-xl aspect-square group shadow-md">
             <img 
               src="https://images.pexels.com/photos/3993449/pexels-photo-3993449.jpeg" 
               alt="Hair Care" 
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-              <div className="p-4">
-                <h3 className="text-lg font-medium text-white">Hair Care</h3>
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-white mb-1 drop-shadow">Hair Care</h3>
+                <p className="text-sm text-gray-200">Premium hair products</p>
               </div>
             </div>
           </Link>
@@ -249,11 +250,12 @@ const BeautyPage: React.FC = () => {
         {/* Products Grid */}
         {loading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 dark:border-primary-400"></div>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">Loading products...</p>
+            <div className="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-fuchsia-600 dark:border-fuchsia-400"></div>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading products...</p>
           </div>
         ) : filteredProducts.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="text-center py-12 bg-white rounded-lg shadow-md dark:bg-gray-800">
+            <h2 className="text-xl font-medium mb-2 dark:text-white">No products found</h2>
             <p className="text-gray-500 dark:text-gray-400">No products found matching your criteria</p>
           </div>
         ) : (
