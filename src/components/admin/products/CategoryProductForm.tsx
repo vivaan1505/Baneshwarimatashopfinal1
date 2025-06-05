@@ -41,7 +41,7 @@ const PRODUCT_TAGS = [
   { value: 'last-piece', label: 'Last Piece', color: 'bg-pink-100 text-pink-800' },
   { value: 'bridal', label: 'Bridal', color: 'bg-pink-100 text-pink-800' },
   { value: 'christmas', label: 'Christmas', color: 'bg-red-100 text-red-800' },
-   { value: 'diwali', label: 'Diwali', color: 'bg-yellow-100 text-yellow-800' },
+  { value: 'diwali', label: 'Diwali', color: 'bg-yellow-100 text-yellow-800' },
   { value: 'eid', label: 'Eid', color: 'bg-green-100 text-green-800' },
   { value: 'hanukkah', label: 'Hanukkah', color: 'bg-blue-100 text-blue-800' },
   { value: 'chinese_new_year', label: 'Chinese New Year', color: 'bg-orange-100 text-orange-800' },
