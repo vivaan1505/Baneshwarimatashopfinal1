@@ -40,7 +40,6 @@ const ProductPage: React.FC = () => {
   useEffect(() => {
     if (id) {
       fetchProduct(id);
-      // Reset scroll position when product changes
       window.scrollTo(0, 0);
     }
   }, [id]);
@@ -53,7 +52,7 @@ const ProductPage: React.FC = () => {
         initialOptions[option.name] = option.values[0];
       });
       setSelectedOptions(initialOptions);
-      
+
       // Find the matching variant
       findMatchingVariant(initialOptions);
     }
@@ -62,7 +61,7 @@ const ProductPage: React.FC = () => {
   const fetchProduct = async (productId: string) => {
     try {
       setLoading(true);
-      
+
       // Fetch product details
       const { data: productData, error: productError } = await supabase
         .from('products')
@@ -76,14 +75,14 @@ const ProductPage: React.FC = () => {
         .maybeSingle();
 
       if (productError) throw productError;
-      
+
       if (!productData) {
         setLoading(false);
         return;
       }
-      
+
       setProduct(productData);
-      
+
       // Update SEO metadata
       if (productData) {
         updateMetaTags(
@@ -92,7 +91,7 @@ const ProductPage: React.FC = () => {
           productData.images?.[0]?.url,
           window.location.href
         );
-        
+
         // Add product schema
         const productSchema = generateProductSchema({
           id: productData.id,
@@ -104,7 +103,7 @@ const ProductPage: React.FC = () => {
           rating: productData.rating,
           reviewCount: productData.review_count
         });
-        
+
         // Add breadcrumb schema
         const breadcrumbs = [
           { name: 'Home', url: '/' },
@@ -112,36 +111,35 @@ const ProductPage: React.FC = () => {
             url: productData.type ? `/${productData.type}` : '/products' },
           { name: productData.name, url: `/product/${productData.id}` }
         ];
-        
+
         const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs);
-        
-        // Add both schemas
+
         addStructuredData([productSchema, breadcrumbSchema]);
       }
-      
+
       // Fetch product options
       const { data: optionsData, error: optionsError } = await supabase
         .from('product_options')
         .select('*')
         .eq('product_id', productId);
-        
+
       if (optionsError) throw optionsError;
       setProductOptions(optionsData || []);
-      
+
       // Fetch product variants
       const { data: variantsData, error: variantsError } = await supabase
         .from('product_variants')
         .select('*')
         .eq('product_id', productId);
-        
+
       if (variantsError) throw variantsError;
       setProductVariants(variantsData || []);
-      
+
       // If there's only one variant, select it
       if (variantsData && variantsData.length === 1) {
         setSelectedVariant(variantsData[0]);
       }
-      
+
       // Fetch related products (same category or brand)
       if (productData.category_id || productData.brand_id) {
         let query = supabase
@@ -154,15 +152,15 @@ const ProductPage: React.FC = () => {
           .eq('is_visible', true)
           .neq('id', productId)
           .limit(4);
-          
+
         if (productData.category_id) {
           query = query.eq('category_id', productData.category_id);
         } else if (productData.brand_id) {
           query = query.eq('brand_id', productData.brand_id);
         }
-        
+
         const { data: relatedData, error: relatedError } = await query;
-        
+
         if (!relatedError && relatedData) {
           setRelatedProducts(relatedData);
         }
@@ -175,16 +173,28 @@ const ProductPage: React.FC = () => {
     }
   };
 
+  // Dynamically label options
+  const getOptionDisplayName = (optionName: string) => {
+    const name = optionName.toLowerCase();
+    if (name === 'size') {
+      if (product?.type === 'jewelry' && product?.subtype === 'ring') return 'Ring Size';
+      if (product?.type === 'jewelry' && product?.subtype === 'chain') return 'Chain Length';
+      if (product?.type === 'footwear') return 'Shoe Size';
+      return 'Size';
+    }
+    if (name === 'weight') return 'Weight';
+    if (name === 'volume') return 'Volume';
+    return optionName.charAt(0).toUpperCase() + optionName.slice(1);
+  };
+
   const findMatchingVariant = (options: Record<string, string>) => {
-    // Find variant that matches all selected options
     const variant = productVariants.find(variant => {
-      // Check if all selected options match this variant's option_values
       const optionValues = variant.option_values;
-      return Object.entries(options).every(([optionName, optionValue]) => {
-        return optionValues.includes(optionValue);
-      });
+      // All selected options must be present in option_values (order-insensitive)
+      return Object.entries(options).every(([optionName, optionValue]) =>
+        optionValues.includes(optionValue)
+      );
     });
-    
     setSelectedVariant(variant || null);
   };
 
@@ -203,7 +213,7 @@ const ProductPage: React.FC = () => {
     const price = selectedVariant ? selectedVariant.price : product.price;
     const compareAtPrice = selectedVariant ? selectedVariant.compare_at_price : product.compare_at_price;
     const stockQuantity = selectedVariant ? selectedVariant.stock_quantity : product.stock_quantity;
-    
+
     if (stockQuantity < quantity) {
       toast.error(`Sorry, only ${stockQuantity} items available`);
       return;
@@ -211,10 +221,17 @@ const ProductPage: React.FC = () => {
 
     addItem({
       productId: product.id,
+      productVariantId: selectedVariant?.id ?? null,
       name: product.name,
       price: price,
       quantity,
-      image: product.images?.[0]?.url || ''
+      image: product.images?.[0]?.url || '',
+      selectedOptions: selectedVariant
+        ? productOptions.reduce((acc, option, idx) => {
+            acc[option.name] = selectedVariant.option_values[idx] || '';
+            return acc;
+          }, {} as Record<string, string>)
+        : {},
     });
 
     toast.success('Added to cart!');
@@ -289,7 +306,7 @@ const ProductPage: React.FC = () => {
                 </span>
               )}
             </div>
-            
+
             {/* Thumbnail Images */}
             {product.images && product.images.length > 1 && (
               <div className="grid grid-cols-5 gap-2">
@@ -402,7 +419,7 @@ const ProductPage: React.FC = () => {
               <div className="space-y-4 mb-6">
                 {productOptions.map(option => (
                   <div key={option.id}>
-                    <h3 className="text-sm font-medium text-gray-900 mb-2 dark:text-white">{option.name}</h3>
+                    <h3 className="text-sm font-medium text-gray-900 mb-2 dark:text-white">{getOptionDisplayName(option.name)}</h3>
                     <div className="grid grid-cols-4 gap-2">
                       {option.values.map(value => (
                         <button
@@ -413,7 +430,7 @@ const ProductPage: React.FC = () => {
                               ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400'
                               : 'border-gray-300 text-gray-700 hover:border-primary-500 dark:border-gray-600 dark:text-gray-300'
                           }`}
-                          aria-label={`Select ${option.name}: ${value}`}
+                          aria-label={`Select ${getOptionDisplayName(option.name)}: ${value}`}
                         >
                           {value}
                         </button>
