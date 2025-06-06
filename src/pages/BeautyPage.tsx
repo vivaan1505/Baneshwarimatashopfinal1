@@ -76,11 +76,12 @@ const BeautyPage: React.FC = () => {
     }
   };
 
+  // UPDATED: fetch from subcategories table
   const fetchSubcategories = async () => {
     try {
       const { data, error } = await supabase
-        .from('categories')
-        .select('id, name, slug')
+        .from('subcategories')
+        .select('id, name')
         .eq('parent_category', 'beauty');
       
       if (error) throw error;
