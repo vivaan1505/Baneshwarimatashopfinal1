@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Layout from './components/layout/Layout';
 import AdminLayout from './components/admin/AdminLayout';
-import { ThemeProvider } from './components/theme/ThemeProvider';
+import ThemeProvider from './components/theme/ThemeProvider';
 
 // Eagerly loaded components
 import HomePage from './pages/HomePage';
