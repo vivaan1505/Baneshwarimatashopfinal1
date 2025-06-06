@@ -12,7 +12,7 @@ interface CategoryPageProps {
 const CategoryPage: React.FC<CategoryPageProps> = ({ category: propCategory }) => {
   const { category: paramCategory } = useParams<{ category: string }>();
   const category = paramCategory || propCategory;
-  
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
@@ -30,7 +30,7 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ category: propCategory }) =
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      
+
       let query = supabase
         .from('products')
         .select(`
@@ -39,14 +39,14 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ category: propCategory }) =
           images:product_images(*)
         `)
         .eq('is_visible', true);
-      
+
       // Filter by category
       if (category === 'footwear' || category === 'clothing' || category === 'jewelry' || category === 'beauty') {
         query = query.eq('type', category);
       }
-      
+
       const { data, error } = await query;
-      
+
       if (error) throw error;
       setProducts(data || []);
     } catch (error) {
@@ -57,13 +57,14 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ category: propCategory }) =
     }
   };
 
+  // UPDATED: fetch from subcategories table
   const fetchSubcategories = async () => {
     try {
       const { data, error } = await supabase
-        .from('categories')
-        .select('id, name, slug')
+        .from('subcategories')
+        .select('id, name')
         .eq('parent_category', category);
-      
+
       if (error) throw error;
       setSubcategories(data || []);
     } catch (error) {
@@ -73,7 +74,7 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ category: propCategory }) =
 
   const filterProducts = (products: any[]) => {
     let filtered = [...products];
-    
+
     // Apply search filter
     if (searchQuery) {
       filtered = filtered.filter(product =>
@@ -81,14 +82,14 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ category: propCategory }) =
         product.description?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-    
+
     // Apply category filter
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(product => 
+      filtered = filtered.filter(product =>
         product.subcategory === selectedCategory
       );
     }
-    
+
     // Apply sorting
     filtered.sort((a, b) => {
       switch (sortBy) {
@@ -103,7 +104,7 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ category: propCategory }) =
           return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
       }
     });
-    
+
     return filtered;
   };
 
