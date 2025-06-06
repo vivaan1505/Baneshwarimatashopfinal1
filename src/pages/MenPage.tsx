@@ -11,37 +11,39 @@ const MenPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [products, setProducts] = useState<any[]>([]);
+  const [subcategories, setSubcategories] = useState<{ id: string; name: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
     fetchMensProducts();
-    
+    fetchSubcategories();
+
     // Update meta tags for SEO and social sharing
     updateMetaTags(
-      'Men\'s Collection | MinddShopp',
-      'Discover our premium selection of men\'s clothing, footwear, accessories, and grooming products. Shop the latest styles and trends.',
+      "Men's Collection | MinddShopp",
+      "Discover our premium selection of men's clothing, footwear, accessories, and grooming products. Shop the latest styles and trends.",
       'https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       window.location.href
     );
-    
+
     // Add structured data
     const webPageSchema = generateWebPageSchema({
-      title: 'Men\'s Collection | MinddShopp',
-      description: 'Discover our premium selection of men\'s clothing, footwear, accessories, and grooming products. Shop the latest styles and trends.',
+      title: "Men's Collection | MinddShopp",
+      description: "Discover our premium selection of men's clothing, footwear, accessories, and grooming products. Shop the latest styles and trends.",
       url: window.location.href
     });
-    
+
     addStructuredData(webPageSchema);
-    
+
     metaUpdatedRef.current = true;
   }, []);
 
   // Update meta tags when category filter changes
   useEffect(() => {
     if (!metaUpdatedRef.current || selectedCategory === 'all') return;
-    
-    const categoryName = categories.find(c => c.id === selectedCategory)?.name || 'Men\'s';
+
+    const categoryName = categories.find(c => c.id === selectedCategory)?.name || "Men's";
     updateMetaTags(
       `Men's ${categoryName} | MinddShopp Collection`,
       `Shop our premium selection of men's ${categoryName.toLowerCase()}. Find the perfect style for any occasion.`,
@@ -53,7 +55,6 @@ const MenPage: React.FC = () => {
   const fetchMensProducts = async () => {
     try {
       setLoading(true);
-      
       const { data, error } = await supabase
         .from('products')
         .select(`
@@ -63,20 +64,42 @@ const MenPage: React.FC = () => {
         `)
         .eq('gender', 'men')
         .eq('is_visible', true);
-      
+
       if (error) throw error;
       setProducts(data || []);
     } catch (error) {
-      console.error('Error fetching men\'s products:', error);
+      console.error("Error fetching men's products:", error);
       toast.error('Failed to load products');
     } finally {
       setLoading(false);
     }
   };
 
+  // Fetch all men subcategories from Supabase
+  const fetchSubcategories = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('subcategories')
+        .select('id, name')
+        .eq('parent_category', 'men');
+      if (error) throw error;
+      setSubcategories(data || []);
+    } catch (error) {
+      console.error('Error fetching subcategories:', error);
+      toast.error('Failed to load categories');
+    }
+  };
+
+  // Build categories array for filter (from subcategories)
+  const categories = [
+    { id: 'all', name: 'All Categories' },
+    ...subcategories
+  ];
+
+  // Filtering logic
   const filterProducts = (products: any[]) => {
     let filtered = [...products];
-    
+
     // Apply search filter
     if (searchQuery) {
       filtered = filtered.filter(product =>
@@ -84,14 +107,14 @@ const MenPage: React.FC = () => {
         product.description?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-    
-    // Apply category filter
+
+    // Apply category filter (by subcategory)
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(product => 
-        product.type === selectedCategory
+      filtered = filtered.filter(product =>
+        product.subcategory === selectedCategory
       );
     }
-    
+
     // Apply sorting
     filtered.sort((a, b) => {
       switch (sortBy) {
@@ -106,21 +129,11 @@ const MenPage: React.FC = () => {
           return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
       }
     });
-    
+
     return filtered;
   };
 
   const filteredProducts = filterProducts(products);
-
-  // Create categories array for filter
-  const categories = [
-    { id: 'all', name: 'All Categories' },
-    { id: 'clothing', name: 'Clothing' },
-    { id: 'footwear', name: 'Footwear' },
-    { id: 'accessories', name: 'Accessories' },
-    { id: 'jewelry', name: 'Jewelry' },
-    { id: 'beauty', name: 'Grooming' }
-  ];
 
   return (
     <div className="py-8">
@@ -149,9 +162,9 @@ const MenPage: React.FC = () => {
         {/* Featured Categories */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <Link to="/clothing?gender=men" className="relative overflow-hidden rounded-lg aspect-square group">
-            <img 
-              src="https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg" 
-              alt="Men's Clothing" 
+            <img
+              src="https://images.pexels.com/photos/1342609/pexels-photo-1342609.jpeg"
+              alt="Men's Clothing"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
@@ -161,11 +174,11 @@ const MenPage: React.FC = () => {
               </div>
             </div>
           </Link>
-          
+
           <Link to="/footwear?gender=men" className="relative overflow-hidden rounded-lg aspect-square group">
-            <img 
-              src="https://images.pexels.com/photos/1461048/pexels-photo-1461048.jpeg" 
-              alt="Men's Footwear" 
+            <img
+              src="https://images.pexels.com/photos/1461048/pexels-photo-1461048.jpeg"
+              alt="Men's Footwear"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
@@ -175,11 +188,11 @@ const MenPage: React.FC = () => {
               </div>
             </div>
           </Link>
-          
+
           <Link to="/jewelry?gender=men" className="relative overflow-hidden rounded-lg aspect-square group">
-            <img 
-              src="https://images.pexels.com/photos/9981133/pexels-photo-9981133.jpeg" 
-              alt="Men's Jewelry" 
+            <img
+              src="https://images.pexels.com/photos/9981133/pexels-photo-9981133.jpeg"
+              alt="Men's Jewelry"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
@@ -189,11 +202,11 @@ const MenPage: React.FC = () => {
               </div>
             </div>
           </Link>
-          
+
           <Link to="/beauty?gender=men" className="relative overflow-hidden rounded-lg aspect-square group">
-            <img 
-              src="https://images.pexels.com/photos/1370719/pexels-photo-1370719.jpeg" 
-              alt="Men's Grooming" 
+            <img
+              src="https://images.pexels.com/photos/1370719/pexels-photo-1370719.jpeg"
+              alt="Men's Grooming"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
@@ -214,6 +227,10 @@ const MenPage: React.FC = () => {
           sortBy={sortBy}
           setSortBy={setSortBy}
           categories={categories}
+          mainCategory="men"
+          allowedGenders={['men']}
+          activeGender="men"
+          setActiveGender={()=>{}}
         />
 
         {/* Products Grid */}
