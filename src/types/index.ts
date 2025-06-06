@@ -63,6 +63,20 @@ export interface Product {
   };
   shipping_info?: string;
   return_policy?: string;
+  // For variant/option support, optionally add:
+  variants?: ProductVariant[];
+}
+
+export interface ProductVariant {
+  id: string;
+  product_id: string;
+  option_values: string[]; // e.g. ["M"] or ["250g"]
+  price: number;
+  compare_at_price?: number | null;
+  sku?: string;
+  stock_quantity: number;
+  is_visible?: boolean;
+  // Optionally, add fields for weight, barcode, etc.
 }
 
 export interface BlogPost {
