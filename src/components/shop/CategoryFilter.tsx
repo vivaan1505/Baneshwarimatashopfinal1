@@ -33,28 +33,30 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
     if (mainCategory) {
       fetchSubcategories(mainCategory);
     }
+    // eslint-disable-next-line
   }, [mainCategory]);
 
+  // --- UPDATED: fetch from subcategories table ---
   const fetchSubcategories = async (category: string) => {
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from('categories')
-        .select('id, name, slug')
+        .from('subcategories')
+        .select('id, name')
         .eq('parent_category', category);
-      
+
       if (error) throw error;
-      
-      // Combine database subcategories with predefined ones
+
+      // Combine database subcategories with provided categories
       const dbSubcategories = data || [];
-      
+
       // Create a set of all subcategories to remove duplicates
       const allSubcategories = new Set([
         { id: 'all', name: 'All Categories' },
         ...dbSubcategories,
         ...categories.filter(cat => cat.id !== 'all')
       ].map(cat => JSON.stringify(cat)));
-      
+
       setSubcategories(Array.from(allSubcategories).map(cat => JSON.parse(cat)));
     } catch (error) {
       console.error('Error fetching subcategories:', error);
@@ -65,16 +67,15 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
 
   // Use subcategories if available, otherwise use provided categories
   const displayCategories = subcategories.length > 0 ? subcategories : categories;
-  
+
   // Limit displayed categories for initial view
-  const visibleCategories = showAllCategories 
-    ? displayCategories 
+  const visibleCategories = showAllCategories
+    ? displayCategories
     : displayCategories.slice(0, 8);
 
   const handleGenderChange = (gender: string) => {
     setActiveGender(gender);
-    // Here you would typically filter products by gender
-    // This could be implemented by passing a gender filter up to the parent component
+    // You could pass this up to the parent to filter products by gender
   };
 
   return (
@@ -153,7 +154,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
               <option value="rating">Highest Rated</option>
             </select>
 
-            <button 
+            <button
               onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
               className="md:hidden flex items-center px-4 py-2 border rounded-md text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700"
             >
@@ -177,7 +178,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
             </button>
           )}
         </div>
-        
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {loading ? (
             <div className="animate-pulse flex space-x-2 col-span-full">
