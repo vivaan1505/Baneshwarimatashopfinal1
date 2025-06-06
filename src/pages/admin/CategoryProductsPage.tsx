@@ -24,7 +24,6 @@ const CategoryProductsPage: React.FC = () => {
   const [sortField, setSortField] = useState<'name' | 'price' | 'stock_quantity' | 'created_at'>('created_at');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
-  // Track products with missing category or category.slug
   const [productsMissingCategory, setProductsMissingCategory] = useState<any[]>([]);
 
   useEffect(() => {
@@ -34,6 +33,7 @@ const CategoryProductsPage: React.FC = () => {
     // eslint-disable-next-line
   }, [category]);
 
+  // Fetch products, including product_options and product_variants for size/weight support
   const fetchCategoryProducts = async (categorySlug: string) => {
     try {
       setLoading(true);
@@ -44,10 +44,11 @@ const CategoryProductsPage: React.FC = () => {
           *,
           brand:brands(*),
           category:categories(*),
-          images:product_images(*)
+          images:product_images(*),
+          product_options(*),
+          product_variants(*)
         `);
 
-      // Handle different category types
       if (categorySlug === 'bridal') {
         query = query.contains('tags', ['bridal']);
       } else if (categorySlug === 'christmas') {
@@ -55,7 +56,6 @@ const CategoryProductsPage: React.FC = () => {
       } else if (categorySlug === 'sale') {
         query = query.not('compare_at_price', 'is', null);
       } else {
-        // For regular categories like clothing, footwear, etc.
         query = query.eq('type', categorySlug);
       }
 
@@ -64,7 +64,6 @@ const CategoryProductsPage: React.FC = () => {
       if (error) throw error;
       setProducts(data || []);
 
-      // Check for products missing category or category.slug
       const missingCategory = (data || []).filter(
         p => !p.category || !p.category.slug
       );
@@ -151,18 +150,14 @@ const CategoryProductsPage: React.FC = () => {
 
   const handleExportProducts = async () => {
     try {
-      // Get products to export (either selected or all filtered)
       let productsToExport = sortedProducts;
       if (selectedProducts.length > 0) {
         productsToExport = sortedProducts.filter(p => selectedProducts.includes(p.id));
       }
 
-      // Create a new workbook
       const workbook = XLSX.utils.book_new();
 
-      // Prepare data for export
       const exportData = productsToExport.map(product => {
-        // Base fields for all products
         const baseData = {
           id: product.id,
           name: product.name,
@@ -189,41 +184,41 @@ const CategoryProductsPage: React.FC = () => {
           updated_at: product.updated_at || ''
         };
 
-        // Add category-specific fields
-        if (category === 'clothing' || product.type === 'clothing') {
-          return {
-            ...baseData,
-            size_guide: product.size_guide ? JSON.stringify(product.size_guide) : ''
-          };
-        } else if (category === 'beauty' || product.type === 'beauty') {
-          return {
-            ...baseData,
-            ingredients: product.ingredients || '',
-            usage_instructions: product.usage_instructions || ''
-          };
-        } else if (category === 'sale' || (product.compare_at_price && product.compare_at_price > product.price)) {
-          return {
-            ...baseData,
-            sale_discount: product.sale_discount || Math.round(((product.compare_at_price - product.price) / product.compare_at_price) * 100) || ''
-          };
+        // Optionally export product_options and product_variants for size/weight
+        let optionsData = {};
+        if (product.product_options && Array.isArray(product.product_options)) {
+          product.product_options.forEach((opt: any, idx: number) => {
+            optionsData[`option_name_${idx+1}`] = opt.name;
+            optionsData[`option_values_${idx+1}`] = Array.isArray(opt.values) ? opt.values.join(',') : '';
+          });
         }
 
-        return baseData;
+        let variantsData = {};
+        if (product.product_variants && Array.isArray(product.product_variants)) {
+          // Export only the first variant as an example, or loop for detailed export
+          const v = product.product_variants[0];
+          if (v) {
+            variantsData = {
+              variant_sku: v.sku,
+              variant_price: v.price,
+              variant_stock_quantity: v.stock_quantity,
+              variant_option_values: Array.isArray(v.option_values) ? v.option_values.join(',') : ''
+            };
+          }
+        }
+
+        return {
+          ...baseData,
+          ...optionsData,
+          ...variantsData
+        };
       });
 
-      // Create a worksheet
       const worksheet = XLSX.utils.json_to_sheet(exportData);
-
-      // Add the worksheet to the workbook
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Products');
-
-      // Generate Excel file
       const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
       const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-      // Save the file
       saveAs(blob, `${category || 'products'}_export_${new Date().toISOString().split('T')[0]}.xlsx`);
-
       toast.success(`Exported ${exportData.length} products`);
     } catch (error) {
       console.error('Error exporting products:', error);
@@ -242,7 +237,6 @@ const CategoryProductsPage: React.FC = () => {
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     const direction = sortDirection === 'asc' ? 1 : -1;
-
     switch (sortField) {
       case 'name':
         return direction * (a.name || '').localeCompare(b.name || '');
@@ -261,7 +255,6 @@ const CategoryProductsPage: React.FC = () => {
 
   return (
     <div>
-      {/* Warning for missing category/slug */}
       {productsMissingCategory.length > 0 && (
         <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 dark:bg-yellow-900 dark:text-yellow-200">
           <strong>Warning:</strong> {productsMissingCategory.length} products are missing a category or category slug.<br />
@@ -334,7 +327,6 @@ const CategoryProductsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Filters */}
       <div className="bg-white p-4 rounded-lg shadow-sm mb-6 dark:bg-gray-800">
         <div className="flex flex-wrap gap-4">
           <div className="flex-1 min-w-[240px]">
@@ -349,7 +341,6 @@ const CategoryProductsPage: React.FC = () => {
               />
             </div>
           </div>
-
           <div className="flex items-center border rounded-md dark:border-gray-600">
             <button
               onClick={() => setViewMode('grid')}
@@ -369,7 +360,6 @@ const CategoryProductsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Products Display */}
       {loading ? (
         <div className="text-center py-12 dark:text-white">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 dark:border-primary-400"></div>
@@ -421,7 +411,6 @@ const CategoryProductsPage: React.FC = () => {
         />
       )}
 
-      {/* Bulk Upload Modal */}
       <BulkUploadModal
         isOpen={isBulkUploadModalOpen}
         onClose={() => setIsBulkUploadModalOpen(false)}
