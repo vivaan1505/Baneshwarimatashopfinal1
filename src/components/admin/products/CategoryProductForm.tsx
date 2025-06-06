@@ -63,7 +63,7 @@ const PRODUCT_TAGS = [
   { value: 'obon', label: 'Obon', color: 'bg-rose-100 text-rose-800' },
   { value: 'mardi_gras', label: 'Mardi Gras', color: 'bg-violet-100 text-violet-800' },
   { value: 'bastille_day', label: 'Bastille Day', color: 'bg-blue-300 text-blue-900' },
-  { value: 'st_patricks', label: 'St. Patrick''s Day', color: 'bg-green-400 text-green-900' },
+  { value: 'st_patricks', label: 'St. Patrick\'s Day', color: 'bg-green-400 text-green-900' },
   { value: 'men', label: 'Men', color: 'bg-blue-100 text-blue-800' },
   { value: 'women', label: 'Women', color: 'bg-pink-100 text-pink-800' },
   { value: 'kids', label: 'Kids', color: 'bg-green-100 text-green-800' }
