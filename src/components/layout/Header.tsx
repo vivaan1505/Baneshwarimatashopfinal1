@@ -1,6 +1,7 @@
+// src/components/layout/Header.tsx
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu as MenuIcon, Search, ShoppingBag, User, Heart, Ticket } from 'lucide-react';
+import { Menu as MenuIcon, Search, ShoppingBag, User, Heart, Ticket, Tag } from 'lucide-react'; // Added Tag icon
 import NavigationMenu from './NavigationMenu';
 import CartDrawer from '../cart/CartDrawer';
 import { useCartStore } from '../../stores/cartStore';
@@ -153,6 +154,17 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
             
             <motion.div whileHover={{ scale: 1.1 }}>
               <Link 
+                to="/sale" // Added Sale link
+                onClick={scrollToTop}
+                className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400"
+                title="Sale"
+              >
+                <Tag size={20} /> {/* Using Tag icon for Sale */}
+              </Link>
+            </motion.div>
+
+            <motion.div whileHover={{ scale: 1.1 }}>
+              <Link 
                 to="/wishlist" 
                 onClick={scrollToTop}
                 className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400 relative"
@@ -163,7 +175,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
                   <motion.span 
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-secondary-600 rounded-full dark:bg-secondary-500"
+                    className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-secondary-600 rounded-full dark:bg-secondary-500"
                   >
                     {wishlistCount}
                   </motion.span>
@@ -276,7 +288,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
                 <motion.span 
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-secondary-600 rounded-full dark:bg-secondary-500"
+                  className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-secondary-600 rounded-full dark:bg-secondary-500"
                 >
                   {cartItemsCount}
                 </motion.span>
