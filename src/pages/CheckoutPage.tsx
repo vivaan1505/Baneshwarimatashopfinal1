@@ -38,14 +38,12 @@ const CheckoutPage: React.FC = () => {
   const state = watch('state');
   
   useEffect(() => {
-    // Update meta tags for SEO and social sharing
     updateMetaTags(
       'Checkout | MinddShopp',
       'Complete your purchase securely at MinddShopp. Review your order, enter shipping details, and select payment method.',
       `${window.location.origin}/icon-512.png`,
       window.location.href
     );
-    
     metaUpdatedRef.current = true;
   }, []);
 
@@ -104,7 +102,7 @@ const CheckoutPage: React.FC = () => {
             user_id: user?.id || null,
             status: 'pending',
             total_amount: total,
-            shipping_address_id: null, // We'll handle addresses separately
+            shipping_address_id: null,
             billing_address_id: null
           }])
           .select()
@@ -115,7 +113,7 @@ const CheckoutPage: React.FC = () => {
         // Create order items
         const orderItems = items.map(item => ({
           order_id: orderData.id,
-          product_variant_id: null, // We're not using variants in this example
+          product_variant_id: item.productVariantId || null, // Pass variantId!
           quantity: item.quantity,
           price_at_time: item.price
         }));
@@ -123,7 +121,6 @@ const CheckoutPage: React.FC = () => {
         const { error: itemsError } = await supabase
           .from('order_items')
           .insert(orderItems);
-          
         if (itemsError) throw itemsError;
         
         // Store shipping address
@@ -141,7 +138,6 @@ const CheckoutPage: React.FC = () => {
           }])
           .select()
           .single();
-          
         if (addressError) throw addressError;
         
         // Update order with shipping address
@@ -149,19 +145,15 @@ const CheckoutPage: React.FC = () => {
           .from('orders')
           .update({
             shipping_address_id: addressData.id,
-            billing_address_id: addressData.id // Using same address for both
+            billing_address_id: addressData.id
           })
           .eq('id', orderData.id);
-          
         if (updateError) throw updateError;
         
       } catch (error) {
         console.error('Error creating order:', error);
-        // Continue to order confirmation even if there's an error
-        // In a real app, you'd want to handle this more gracefully
       }
       
-      // Clear cart on success
       clearCart();
       resetCheckout();
       navigate('/order-confirmation');
@@ -193,7 +185,6 @@ const CheckoutPage: React.FC = () => {
         {/* Checkout Form */}
         <div>
           <h2 className="text-2xl font-medium mb-8">Checkout</h2>
-          
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Shipping Address */}
             <div className="bg-white p-6 rounded-lg shadow-sm">
@@ -269,7 +260,6 @@ const CheckoutPage: React.FC = () => {
                 </div>
               </div>
             </div>
-            
             {/* Shipping Method */}
             {shippingRates.length > 0 && (
               <div className="bg-white p-6 rounded-lg shadow-sm">
@@ -300,7 +290,6 @@ const CheckoutPage: React.FC = () => {
                 </div>
               </div>
             )}
-            
             {/* Payment Method */}
             <div className="bg-white p-6 rounded-lg shadow-sm">
               <h3 className="text-lg font-medium mb-4">Payment Method</h3>
@@ -319,7 +308,6 @@ const CheckoutPage: React.FC = () => {
                     <p className="text-sm text-gray-500">Pay when you receive your order</p>
                   </div>
                 </label>
-                
                 <label className="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
                   <input
                     type="radio"
@@ -336,7 +324,6 @@ const CheckoutPage: React.FC = () => {
                 </label>
               </div>
             </div>
-            
             <button
               type="submit"
               disabled={loading || !selectedShippingRate || !paymentMethod}
@@ -346,15 +333,13 @@ const CheckoutPage: React.FC = () => {
             </button>
           </form>
         </div>
-        
         {/* Order Summary */}
         <div>
           <div className="bg-white p-6 rounded-lg shadow-sm sticky top-24">
             <h3 className="text-lg font-medium mb-4">Order Summary</h3>
-            
             <div className="space-y-4 mb-6">
               {items.map((item) => (
-                <div key={item.id} className="flex items-center">
+                <div key={item.id || item.productId} className="flex items-center">
                   <img
                     src={item.image}
                     alt={item.name}
@@ -362,6 +347,13 @@ const CheckoutPage: React.FC = () => {
                   />
                   <div className="ml-4 flex-1">
                     <h4 className="text-sm font-medium">{item.name}</h4>
+                    {item.selectedOptions && Object.keys(item.selectedOptions).length > 0 && (
+                      <div className="text-xs text-gray-500 mb-1">
+                        {Object.entries(item.selectedOptions).map(([k, v]) => (
+                          <span key={k}>{k}: {v} </span>
+                        ))}
+                      </div>
+                    )}
                     <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
                   </div>
                   <p className="text-sm font-medium">
@@ -370,7 +362,6 @@ const CheckoutPage: React.FC = () => {
                 </div>
               ))}
             </div>
-            
             <div className="border-t pt-4 space-y-2">
               <div className="flex justify-between text-sm">
                 <span>Subtotal</span>
