@@ -18,31 +18,26 @@ const BeautyPage: React.FC = () => {
   useEffect(() => {
     fetchBeautyProducts();
     fetchSubcategories();
-    
-    // Update meta tags for SEO and social sharing
+
     updateMetaTags(
       'Premium Beauty Collection | MinddShopp',
       'Discover our premium selection of beauty products. Shop skincare, makeup, fragrances, and more from luxury brands.',
       'https://images.pexels.com/photos/4938502/pexels-photo-4938502.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       window.location.href
     );
-    
-    // Add structured data
+
     const webPageSchema = generateWebPageSchema({
       title: 'Premium Beauty Collection | MinddShopp',
       description: 'Discover our premium selection of beauty products. Shop skincare, makeup, fragrances, and more from luxury brands.',
       url: window.location.href
     });
-    
+
     addStructuredData(webPageSchema);
-    
     metaUpdatedRef.current = true;
   }, []);
 
-  // Update meta tags when category filter changes
   useEffect(() => {
     if (!metaUpdatedRef.current || selectedCategory === 'all') return;
-    
     const categoryName = categories.find(c => c.id === selectedCategory)?.name || 'Beauty';
     updateMetaTags(
       `${categoryName} | MinddShopp Beauty Collection`,
@@ -55,7 +50,7 @@ const BeautyPage: React.FC = () => {
   const fetchBeautyProducts = async () => {
     try {
       setLoading(true);
-      
+
       const { data, error } = await supabase
         .from('products')
         .select(`
@@ -65,7 +60,7 @@ const BeautyPage: React.FC = () => {
         `)
         .eq('type', 'beauty')
         .eq('is_visible', true);
-      
+
       if (error) throw error;
       setProducts(data || []);
     } catch (error) {
@@ -76,14 +71,13 @@ const BeautyPage: React.FC = () => {
     }
   };
 
-  // UPDATED: fetch from subcategories table
+  // Fetch beauty subcategories from Supabase
   const fetchSubcategories = async () => {
     try {
       const { data, error } = await supabase
         .from('subcategories')
         .select('id, name')
         .eq('parent_category', 'beauty');
-      
       if (error) throw error;
       setSubcategories(data || []);
     } catch (error) {
@@ -91,25 +85,39 @@ const BeautyPage: React.FC = () => {
     }
   };
 
+  // Build categories array for filter (from subcategories)
+  const categorySet = new Set([
+    { id: 'all', name: 'All Categories' },
+    ...subcategories
+  ].map(cat => JSON.stringify(cat)));
+  const categories = [...Array.from(categorySet).map(cat => JSON.parse(cat))];
+
+  // Add specified beauty categories
+  const predefinedCategories = [
+    { id: 'skincare', name: 'Skincare' },
+    { id: 'makeup', name: 'Makeup' },
+    { id: 'fragrances', name: 'Fragrances' },
+    { id: 'hair-care', name: 'Hair Care' }
+  ];
+  predefinedCategories.forEach(cat => {
+    if (!categories.some(existing => existing.id === cat.id)) {
+      categories.push(cat);
+    }
+  });
+
   const filterProducts = (products: any[]) => {
     let filtered = [...products];
-    
-    // Apply search filter
     if (searchQuery) {
       filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-    
-    // Apply category filter
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(product => 
+      filtered = filtered.filter(product =>
         product.subcategory === selectedCategory
       );
     }
-    
-    // Apply sorting
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'price-asc':
@@ -123,35 +131,10 @@ const BeautyPage: React.FC = () => {
           return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
       }
     });
-    
     return filtered;
   };
 
   const filteredProducts = filterProducts(products);
-
-  // Create categories array for filter - using Set to remove duplicates
-  const categorySet = new Set([
-    { id: 'all', name: 'All Categories' },
-    ...subcategories
-  ].map(cat => JSON.stringify(cat)));
-  
-  // Convert back to array
-  const categories = [...Array.from(categorySet).map(cat => JSON.parse(cat))];
-  
-  // Add specified beauty categories
-  const predefinedCategories = [
-    { id: 'skincare', name: 'Skincare' },
-    { id: 'makeup', name: 'Makeup' },
-    { id: 'fragrances', name: 'Fragrances' },
-    { id: 'hair-care', name: 'Hair Care' }
-  ];
-  
-  // Add predefined categories only if they don't already exist
-  predefinedCategories.forEach(cat => {
-    if (!categories.some(existing => existing.id === cat.id)) {
-      categories.push(cat);
-    }
-  });
 
   return (
     <div className="py-8 bg-gradient-to-br from-white via-blue-50 to-pink-50 min-h-screen dark:from-gray-900 dark:via-gray-950 dark:to-black">
@@ -180,9 +163,9 @@ const BeautyPage: React.FC = () => {
         {/* Popular Categories */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
           <Link to="/beauty?category=skincare" className="relative overflow-hidden rounded-xl aspect-square group shadow-md">
-            <img 
-              src="https://images.pexels.com/photos/3785147/pexels-photo-3785147.jpeg" 
-              alt="Skincare" 
+            <img
+              src="https://images.pexels.com/photos/3785147/pexels-photo-3785147.jpeg"
+              alt="Skincare"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
@@ -192,11 +175,11 @@ const BeautyPage: React.FC = () => {
               </div>
             </div>
           </Link>
-          
+
           <Link to="/beauty?category=makeup" className="relative overflow-hidden rounded-xl aspect-square group shadow-md">
-            <img 
-              src="https://images.pexels.com/photos/4938502/pexels-photo-4938502.jpeg" 
-              alt="Makeup" 
+            <img
+              src="https://images.pexels.com/photos/4938502/pexels-photo-4938502.jpeg"
+              alt="Makeup"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
@@ -206,11 +189,11 @@ const BeautyPage: React.FC = () => {
               </div>
             </div>
           </Link>
-          
+
           <Link to="/beauty?category=fragrances" className="relative overflow-hidden rounded-xl aspect-square group shadow-md">
-            <img 
-              src="https://images.pexels.com/photos/965989/pexels-photo-965989.jpeg" 
-              alt="Fragrances" 
+            <img
+              src="https://images.pexels.com/photos/965989/pexels-photo-965989.jpeg"
+              alt="Fragrances"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
@@ -220,11 +203,11 @@ const BeautyPage: React.FC = () => {
               </div>
             </div>
           </Link>
-          
+
           <Link to="/beauty?category=hair-care" className="relative overflow-hidden rounded-xl aspect-square group shadow-md">
-            <img 
-              src="https://images.pexels.com/photos/3993449/pexels-photo-3993449.jpeg" 
-              alt="Hair Care" 
+            <img
+              src="https://images.pexels.com/photos/3993449/pexels-photo-3993449.jpeg"
+              alt="Hair Care"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
