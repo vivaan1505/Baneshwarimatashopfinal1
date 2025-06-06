@@ -73,7 +73,7 @@ const ProductPage: React.FC = () => {
           images:product_images(*)
         `)
         .eq('id', productId)
-        .single();
+        .maybeSingle();
 
       if (productError) throw productError;
       
