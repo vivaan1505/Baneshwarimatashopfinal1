@@ -73,7 +73,7 @@ const KidsPage: React.FC = () => {
     }
   };
 
-  // Fetch subcategories from Supabase
+  // Fetch subcategories from Supabase (only KIDS)
   const fetchSubcategories = async () => {
     try {
       const { data, error } = await supabase
@@ -88,7 +88,7 @@ const KidsPage: React.FC = () => {
     }
   };
 
-  // Create categories array for filter
+  // Only show kids subcategories in the filter (No men/women)
   const categories = [
     { id: 'all', name: 'All Categories' },
     ...subcategories.map((cat) => ({ id: cat.id, name: cat.name })),
@@ -103,7 +103,7 @@ const KidsPage: React.FC = () => {
         product.description?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-    // Apply category filter
+    // Apply category filter (by subcategory, not type)
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(product => 
         product.subcategory === selectedCategory
@@ -128,7 +128,7 @@ const KidsPage: React.FC = () => {
 
   const filteredProducts = filterProducts(products);
 
-  // Replace with robust, reliable Unsplash/Pexels images
+  // Age groups, only kid-appropriate images
   const ageGroups = [
     { name: 'Baby (0-2 years)', image: 'https://images.pexels.com/photos/1556706/pexels-photo-1556706.jpeg?auto=compress&w=400&h=400' },
     { name: 'Toddler (2-4 years)', image: 'https://images.pexels.com/photos/3661352/pexels-photo-3661352.jpeg?auto=compress&w=400&h=400' },
@@ -198,7 +198,7 @@ const KidsPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Featured Categories with playful icons */}
+        {/* Featured Categories -- only for kids */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <Link to="/clothing?gender=kids" className="relative overflow-hidden rounded-2xl aspect-video group border-2 border-[#c3f584] bg-[#f6ffdf] hover:shadow-xl transition-all duration-300">
             <img 
