@@ -4,11 +4,22 @@ import { supabase } from '../../../lib/supabase';
 import { toast } from 'react-hot-toast';
 import type { Product } from '../../../types';
 
+// --- Variant type ---
+interface ProductVariant {
+  id: string;
+  product_id: string;
+  option_values: string[];
+  price: number;
+  stock_quantity: number;
+  sku?: string;
+  compare_at_price?: number | null;
+}
+
 // Stronger type for onSort, restrict to allowed fields
 type SortField = 'name' | 'price' | 'stock_quantity';
 
 interface ProductListProps {
-  products: Product[];
+  products: (Product & { variants?: ProductVariant[] })[];
   selectedProducts: string[];
   onSelect: (id: string) => void;
   onSelectAll: () => void;
@@ -29,6 +40,20 @@ const getAriaSort = (
     return sortDirection === 'asc' ? 'ascending' : 'descending';
   }
   return 'none';
+};
+
+// Helper to get summary info for variants
+const getVariantSummary = (variants?: ProductVariant[]) => {
+  if (!variants || variants.length === 0) return { sizes: [], minPrice: undefined, maxPrice: undefined, totalStock: undefined };
+  const sizes = variants.map(v => v.option_values.join(', '));
+  const prices = variants.map(v => v.price);
+  const stocks = variants.map(v => v.stock_quantity || 0);
+  return {
+    sizes: Array.from(new Set(sizes)),
+    minPrice: Math.min(...prices),
+    maxPrice: Math.max(...prices),
+    totalStock: stocks.reduce((a, b) => a + b, 0)
+  };
 };
 
 const ProductList: React.FC<ProductListProps> = ({
@@ -79,86 +104,113 @@ const ProductList: React.FC<ProductListProps> = ({
 
   // Memoize product rows for large lists
   const productRows = useMemo(() => (
-    products.map((product) => (
-      <tr key={product.id} className="hover:bg-gray-50">
-        <td className="px-6 py-4 whitespace-nowrap">
-          <input
-            type="checkbox"
-            checked={selectedProducts.includes(product.id)}
-            onChange={() => onSelect(product.id)}
-            className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-            aria-label={`Select product ${product.name}`}
-          />
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap">
-          <div className="flex items-center">
-            <img
-              src={product.images?.[0]?.url || product.imageUrl}
-              alt={product.name}
-              className="h-10 w-10 rounded-full object-cover"
-              loading="lazy"
+    products.map((product) => {
+      const { sizes, minPrice, maxPrice, totalStock } = getVariantSummary((product as any).variants);
+      return (
+        <tr key={product.id} className="hover:bg-gray-50">
+          <td className="px-6 py-4 whitespace-nowrap">
+            <input
+              type="checkbox"
+              checked={selectedProducts.includes(product.id)}
+              onChange={() => onSelect(product.id)}
+              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              aria-label={`Select product ${product.name}`}
             />
-            <div className="ml-4">
-              <div className="text-sm font-medium text-gray-900">{product.name}</div>
-              <div className="text-sm text-gray-500">{product.brand?.name || 'No Brand'}</div>
+          </td>
+          <td className="px-6 py-4 whitespace-nowrap">
+            <div className="flex items-center">
+              <img
+                src={product.images?.[0]?.url || product.imageUrl}
+                alt={product.name}
+                className="h-10 w-10 rounded-full object-cover"
+                loading="lazy"
+              />
+              <div className="ml-4">
+                <div className="text-sm font-medium text-gray-900">{product.name}</div>
+                <div className="text-sm text-gray-500">{product.brand?.name || 'No Brand'}</div>
+                {/* Sizes/Weights display */}
+                {sizes && sizes.length > 0 && (
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    <span className="text-xs text-gray-500">Sizes:</span>
+                    {sizes.map((size, i) => (
+                      <span
+                        key={size + i}
+                        className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-xs"
+                      >
+                        {size}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap">
-          <div className="text-sm text-gray-900">${product.price.toFixed(2)}</div>
-          {product.compare_at_price && (
-            <div className="text-sm text-gray-500 line-through">
-              ${product.compare_at_price.toFixed(2)}
+          </td>
+          <td className="px-6 py-4 whitespace-nowrap">
+            {minPrice !== undefined ? (
+              <div className="text-sm text-gray-900">
+                {minPrice === maxPrice
+                  ? `$${minPrice.toFixed(2)}`
+                  : `$${minPrice.toFixed(2)} - $${maxPrice.toFixed(2)}`}
+              </div>
+            ) : (
+              <div className="text-sm text-gray-900">${product.price.toFixed(2)}</div>
+            )}
+            {product.compare_at_price && (
+              <div className="text-sm text-gray-500 line-through">
+                ${product.compare_at_price.toFixed(2)}
+              </div>
+            )}
+          </td>
+          <td className="px-6 py-4 whitespace-nowrap">
+            <div className="text-sm text-gray-900">
+              {totalStock !== undefined ? totalStock : (product.stock_quantity ?? 0)}
             </div>
-          )}
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap">
-          <div className="text-sm text-gray-900">{product.stock_quantity ?? 0}</div>
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap">
-          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-            product.is_visible
-              ? 'bg-green-100 text-green-800'
-              : 'bg-gray-100 text-gray-800'
-          }`}>
-            {product.is_visible ? 'Active' : 'Hidden'}
-          </span>
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-          <div className="flex items-center justify-end space-x-2">
-            <button
-              onClick={() => handleToggleVisibility(product)}
-              className="text-gray-600 hover:text-primary-600"
-              title={product.is_visible ? 'Hide product' : 'Show product'}
-              aria-label={product.is_visible ? 'Hide product' : 'Show product'}
-              type="button"
-            >
-              {product.is_visible ? <Eye size={18} /> : <EyeOff size={18} />}
-            </button>
-            {onEdit && (
+          </td>
+          <td className="px-6 py-4 whitespace-nowrap">
+            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+              product.is_visible
+                ? 'bg-green-100 text-green-800'
+                : 'bg-gray-100 text-gray-800'
+            }`}>
+              {product.is_visible ? 'Active' : 'Hidden'}
+            </span>
+          </td>
+          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            <div className="flex items-center justify-end space-x-2">
               <button
-                onClick={() => onEdit(product.id)}
+                onClick={() => handleToggleVisibility(product)}
                 className="text-gray-600 hover:text-primary-600"
-                title="Edit product"
-                aria-label="Edit product"
+                title={product.is_visible ? 'Hide product' : 'Show product'}
+                aria-label={product.is_visible ? 'Hide product' : 'Show product'}
                 type="button"
               >
-                <Edit size={18} />
+                {product.is_visible ? <Eye size={18} /> : <EyeOff size={18} />}
               </button>
-            )}
-            <button
-              onClick={() => handleDelete(product)}
-              className="text-gray-600 hover:text-red-600"
-              title="Delete product"
-              aria-label="Delete product"
-              type="button"
-            >
-              <Trash size={18} />
-            </button>
-          </div>
-        </td>
-      </tr>
-    ))
+              {onEdit && (
+                <button
+                  onClick={() => onEdit(product.id)}
+                  className="text-gray-600 hover:text-primary-600"
+                  title="Edit product"
+                  aria-label="Edit product"
+                  type="button"
+                >
+                  <Edit size={18} />
+                </button>
+              )}
+              <button
+                onClick={() => handleDelete(product)}
+                className="text-gray-600 hover:text-red-600"
+                title="Delete product"
+                aria-label="Delete product"
+                type="button"
+              >
+                <Trash size={18} />
+              </button>
+            </div>
+          </td>
+        </tr>
+      );
+    })
   ), [products, selectedProducts, onSelect, handleDelete, handleToggleVisibility, onEdit]);
 
   return (
@@ -194,7 +246,7 @@ const ProductList: React.FC<ProductListProps> = ({
               className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
               aria-sort={getAriaSort('price', sortField, sortDirection)}
               role="columnheader"
-              onClick={() => onSort('price')}
+              onClick={() => onSort('price)}
               tabIndex={0}
               onKeyPress={e => { if (e.key === 'Enter' || e.key === ' ') onSort('price'); }}
               aria-label="Sort by price"
