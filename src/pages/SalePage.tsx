@@ -7,25 +7,25 @@ import CategoryDropdownFilter from '../components/shop/CategoryDropdownFilter';
 import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 const GENDER_OPTIONS = [
-  { label: 'All', value: 'all' },
-  { label: 'Men', value: 'men' },
-  { label: 'Women', value: 'women' },
-  { label: 'Kids', value: 'kids' },
-  { label: 'Unisex', value: 'unisex' }
+  { id: 'all', name: 'All Genders' },
+  { id: 'men', name: 'Men' },
+  { id: 'women', name: 'Women' },
+  { id: 'kids', name: 'Kids' },
+  { id: 'unisex', name: 'Unisex' }
 ];
 
-// Replace with your product types if you have more
 const PRODUCT_TYPE_OPTIONS = [
   { id: 'all', name: 'All Products' },
-  { id: 'footwear', name: 'Footwear' },
   { id: 'clothing', name: 'Clothing' },
-  { id: 'accessories', name: 'Accessories' },
+  { id: 'footwear', name: 'Footwear' },
+  { id: 'jewelry', name: 'Jewelry' },
+  { id: 'beauty', name: 'Beauty' }
 ];
 
 const SalePage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedGender, setSelectedGender] = useState('all');
   const [selectedProductType, setSelectedProductType] = useState('all');
+  const [selectedGender, setSelectedGender] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -124,7 +124,8 @@ const SalePage: React.FC = () => {
     }
     if (selectedProductType !== 'all') {
       filtered = filtered.filter(
-        (product) => (product.type || product.product_type) === selectedProductType
+        (product) =>
+          (product.type || product.product_type) === selectedProductType
       );
     }
     filtered.sort((a, b) => {
@@ -188,32 +189,24 @@ const SalePage: React.FC = () => {
           </p>
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-          {/* Gender Filter */}
-          <div className="flex gap-2 flex-wrap">
-            <div className="font-semibold text-gray-700 dark:text-gray-300 flex items-center mr-2">
-              Gender:
-            </div>
-            {GENDER_OPTIONS.map(({ label, value }) => (
-              <button
-                key={value}
-                onClick={() => setSelectedGender(value)}
-                className={`px-5 py-2 rounded-full text-sm font-semibold shadow-sm transition-colors ${
-                  selectedGender === value
-                    ? 'bg-blue-700 text-white dark:bg-blue-500'
-                    : 'bg-gray-100 text-gray-700 hover:bg-blue-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
-                }`}
-              >
-                {label}
-              </button>
-            ))}
+        {/* Filter Bar */}
+        <div className="flex flex-wrap gap-4 items-end mb-16">
+          {/* Gender Dropdown */}
+          <div className="flex flex-col">
+            <label className="mb-1 font-semibold text-gray-700 dark:text-gray-300">
+              Gender
+            </label>
+            <CategoryDropdownFilter
+              selectedCategory={selectedGender}
+              setSelectedCategory={setSelectedGender}
+              categories={GENDER_OPTIONS}
+              loading={false}
+            />
           </div>
-
           {/* Product Type Dropdown */}
-          <div className="flex items-center gap-3">
-            <label className="font-semibold text-gray-700 dark:text-gray-300">
-              Product Type:
+          <div className="flex flex-col">
+            <label className="mb-1 font-semibold text-gray-700 dark:text-gray-300">
+              Product Type
             </label>
             <CategoryDropdownFilter
               selectedCategory={selectedProductType}
@@ -222,11 +215,10 @@ const SalePage: React.FC = () => {
               loading={false}
             />
           </div>
-
           {/* Category Dropdown */}
-          <div className="flex items-center gap-3">
-            <label className="font-semibold text-gray-700 dark:text-gray-300">
-              Category:
+          <div className="flex flex-col">
+            <label className="mb-1 font-semibold text-gray-700 dark:text-gray-300">
+              Category
             </label>
             <CategoryDropdownFilter
               selectedCategory={selectedCategory}
@@ -235,22 +227,29 @@ const SalePage: React.FC = () => {
               loading={loading}
             />
           </div>
-
           {/* Sort Dropdown */}
-          <div className="flex items-center gap-2">
-            <label className="font-semibold text-gray-700 dark:text-gray-300">
-              Sort by:
+          <div className="flex flex-col">
+            <label className="mb-1 font-semibold text-gray-700 dark:text-gray-300">
+              Sort by
             </label>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white min-w-[160px]"
             >
               <option value="newest">Newest</option>
               <option value="price-asc">Price: Low to High</option>
               <option value="price-desc">Price: High to Low</option>
               <option value="rating">Highest Rated</option>
             </select>
+          </div>
+        </div>
+
+        {/* AD Space placeholder */}
+        <div className="mb-12 w-full flex justify-center">
+          {/* Replace this with your Ad component or banner */}
+          <div className="bg-gray-200 dark:bg-gray-800 rounded-lg h-32 w-full max-w-3xl flex items-center justify-center text-gray-400 text-xl font-semibold">
+            [ Your Ad Here ]
           </div>
         </div>
 
