@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { toast } from 'react-hot-toast';
 import ProductCard from '../components/common/ProductCard';
-import CategoryFilter from '../components/shop/CategoryFilter';
+import CategoryDropdownFilter from '../components/shop/CategoryDropdownFilter';
 import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
 const GENDER_OPTIONS = [
@@ -21,7 +21,7 @@ const SalePage: React.FC = () => {
   const [sortBy, setSortBy] = useState('newest');
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [subcategories, setSubcategories] = useState<{id: string, name: string}[]>([]);
+  const [subcategories, setSubcategories] = useState<{ id: string; name: string }[]>([]);
   const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const SalePage: React.FC = () => {
 
   useEffect(() => {
     if (!metaUpdatedRef.current || selectedCategory === 'all') return;
-    const categoryName = categories.find(c => c.id === selectedCategory)?.name || 'Sale';
+    const categoryName = categories.find((c) => c.id === selectedCategory)?.name || 'Sale';
     updateMetaTags(
       `Sale - ${categoryName} | MinddShopp`,
       `Big savings on ${categoryName.toLowerCase()} at MinddShopp. Grab the best deals before they're gone!`,
@@ -84,8 +84,6 @@ const SalePage: React.FC = () => {
   // Fetch all subcategories from sale products
   const fetchSubcategories = async () => {
     try {
-      // If you want to display only subcategories related to sale products, you can aggregate them from products here.
-      // Or fetch all subcategories from DB if you want a broader filter.
       const { data, error } = await supabase
         .from('subcategories')
         .select('id, name');
@@ -97,30 +95,30 @@ const SalePage: React.FC = () => {
   };
 
   // Build categories array for filter (from subcategories)
-  const categorySet = new Set([
-    { id: 'all', name: 'All Categories' },
-    ...subcategories
-  ].map(cat => JSON.stringify(cat)));
-  const categories = [...Array.from(categorySet).map(cat => JSON.parse(cat))];
+  const categorySet = new Set(
+    [{ id: 'all', name: 'All Categories' }, ...subcategories].map((cat) =>
+      JSON.stringify(cat)
+    )
+  );
+  const categories = [...Array.from(categorySet).map((cat) => JSON.parse(cat))];
 
   // Filtering logic
   const filterProducts = (products: any[]) => {
     let filtered = [...products];
 
     if (searchQuery) {
-      filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      filtered = filtered.filter(
+        (product) =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.description?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(product =>
-        product.subcategory === selectedCategory
-      );
+      filtered = filtered.filter((product) => product.subcategory === selectedCategory);
     }
     if (selectedGender !== 'all') {
-      filtered = filtered.filter(product =>
-        product.gender === selectedGender || product.gender === 'unisex'
+      filtered = filtered.filter(
+        (product) => product.gender === selectedGender || product.gender === 'unisex'
       );
     }
     filtered.sort((a, b) => {
@@ -133,7 +131,9 @@ const SalePage: React.FC = () => {
           return (b.rating || 0) - (a.rating || 0);
         case 'newest':
         default:
-          return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
+          return (
+            new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
+          );
       }
     });
     return filtered;
@@ -148,9 +148,24 @@ const SalePage: React.FC = () => {
         <nav className="mb-6">
           <ol className="flex text-sm">
             <li className="flex items-center">
-              <Link to="/" className="text-gray-500 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-400">Home</Link>
-              <svg className="mx-2 w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+              <Link
+                to="/"
+                className="text-gray-500 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-400"
+              >
+                Home
+              </Link>
+              <svg
+                className="mx-2 w-4 h-4 text-gray-400 dark:text-gray-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </li>
             <li className="text-gray-900 font-medium dark:text-white">Sale</li>
@@ -159,8 +174,12 @@ const SalePage: React.FC = () => {
 
         {/* Category Header */}
         <div className="mb-8 text-center">
-          <h1 className="text-4xl font-heading font-bold mb-4 text-primary-700 dark:text-white">🔥 Sale: Best Deals!</h1>
-          <p className="mb-8 text-lg text-gray-700 dark:text-gray-300">Shop big savings across all categories and genders.</p>
+          <h1 className="text-4xl font-heading font-bold mb-4 text-primary-700 dark:text-white">
+            🔥 Sale: Best Deals!
+          </h1>
+          <p className="mb-8 text-lg text-gray-700 dark:text-gray-300">
+            Shop big savings across all categories and genders.
+          </p>
         </div>
 
         {/* Gender Filter */}
@@ -180,17 +199,40 @@ const SalePage: React.FC = () => {
           ))}
         </div>
 
-        {/* Category Filter */}
-        <CategoryFilter
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
+        {/* Category Dropdown Filter */}
+        <CategoryDropdownFilter
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
-          sortBy={sortBy}
-          setSortBy={setSortBy}
           categories={categories}
-          mainCategory=""
+          loading={loading}
         />
+
+        {/* Search Bar and Sort */}
+        <div className="flex flex-wrap gap-4 mb-8">
+          <div className="flex-1 min-w-[240px]">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search sale products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-4 pr-4 py-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              />
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            >
+              <option value="newest">Newest</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="rating">Highest Rated</option>
+            </select>
+          </div>
+        </div>
 
         {/* Products Grid */}
         {loading ? (
@@ -201,7 +243,9 @@ const SalePage: React.FC = () => {
         ) : filteredProducts.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-lg shadow-md dark:bg-gray-800">
             <h2 className="text-xl font-medium mb-2 dark:text-white">No sale products found</h2>
-            <p className="text-gray-500 dark:text-gray-400">No sale products found matching your criteria</p>
+            <p className="text-gray-500 dark:text-gray-400">
+              No sale products found matching your criteria
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
