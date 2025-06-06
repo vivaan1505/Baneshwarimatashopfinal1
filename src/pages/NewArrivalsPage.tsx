@@ -4,7 +4,6 @@ import ProductCard from '../components/common/ProductCard';
 import { useProducts } from '../hooks/useProducts';
 import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
-// For robust category filtering, use these as the "category.slug" values expected in product data.
 const CATEGORY_OPTIONS = [
   { label: 'All Categories', value: 'all' },
   { label: 'Footwear', value: 'footwear' },
@@ -13,9 +12,18 @@ const CATEGORY_OPTIONS = [
   { label: 'Beauty', value: 'beauty' },
 ];
 
+const GENDER_OPTIONS = [
+  { label: 'All', value: 'all' },
+  { label: 'Men', value: 'men' },
+  { label: 'Women', value: 'women' },
+  { label: 'Kids', value: 'kids' },
+  { label: 'Unisex', value: 'unisex' }
+];
+
 const NewArrivalsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedGender, setSelectedGender] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const metaUpdatedRef = useRef(false);
 
@@ -47,7 +55,7 @@ const NewArrivalsPage: React.FC = () => {
     );
   }, [selectedCategory]);
 
-  // Robust filtering: category filter matches category.slug (case-insensitive)
+  // Filter and sort products
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory =
@@ -56,7 +64,13 @@ const NewArrivalsPage: React.FC = () => {
         : (product.category &&
           typeof product.category.slug === 'string' &&
           product.category.slug.toLowerCase() === selectedCategory);
-    return matchesSearch && matchesCategory;
+
+    const matchesGender =
+      selectedGender === 'all'
+        ? true
+        : (product.gender === selectedGender || product.gender === 'unisex');
+
+    return matchesSearch && matchesCategory && matchesGender;
   });
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
@@ -122,6 +136,23 @@ const NewArrivalsPage: React.FC = () => {
                 Filters
               </button>
             </div>
+          </div>
+
+          {/* Gender Pills */}
+          <div className="flex flex-wrap gap-2 mt-6">
+            {GENDER_OPTIONS.map(({ label, value }) => (
+              <button
+                key={value}
+                onClick={() => setSelectedGender(value)}
+                className={`px-5 py-2 rounded-full text-sm font-semibold shadow-sm transition-colors ${
+                  selectedGender === value
+                    ? 'bg-blue-700 text-white dark:bg-blue-500'
+                    : 'bg-gray-100 text-gray-700 hover:bg-blue-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
 
           {/* Category Pills */}
