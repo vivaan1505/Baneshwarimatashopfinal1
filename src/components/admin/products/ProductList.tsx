@@ -246,7 +246,7 @@ const ProductList: React.FC<ProductListProps> = ({
               className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
               aria-sort={getAriaSort('price', sortField, sortDirection)}
               role="columnheader"
-              onClick={() => onSort('price)}
+              onClick={() => onSort('price')}
               tabIndex={0}
               onKeyPress={e => { if (e.key === 'Enter' || e.key === ' ') onSort('price'); }}
               aria-label="Sort by price"
