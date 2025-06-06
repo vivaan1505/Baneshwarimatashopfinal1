@@ -369,7 +369,16 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
         brandId = newBrand.id;
       }
 
-      const { brand, images: imagesProp, custom_brand, category: categoryObj, ...updateData } = formData;
+      // Exclude fields that don't exist in the products table
+      const { 
+        brand, 
+        images: imagesProp, 
+        custom_brand, 
+        category: categoryObj, 
+        product_options,
+        product_variants,
+        ...updateData 
+      } = formData;
 
       updateData.tags = Array.isArray(updateData.tags) ? updateData.tags : [];
 
