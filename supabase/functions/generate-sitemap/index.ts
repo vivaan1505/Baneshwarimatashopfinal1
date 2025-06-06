@@ -67,11 +67,12 @@ async function generateSitemap() {
   ];
   
   // Fetch dynamic content
-  const [products, brands, blogPosts, categories, pages] = await Promise.all([
+  const [products, brands, blogPosts, categories, subcategories, pages] = await Promise.all([
     fetchProducts(),
     fetchBrands(),
     fetchBlogPosts(),
     fetchCategories(),
+    fetchSubcategories(),
     fetchPages()
   ]);
   
@@ -82,6 +83,7 @@ async function generateSitemap() {
     ...brands,
     ...blogPosts,
     ...categories,
+    ...subcategories,
     ...pages
   ];
   
@@ -180,6 +182,25 @@ async function fetchCategories() {
     lastmod: category.updated_at ? new Date(category.updated_at).toISOString().split('T')[0] : undefined,
     changefreq: 'weekly',
     priority: 0.8
+  }));
+}
+
+async function fetchSubcategories() {
+  const { data, error } = await supabase
+    .from('subcategories')
+    .select('slug, updated_at, parent_category');
+    
+  if (error) {
+    console.error('Error fetching subcategories:', error);
+    return [];
+  }
+
+  // Generates URLs like /parent-category/subcategory-slug
+  return (data || []).map(subcat => ({
+    url: `/${subcat.parent_category}/${subcat.slug}`,
+    lastmod: subcat.updated_at ? new Date(subcat.updated_at).toISOString().split('T')[0] : undefined,
+    changefreq: 'weekly',
+    priority: 0.75
   }));
 }
 
