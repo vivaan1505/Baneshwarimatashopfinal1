@@ -69,6 +69,48 @@ const PRODUCT_TAGS = [
   { value: 'kids', label: 'Kids', color: 'bg-green-100 text-green-800' }
 ];
 
+// Option/Variant logic
+const DEFAULT_SIZE_OPTIONS: { [key: string]: string[] } = {
+  clothing: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+  footwear: ['6', '7', '8', '9', '10', '11', '12'],
+  jewelry: ['6', '7', '8', '16cm', '18cm', '20cm'],
+  beauty: ['50g', '100g', '250ml'],
+};
+
+function getDefaultOptionsByType(type: string) {
+  if (type === 'beauty') {
+    return [{ name: 'Weight', values: DEFAULT_SIZE_OPTIONS['beauty'] }];
+  } else if (type === 'jewelry') {
+    return [{ name: 'Size', values: DEFAULT_SIZE_OPTIONS['jewelry'] }];
+  } else if (type === 'footwear') {
+    return [{ name: 'Size', values: DEFAULT_SIZE_OPTIONS['footwear'] }];
+  }
+  return [{ name: 'Size', values: DEFAULT_SIZE_OPTIONS['clothing'] }];
+}
+
+function mapCategoryToType(category: string): 'footwear' | 'clothing' | 'jewelry' | 'beauty' | 'accessories' | 'bags' {
+  switch (category) {
+    case 'footwear':
+      return 'footwear';
+    case 'clothing':
+      return 'clothing';
+    case 'jewelry':
+      return 'jewelry';
+    case 'beauty':
+      return 'beauty';
+    case 'accessories':
+      return 'accessories';
+    case 'bags':
+      return 'bags';
+    case 'bridal':
+    case 'christmas':
+    case 'sale':
+      return 'clothing';
+    default:
+      return 'clothing';
+  }
+}
+
 const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
   category,
   isOpen,
@@ -80,6 +122,10 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
   const [brands, setBrands] = useState<Brand[]>([]);
   const [dbSubcategories, setDbSubcategories] = useState<Subcategory[]>([]);
   const [availableSubcategories, setAvailableSubcategories] = useState<Subcategory[]>([]);
+  const [optionFields, setOptionFields] = useState<{ name: string; values: string[] }[]>([]);
+  const [variantRows, setVariantRows] = useState<
+    { optionValues: string[]; price: number; compare_at_price: number | null; sku: string; stock_quantity: number }[]
+  >([]);
 
   const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm({
     defaultValues: {
@@ -109,39 +155,12 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
   const isSpecialCategory = category === 'bridal' || category === 'christmas' || category === 'sale';
   const BrandSelect = isSpecialCategory ? CreatableSelect : Select;
 
-  function mapCategoryToType(category: string): 'footwear' | 'clothing' | 'jewelry' | 'beauty' | 'accessories' | 'bags' {
-    switch (category) {
-      case 'footwear':
-        return 'footwear';
-      case 'clothing':
-        return 'clothing';
-      case 'jewelry':
-        return 'jewelry';
-      case 'beauty':
-        return 'beauty';
-      case 'accessories':
-        return 'accessories';
-      case 'bags':
-        return 'bags';
-      case 'bridal':
-      case 'christmas':
-      case 'sale':
-        return 'clothing';
-      default:
-        return 'clothing';
-    }
-  }
-
   useEffect(() => {
     fetchBrands();
     fetchDbSubcategories();
     setValue('type', mapCategoryToType(category));
-    if (category === 'bridal') {
-      setValue('gender', 'women');
-    }
-    if (isSpecialCategory) {
-      setValue('tags', [category]);
-    }
+    if (category === 'bridal') setValue('gender', 'women');
+    if (isSpecialCategory) setValue('tags', [category]);
   }, [category]);
 
   const fetchDbSubcategories = async () => {
@@ -230,18 +249,54 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
     setValue('tags', tags);
   };
 
+  // --------- Option/Variant logic ----------
+  useEffect(() => {
+    const opts = getDefaultOptionsByType(selectedType);
+    setOptionFields(opts);
+    generateVariants(opts);
+  }, [selectedType]);
+
+  const handleOptionValueChange = (optionIdx: number, valuesString: string) => {
+    const values = valuesString.split(',').map(v => v.trim()).filter(Boolean);
+    setOptionFields(fields => {
+      const copy = [...fields];
+      copy[optionIdx].values = values;
+      return copy;
+    });
+    generateVariants([{ ...optionFields[optionIdx], values }]);
+  };
+
+  const generateVariants = (optionsArr: { name: string; values: string[] }[]) => {
+    if (optionsArr.length === 0) {
+      setVariantRows([]);
+      return;
+    }
+    const variants = optionsArr[0].values.map(value => ({
+      optionValues: [value],
+      price: 0,
+      compare_at_price: null,
+      sku: '',
+      stock_quantity: 0
+    }));
+    setVariantRows(variants);
+  };
+
+  const handleVariantChange = (index: number, field: string, value: any) => {
+    setVariantRows(rows =>
+      rows.map((row, i) => (i === index ? { ...row, [field]: value } : row))
+    );
+  };
+  // -----------------------------------------
+
   const onSubmit = async (formData: any) => {
     setUploading(true);
     try {
       let brandId = formData.brand_id;
-
-      // Handle custom brand creation if needed
       if (formData.custom_brand) {
         const brandSlug = formData.custom_brand
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-|-$/g, '');
-
         const { data: newBrand, error: brandError } = await supabase
           .from('brands')
           .insert([{
@@ -252,15 +307,10 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
           }])
           .select()
           .single();
-
-        if (brandError) {
-          throw new Error(`Error creating brand: ${brandError.message}`);
-        }
-
+        if (brandError) throw new Error(`Error creating brand: ${brandError.message}`);
         brandId = newBrand.id;
       }
 
-      // Map special categories to valid category slug for lookup
       let dbCategorySlug = category;
       if (
         [
@@ -268,11 +318,8 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
           'songkran', 'nowruz', 'lunar_new_year', 'mid_autumn_festival', 'yam', 'intiraymi',
           'las_posadas', 'obon', 'mardi_gras', 'bastille_day', 'st_patricks', 'sale', 'bridal', 'festive'
         ].includes(category)
-      ) {
-        dbCategorySlug = 'clothing';
-      }
+      ) dbCategorySlug = 'clothing';
 
-      // --- LOOKUP category_id BY SLUG ---
       let dbCategoryId = null;
       try {
         const { data: categoryRow, error: categoryError } = await supabase
@@ -280,7 +327,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
           .select('id')
           .eq('slug', dbCategorySlug)
           .single();
-
         if (categoryError) throw categoryError;
         dbCategoryId = categoryRow?.id || null;
       } catch (err) {
@@ -289,13 +335,10 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         return;
       }
 
-      // --- ALWAYS SET SLUG FROM NAME ---
       const productSlug = formData.name
         ?.toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '') || '';
-
-      // --- PREP PRODUCT DATA ---
       const { brand, images: imagesProp, custom_brand, ...productData } = formData;
       productData.tags = Array.isArray(productData.tags) ? productData.tags : [];
       if (
@@ -303,11 +346,9 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
           'christmas', 'diwali', 'eid', 'holi', 'sale', 'bridal', 'festive'
         ].includes(category) &&
         !productData.tags.includes(category)
-      ) {
-        productData.tags.push(category);
-      }
+      ) productData.tags.push(category);
 
-      // --- INSERT PRODUCT WITH category_id AND slug ---
+      // Insert product
       const { data: product, error: productError } = await supabase
         .from('products')
         .insert([{
@@ -321,31 +362,47 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         }])
         .select()
         .single();
-
       if (productError) throw productError;
 
-      // --- UPLOAD IMAGES IF NEEDED ---
+      // Insert product_options
+      for (const opt of optionFields) {
+        const { error: optionsError } = await supabase
+          .from('product_options')
+          .insert([{ product_id: product.id, name: opt.name, values: opt.values }]);
+        if (optionsError) throw optionsError;
+      }
+
+      // Insert product_variants
+      for (const variant of variantRows) {
+        const { error: variantError } = await supabase
+          .from('product_variants')
+          .insert([{
+            product_id: product.id,
+            option_values: variant.optionValues,
+            price: variant.price,
+            compare_at_price: variant.compare_at_price,
+            sku: variant.sku,
+            stock_quantity: variant.stock_quantity,
+            is_visible: true
+          }]);
+        if (variantError) throw variantError;
+      }
+
       if (images.length > 0) {
         const imagePromises = images.map(async (file, index) => {
           const fileExt = file.name.split('.').pop();
           const fileName = `${Date.now()}-${index}.${fileExt}`;
           const filePath = `${product.id}/${fileName}`;
-
           const { error: uploadError } = await supabase.storage
             .from('product-images')
             .upload(filePath, file);
-
           if (uploadError) throw uploadError;
-
           const { data: { publicUrl } } = supabase.storage
             .from('product-images')
             .getPublicUrl(filePath);
-
           return publicUrl;
         });
-
         const imageUrls = await Promise.all(imagePromises);
-
         const { error: imagesError } = await supabase
           .from('product_images')
           .insert(
@@ -355,7 +412,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
               position: index,
             }))
           );
-
         if (imagesError) throw imagesError;
       }
 
@@ -519,6 +575,77 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     classNamePrefix="select"
                     placeholder="Select tags"
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    {optionFields[0]?.name === 'Weight' ? 'Weights (comma separated)' : 'Sizes (comma separated)'}
+                  </label>
+                  <input
+                    type="text"
+                    value={optionFields[0]?.values.join(', ') || ''}
+                    onChange={e => handleOptionValueChange(0, e.target.value)}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  />
+                </div>
+              </div>
+              {/* Variants Table */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {optionFields[0]?.name === 'Weight' ? 'Weight Variants' : 'Size Variants'}
+                </label>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm border divide-y">
+                    <thead>
+                      <tr>
+                        <th className="px-2 py-1 border">Option</th>
+                        <th className="px-2 py-1 border">Price</th>
+                        <th className="px-2 py-1 border">Compare At Price</th>
+                        <th className="px-2 py-1 border">SKU</th>
+                        <th className="px-2 py-1 border">Stock Qty</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {variantRows.map((variant, idx) => (
+                        <tr key={idx}>
+                          <td className="px-2 py-1 border">{variant.optionValues[0]}</td>
+                          <td className="px-2 py-1 border">
+                            <input
+                              type="number"
+                              step="0.01"
+                              value={variant.price}
+                              onChange={e => handleVariantChange(idx, 'price', parseFloat(e.target.value))}
+                              className="w-20"
+                            />
+                          </td>
+                          <td className="px-2 py-1 border">
+                            <input
+                              type="number"
+                              step="0.01"
+                              value={variant.compare_at_price ?? ''}
+                              onChange={e => handleVariantChange(idx, 'compare_at_price', e.target.value ? parseFloat(e.target.value) : null)}
+                              className="w-20"
+                            />
+                          </td>
+                          <td className="px-2 py-1 border">
+                            <input
+                              type="text"
+                              value={variant.sku}
+                              onChange={e => handleVariantChange(idx, 'sku', e.target.value)}
+                              className="w-24"
+                            />
+                          </td>
+                          <td className="px-2 py-1 border">
+                            <input
+                              type="number"
+                              value={variant.stock_quantity}
+                              onChange={e => handleVariantChange(idx, 'stock_quantity', parseInt(e.target.value) || 0)}
+                              className="w-16"
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
               <div>
