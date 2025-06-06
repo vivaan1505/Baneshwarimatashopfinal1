@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { X, Upload, Plus, Minus } from 'lucide-react';
+import { X, Upload } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-hot-toast';
@@ -26,7 +26,7 @@ interface Brand {
 interface Subcategory {
   id: string;
   name: string;
-  slug: string;
+  gender: string;
   parent_category: string;
 }
 
@@ -63,293 +63,11 @@ const PRODUCT_TAGS = [
   { value: 'obon', label: 'Obon', color: 'bg-rose-100 text-rose-800' },
   { value: 'mardi_gras', label: 'Mardi Gras', color: 'bg-violet-100 text-violet-800' },
   { value: 'bastille_day', label: 'Bastille Day', color: 'bg-blue-300 text-blue-900' },
-  { value: 'st_patricks', label: 'St. Patrick\'s Day', color: 'bg-green-400 text-green-900' },
+  { value: 'st_patricks', label: 'St. Patrick''s Day', color: 'bg-green-400 text-green-900' },
   { value: 'men', label: 'Men', color: 'bg-blue-100 text-blue-800' },
   { value: 'women', label: 'Women', color: 'bg-pink-100 text-pink-800' },
   { value: 'kids', label: 'Kids', color: 'bg-green-100 text-green-800' }
 ];
-
-const SUBCATEGORIES = {
-  footwear: [
-    // Men's Footwear
-    { id: 'mens-sneakers', name: 'Men\'s Sneakers', gender: 'men' },
-    { id: 'mens-loafers', name: 'Men\'s Loafers', gender: 'men' },
-    { id: 'mens-derby-shoes', name: 'Men\'s Derby Shoes', gender: 'men' },
-    { id: 'mens-oxford-shoes', name: 'Men\'s Oxford Shoes', gender: 'men' },
-    { id: 'mens-brogues', name: 'Men\'s Brogues', gender: 'men' },
-    { id: 'mens-chelsea-boots', name: 'Men\'s Chelsea Boots', gender: 'men' },
-    { id: 'mens-chukka-boots', name: 'Men\'s Chukka Boots', gender: 'men' },
-    { id: 'mens-sandals', name: 'Men\'s Sandals', gender: 'men' },
-    { id: 'mens-flip-flops', name: 'Men\'s Flip-Flops', gender: 'men' },
-    { id: 'mens-slides', name: 'Men\'s Slides', gender: 'men' },
-    { id: 'mens-formal-shoes', name: 'Men\'s Formal Shoes', gender: 'men' },
-    { id: 'mens-running-shoes', name: 'Men\'s Running Shoes', gender: 'men' },
-    { id: 'mens-training-shoes', name: 'Men\'s Training Shoes', gender: 'men' },
-    { id: 'mens-hiking-boots', name: 'Men\'s Hiking Boots', gender: 'men' },
-    { id: 'mens-moccasins', name: 'Men\'s Moccasins', gender: 'men' },
-    { id: 'mens-espadrilles', name: 'Men\'s Espadrilles', gender: 'men' },
-    { id: 'mens-ethnic-footwear', name: 'Men\'s Ethnic Footwear', gender: 'men' },
-    
-    // Women's Footwear
-    { id: 'womens-heels', name: 'Women\'s Heels', gender: 'women' },
-    { id: 'womens-stilettos', name: 'Women\'s Stilettos', gender: 'women' },
-    { id: 'womens-block-heels', name: 'Women\'s Block Heels', gender: 'women' },
-    { id: 'womens-kitten-heels', name: 'Women\'s Kitten Heels', gender: 'women' },
-    { id: 'womens-wedge-heels', name: 'Women\'s Wedge Heels', gender: 'women' },
-    { id: 'womens-flats', name: 'Women\'s Flats', gender: 'women' },
-    { id: 'womens-ballerinas', name: 'Women\'s Ballerinas', gender: 'women' },
-    { id: 'womens-loafers', name: 'Women\'s Loafers', gender: 'women' },
-    { id: 'womens-mules', name: 'Women\'s Mules', gender: 'women' },
-    { id: 'womens-boots', name: 'Women\'s Boots', gender: 'women' },
-    { id: 'womens-ankle-boots', name: 'Women\'s Ankle Boots', gender: 'women' },
-    { id: 'womens-knee-high-boots', name: 'Women\'s Knee-high Boots', gender: 'women' },
-    { id: 'womens-over-the-knee-boots', name: 'Women\'s Over-the-knee Boots', gender: 'women' },
-    { id: 'womens-sandals', name: 'Women\'s Sandals', gender: 'women' },
-    { id: 'womens-gladiator-sandals', name: 'Women\'s Gladiator Sandals', gender: 'women' },
-    { id: 'womens-platform-sandals', name: 'Women\'s Platform Sandals', gender: 'women' },
-    { id: 'womens-strappy-sandals', name: 'Women\'s Strappy Sandals', gender: 'women' },
-    { id: 'womens-sneakers', name: 'Women\'s Sneakers', gender: 'women' },
-    { id: 'womens-slip-ons', name: 'Women\'s Slip-ons', gender: 'women' },
-    { id: 'womens-ethnic-footwear', name: 'Women\'s Ethnic Footwear', gender: 'women' },
-    
-    // Kids' Footwear
-    { id: 'kids-school-shoes', name: 'Kids\' School Shoes', gender: 'kids' },
-    { id: 'kids-sports-shoes', name: 'Kids\' Sports Shoes', gender: 'kids' },
-    { id: 'kids-sandals', name: 'Kids\' Sandals', gender: 'kids' },
-    { id: 'kids-sneakers', name: 'Kids\' Sneakers', gender: 'kids' },
-    { id: 'kids-boots', name: 'Kids\' Boots', gender: 'kids' },
-    { id: 'kids-flip-flops', name: 'Kids\' Flip-Flops', gender: 'kids' },
-    { id: 'kids-ballet-flats', name: 'Kids\' Ballet Flats', gender: 'kids' },
-    { id: 'kids-velcro-shoes', name: 'Kids\' Velcro Shoes', gender: 'kids' },
-    { id: 'kids-light-up-shoes', name: 'Kids\' Light-Up Shoes', gender: 'kids' },
-    
-    // Specialty Footwear
-    { id: 'bridal-footwear', name: 'Bridal Footwear', gender: 'women' },
-    { id: 'vegan-footwear', name: 'Vegan Footwear', gender: 'unisex' },
-    { id: 'sustainable-shoes', name: 'Sustainable Shoes', gender: 'unisex' },
-    { id: 'designer-footwear', name: 'Designer Footwear', gender: 'unisex' },
-    { id: 'custom-made-shoes', name: 'Custom-Made Shoes', gender: 'unisex' },
-    
-    // Sports & Outdoor
-    { id: 'running-shoes', name: 'Running Shoes', gender: 'unisex' },
-    { id: 'training-shoes', name: 'Training Shoes', gender: 'unisex' },
-    { id: 'basketball-shoes', name: 'Basketball Shoes', gender: 'unisex' },
-    { id: 'football-cleats', name: 'Football Cleats', gender: 'unisex' },
-    { id: 'hiking-shoes', name: 'Hiking Shoes', gender: 'unisex' },
-    { id: 'trekking-boots', name: 'Trekking Boots', gender: 'unisex' },
-    { id: 'cycling-shoes', name: 'Cycling Shoes', gender: 'unisex' },
-    { id: 'water-shoes', name: 'Water Shoes', gender: 'unisex' },
-    
-    // Generic categories
-    { id: 'formal-shoes', name: 'Formal Shoes', gender: 'unisex' },
-    { id: 'casual-shoes', name: 'Casual Shoes', gender: 'unisex' },
-    { id: 'athletic-shoes', name: 'Athletic Shoes', gender: 'unisex' },
-    { id: 'boots', name: 'Boots', gender: 'unisex' },
-    { id: 'sandals', name: 'Sandals', gender: 'unisex' },
-    { id: 'heels', name: 'Heels', gender: 'women' },
-    { id: 'flats', name: 'Flats', gender: 'women' },
-    { id: 'sneakers', name: 'Sneakers', gender: 'unisex' }
-  ],
-  clothing: [
-    { id: 'mens-formal', name: 'Men\'s Formal', gender: 'men' },
-    { id: 'mens-casual', name: 'Men\'s Casual', gender: 'men' },
-    { id: 'mens-shirts', name: 'Men\'s Shirts', gender: 'men' },
-    { id: 'mens-pants', name: 'Men\'s Pants', gender: 'men' },
-    { id: 'mens-suits', name: 'Men\'s Suits', gender: 'men' },
-    { id: 'mens-jackets', name: 'Men\'s Jackets', gender: 'men' },
-    { id: 'womens-dresses', name: 'Women\'s Dresses', gender: 'women' },
-    { id: 'womens-tops', name: 'Women\'s Tops', gender: 'women' },
-    { id: 'womens-bottoms', name: 'Women\'s Bottoms', gender: 'women' },
-    { id: 'womens-skirts', name: 'Women\'s Skirts', gender: 'women' },
-    { id: 'womens-blouses', name: 'Women\'s Blouses', gender: 'women' },
-    { id: 'womens-jackets', name: 'Women\'s Jackets', gender: 'women' },
-    { id: 'kids-clothing', name: 'Kids\' Clothing', gender: 'kids' },
-    { id: 'kids-tops', name: 'Kids\' Tops', gender: 'kids' },
-    { id: 'kids-bottoms', name: 'Kids\' Bottoms', gender: 'kids' },
-    { id: 'kids-outerwear', name: 'Kids\' Outerwear', gender: 'kids' },
-    { id: 'outerwear', name: 'Outerwear', gender: 'unisex' },
-    { id: 'activewear', name: 'Activewear', gender: 'unisex' },
-    { id: 'swimwear', name: 'Swimwear', gender: 'unisex' },
-    { id: 'underwear', name: 'Underwear', gender: 'unisex' }
-  ],
-  jewelry: [
-    { id: 'mens-watches', name: 'Men\'s Watches', gender: 'men' },
-    { id: 'mens-bracelets', name: 'Men\'s Bracelets', gender: 'men' },
-    { id: 'mens-necklaces', name: 'Men\'s Necklaces', gender: 'men' },
-    { id: 'mens-rings', name: 'Men\'s Rings', gender: 'men' },
-    { id: 'womens-necklaces', name: 'Women\'s Necklaces', gender: 'women' },
-    { id: 'womens-rings', name: 'Women\'s Rings', gender: 'women' },
-    { id: 'womens-earrings', name: 'Women\'s Earrings', gender: 'women' },
-    { id: 'womens-bracelets', name: 'Women\'s Bracelets', gender: 'women' },
-    { id: 'womens-watches', name: 'Women\'s Watches', gender: 'women' },
-    { id: 'kids-jewelry', name: 'Kids\' Jewelry', gender: 'kids' },
-    { id: 'necklaces', name: 'Necklaces', gender: 'unisex' },
-    { id: 'rings', name: 'Rings', gender: 'unisex' },
-    { id: 'earrings', name: 'Earrings', gender: 'unisex' },
-    { id: 'bracelets', name: 'Bracelets', gender: 'unisex' },
-    { id: 'watches', name: 'Watches', gender: 'unisex' },
-    { id: 'anklets', name: 'Anklets', gender: 'unisex' },
-    { id: 'brooches', name: 'Brooches', gender: 'unisex' },
-    { id: 'cufflinks', name: 'Cufflinks', gender: 'men' }
-  ],
-  beauty: [
-    // Women's Beauty
-    { id: 'womens-skincare', name: 'Women\'s Skincare', gender: 'women' },
-    { id: 'womens-moisturizers', name: 'Women\'s Moisturizers', gender: 'women' },
-    { id: 'womens-serums-oils', name: 'Women\'s Serums & Oils', gender: 'women' },
-    { id: 'womens-face-masks', name: 'Women\'s Face Masks', gender: 'women' },
-    { id: 'womens-cleansers-toners', name: 'Women\'s Cleansers & Toners', gender: 'women' },
-    { id: 'womens-sunscreen', name: 'Women\'s Sunscreen & SPF', gender: 'women' },
-    
-    { id: 'womens-makeup', name: 'Women\'s Makeup', gender: 'women' },
-    { id: 'womens-foundation-concealer', name: 'Women\'s Foundation & Concealer', gender: 'women' },
-    { id: 'womens-lipstick-gloss', name: 'Women\'s Lipsticks & Lip Gloss', gender: 'women' },
-    { id: 'womens-eyeshadow-eyeliner', name: 'Women\'s Eyeshadow & Eyeliner', gender: 'women' },
-    { id: 'womens-mascara', name: 'Women\'s Mascara', gender: 'women' },
-    { id: 'womens-blush-highlighter', name: 'Women\'s Blush & Highlighter', gender: 'women' },
-    
-    { id: 'womens-hair-care', name: 'Women\'s Hair Care', gender: 'women' },
-    { id: 'womens-shampoo-conditioner', name: 'Women\'s Shampoos & Conditioners', gender: 'women' },
-    { id: 'womens-hair-oils-serums', name: 'Women\'s Hair Oils & Serums', gender: 'women' },
-    { id: 'womens-hair-masks-treatments', name: 'Women\'s Hair Masks & Treatments', gender: 'women' },
-    { id: 'womens-styling-products', name: 'Women\'s Styling Products', gender: 'women' },
-    
-    { id: 'womens-fragrances', name: 'Women\'s Fragrances', gender: 'women' },
-    { id: 'womens-perfumes', name: 'Women\'s Perfumes', gender: 'women' },
-    { id: 'womens-body-mists', name: 'Women\'s Body Mists', gender: 'women' },
-    
-    { id: 'womens-bath-body', name: 'Women\'s Bath & Body', gender: 'women' },
-    { id: 'womens-body-lotions-creams', name: 'Women\'s Body Lotions & Creams', gender: 'women' },
-    { id: 'womens-body-wash-scrubs', name: 'Women\'s Body Wash & Scrubs', gender: 'women' },
-    { id: 'womens-hand-foot-care', name: 'Women\'s Hand & Foot Care', gender: 'women' },
-    
-    { id: 'womens-nail-care', name: 'Women\'s Nail Care', gender: 'women' },
-    { id: 'womens-nail-polish', name: 'Women\'s Nail Polish', gender: 'women' },
-    { id: 'womens-nail-treatments-tools', name: 'Women\'s Nail Treatments & Tools', gender: 'women' },
-    
-    { id: 'womens-beauty-tools', name: 'Women\'s Beauty Tools & Accessories', gender: 'women' },
-    { id: 'womens-makeup-brushes-sponges', name: 'Women\'s Makeup Brushes & Sponges', gender: 'women' },
-    { id: 'womens-facial-tools', name: 'Women\'s Facial Tools', gender: 'women' },
-    { id: 'womens-hair-tools', name: 'Women\'s Hair Tools', gender: 'women' },
-    
-    // Men's Beauty
-    { id: 'mens-skincare', name: 'Men\'s Skincare', gender: 'men' },
-    { id: 'mens-face-wash-cleansers', name: 'Men\'s Face Wash & Cleansers', gender: 'men' },
-    { id: 'mens-moisturizers-aftershave', name: 'Men\'s Moisturizers & Aftershave Balms', gender: 'men' },
-    { id: 'mens-sunscreen', name: 'Men\'s Sunscreen & SPF', gender: 'men' },
-    { id: 'mens-beard-care', name: 'Men\'s Beard Care', gender: 'men' },
-    
-    { id: 'mens-hair-care', name: 'Men\'s Hair Care', gender: 'men' },
-    { id: 'mens-shampoo-conditioner', name: 'Men\'s Shampoos & Conditioners', gender: 'men' },
-    { id: 'mens-styling-gels-pomades', name: 'Men\'s Styling Gels & Pomades', gender: 'men' },
-    
-    { id: 'mens-fragrances', name: 'Men\'s Fragrances', gender: 'men' },
-    { id: 'mens-cologne-aftershave', name: 'Men\'s Cologne & Aftershave', gender: 'men' },
-    
-    { id: 'mens-grooming', name: 'Men\'s Grooming', gender: 'men' },
-    { id: 'mens-shaving-creams-razors', name: 'Men\'s Shaving Creams & Razors', gender: 'men' },
-    { id: 'mens-trimmers-grooming-kits', name: 'Men\'s Trimmers & Grooming Kits', gender: 'men' },
-    
-    { id: 'mens-bath-body', name: 'Men\'s Bath & Body', gender: 'men' },
-    { id: 'mens-body-wash-scrubs', name: 'Men\'s Body Wash & Scrubs', gender: 'men' },
-    { id: 'mens-deodorants-antiperspirants', name: 'Men\'s Deodorants & Antiperspirants', gender: 'men' },
-    
-    { id: 'mens-nail-care', name: 'Men\'s Nail Care', gender: 'men' },
-    { id: 'mens-nail-grooming-tools', name: 'Men\'s Nail Grooming Tools', gender: 'men' },
-    
-    // Kids' Beauty
-    { id: 'kids-skincare', name: 'Kids\' Skincare', gender: 'kids' },
-    { id: 'kids-gentle-cleansers', name: 'Kids\' Gentle Cleansers', gender: 'kids' },
-    { id: 'kids-lotions-moisturizers', name: 'Kids\' Lotions & Moisturizers', gender: 'kids' },
-    { id: 'kids-diaper-rash-creams', name: 'Kids\' Diaper Rash Creams', gender: 'kids' },
-    
-    { id: 'kids-hair-care', name: 'Kids\' Hair Care', gender: 'kids' },
-    { id: 'kids-shampoos-conditioners', name: 'Kids\' Shampoos & Conditioners', gender: 'kids' },
-    { id: 'kids-detanglers', name: 'Kids\' Detanglers', gender: 'kids' },
-    
-    { id: 'kids-bath-body', name: 'Kids\' Bath & Body', gender: 'kids' },
-    { id: 'kids-bath-wash', name: 'Kids\' Bath Wash', gender: 'kids' },
-    { id: 'kids-body-lotions', name: 'Kids\' Body Lotions', gender: 'kids' },
-    
-    { id: 'kids-fragrances', name: 'Kids\' Fragrances', gender: 'kids' },
-    { id: 'kids-body-sprays', name: 'Kids\' Body Sprays', gender: 'kids' },
-    
-    { id: 'kids-grooming', name: 'Kids\' Grooming', gender: 'kids' },
-    { id: 'kids-nail-clippers-grooming-sets', name: 'Kids\' Nail Clippers & Grooming Sets', gender: 'kids' },
-    
-    // Generic Beauty Categories
-    { id: 'skincare', name: 'Skincare', gender: 'unisex' },
-    { id: 'makeup', name: 'Makeup', gender: 'unisex' },
-    { id: 'fragrances', name: 'Fragrances', gender: 'unisex' },
-    { id: 'hair-care', name: 'Hair Care', gender: 'unisex' },
-    { id: 'bath-body', name: 'Bath & Body', gender: 'unisex' },
-    { id: 'tools-accessories', name: 'Tools & Accessories', gender: 'unisex' },
-    { id: 'gift-sets', name: 'Gift Sets', gender: 'unisex' }
-  ],
-  accessories: [
-    { id: 'mens-hats', name: 'Men\'s Hats', gender: 'men' },
-    { id: 'mens-ties', name: 'Men\'s Ties', gender: 'men' },
-    { id: 'mens-belts', name: 'Men\'s Belts', gender: 'men' },
-    { id: 'womens-scarves', name: 'Women\'s Scarves', gender: 'women' },
-    { id: 'womens-hair-accessories', name: 'Women\'s Hair Accessories', gender: 'women' },
-    { id: 'kids-accessories', name: 'Kids\' Accessories', gender: 'kids' },
-    { id: 'hats', name: 'Hats', gender: 'unisex' },
-    { id: 'scarves', name: 'Scarves', gender: 'unisex' },
-    { id: 'gloves', name: 'Gloves', gender: 'unisex' },
-    { id: 'belts', name: 'Belts', gender: 'unisex' },
-    { id: 'sunglasses', name: 'Sunglasses', gender: 'unisex' },
-    { id: 'hair-accessories', name: 'Hair Accessories', gender: 'unisex' },
-    { id: 'ties', name: 'Ties', gender: 'men' },
-    { id: 'wallets', name: 'Wallets', gender: 'unisex' }
-  ],
-  bags: [
-    { id: 'mens-bags', name: 'Men\'s Bags', gender: 'men' },
-    { id: 'mens-backpacks', name: 'Men\'s Backpacks', gender: 'men' },
-    { id: 'mens-briefcases', name: 'Men\'s Briefcases', gender: 'men' },
-    { id: 'womens-handbags', name: 'Women\'s Handbags', gender: 'women' },
-    { id: 'womens-clutches', name: 'Women\'s Clutches', gender: 'women' },
-    { id: 'womens-totes', name: 'Women\'s Totes', gender: 'women' },
-    { id: 'kids-backpacks', name: 'Kids\' Backpacks', gender: 'kids' },
-    { id: 'handbags', name: 'Handbags', gender: 'unisex' },
-    { id: 'backpacks', name: 'Backpacks', gender: 'unisex' },
-    { id: 'totes', name: 'Totes', gender: 'unisex' },
-    { id: 'clutches', name: 'Clutches', gender: 'unisex' },
-    { id: 'travel-bags', name: 'Travel Bags', gender: 'unisex' },
-    { id: 'laptop-bags', name: 'Laptop Bags', gender: 'unisex' },
-    { id: 'wallets-purses', name: 'Wallets & Purses', gender: 'unisex' },
-    { id: 'luggage', name: 'Luggage', gender: 'unisex' }
-  ],
-  bridal: [
-    { id: 'bridal-gowns', name: 'Bridal Gowns', gender: 'women' },
-    { id: 'bridal-veils', name: 'Bridal Veils', gender: 'women' },
-    { id: 'bridal-tiaras', name: 'Bridal Tiaras & Headpieces', gender: 'women' },
-    { id: 'bridal-jewelry', name: 'Bridal Jewelry Sets', gender: 'women' },
-    { id: 'bridal-earrings', name: 'Bridal Earrings', gender: 'women' },
-    { id: 'bridal-necklaces', name: 'Bridal Necklaces', gender: 'women' },
-    { id: 'bridal-bracelets', name: 'Bridal Bracelets', gender: 'women' },
-    { id: 'bridal-rings', name: 'Bridal Rings', gender: 'women' },
-    { id: 'bridal-hair-accessories', name: 'Bridal Hair Accessories', gender: 'women' },
-    { id: 'bridal-shoes', name: 'Bridal Shoes', gender: 'women' },
-    { id: 'bridal-clutches', name: 'Bridal Clutches', gender: 'women' },
-    { id: 'bridal-lingerie', name: 'Bridal Lingerie', gender: 'women' },
-    { id: 'bridesmaid-dresses', name: 'Bridesmaid Dresses', gender: 'women' },
-    { id: 'bridesmaid-accessories', name: 'Bridesmaid Accessories', gender: 'women' },
-    { id: 'groom-accessories', name: 'Groom Accessories', gender: 'men' },
-    { id: 'wedding-bands', name: 'Wedding Bands', gender: 'unisex' },
-    { id: 'bridal-robes', name: 'Bridal Robes', gender: 'women' },
-    { id: 'bridal-sashes', name: 'Bridal Sashes & Belts', gender: 'women' },
-    { id: 'bridal-gloves', name: 'Bridal Gloves', gender: 'women' },
-    { id: 'bridal-cover-ups', name: 'Bridal Cover-ups', gender: 'women' },
-    { id: 'wedding-guest-dresses', name: 'Wedding Guest Dresses', gender: 'women' },
-    { id: 'mother-of-bride-dresses', name: 'Mother of Bride Dresses', gender: 'women' },
-    { id: 'flower-girl-dresses', name: 'Flower Girl Dresses', gender: 'kids' },
-    { id: 'ring-bearer-outfits', name: 'Ring Bearer Outfits', gender: 'kids' },
-    { id: 'bridal-party-gifts', name: 'Bridal Party Gifts', gender: 'unisex' },
-    { id: 'wedding-decorations', name: 'Wedding Decorations', gender: 'unisex' },
-    { id: 'wedding-favors', name: 'Wedding Favors', gender: 'unisex' },
-    { id: 'wedding-stationery', name: 'Wedding Stationery', gender: 'unisex' }
-  ]
-};
 
 const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
   category,
@@ -361,8 +79,8 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
   const [images, setImages] = useState<File[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [dbSubcategories, setDbSubcategories] = useState<Subcategory[]>([]);
-  const [availableSubcategories, setAvailableSubcategories] = useState<{id: string, name: string}[]>([]);
-  
+  const [availableSubcategories, setAvailableSubcategories] = useState<Subcategory[]>([]);
+
   const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm({
     defaultValues: {
       name: '',
@@ -388,7 +106,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
 
   const selectedType = watch('type');
   const selectedGender = watch('gender');
-  const selectedTags = watch('tags') || [];
   const isSpecialCategory = category === 'bridal' || category === 'christmas' || category === 'sale';
   const BrandSelect = isSpecialCategory ? CreatableSelect : Select;
 
@@ -407,9 +124,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
       case 'bags':
         return 'bags';
       case 'bridal':
-        return 'clothing';
       case 'christmas':
-        return 'clothing';
       case 'sale':
         return 'clothing';
       default:
@@ -419,58 +134,42 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
 
   useEffect(() => {
     fetchBrands();
-    fetchSubcategories();
-    
+    fetchDbSubcategories();
     setValue('type', mapCategoryToType(category));
-    
     if (category === 'bridal') {
       setValue('gender', 'women');
     }
-    
     if (isSpecialCategory) {
       setValue('tags', [category]);
     }
   }, [category]);
 
+  const fetchDbSubcategories = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('subcategories')
+        .select('*');
+      if (error) throw error;
+      setDbSubcategories(data || []);
+    } catch (error) {
+      console.error('Error fetching subcategories:', error);
+      toast.error('Failed to load subcategories');
+    }
+  };
+
   useEffect(() => {
     const type = selectedType;
     if (type) {
-      let predefinedSubcats: any[] = [];
-      
-      if (category === 'bridal') {
-        predefinedSubcats = SUBCATEGORIES['bridal'] || [];
-      } else {
-        predefinedSubcats = SUBCATEGORIES[type as keyof typeof SUBCATEGORIES] || [];
-      }
-      
-      const dbSubcats = dbSubcategories.filter(s => s.parent_category === type);
-      
-      const mergedSubcats = [...dbSubcats];
-      
-      predefinedSubcats.forEach(predef => {
-        if (!mergedSubcats.some(s => s.id === predef.id)) {
-          mergedSubcats.push(predef);
-        }
-      });
-      
-      let filteredSubcats = mergedSubcats;
+      let filtered = dbSubcategories.filter((subcat) =>
+        subcat.parent_category === type ||
+        (category === 'bridal' && subcat.parent_category === 'bridal')
+      );
       if (selectedGender && selectedGender !== 'unisex') {
-        filteredSubcats = mergedSubcats.filter(subcat => {
-          if ('gender' in subcat) {
-            return subcat.gender === selectedGender || subcat.gender === 'unisex';
-          }
-          
-          const id = subcat.id.toLowerCase();
-          const genderPrefix = selectedGender === 'men' ? 'mens-' : 
-                              selectedGender === 'women' ? 'womens-' : 
-                              selectedGender === 'kids' ? 'kids-' : '';
-          
-          return id.startsWith(genderPrefix) || 
-                 (!id.startsWith('mens-') && !id.startsWith('womens-') && !id.startsWith('kids-'));
-        });
+        filtered = filtered.filter((subcat) =>
+          subcat.gender === selectedGender || subcat.gender === 'unisex'
+        );
       }
-      
-      setAvailableSubcategories(filteredSubcats);
+      setAvailableSubcategories(filtered);
     } else {
       setAvailableSubcategories([]);
     }
@@ -483,35 +182,17 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         .select('*')
         .eq('is_active', true)
         .order('name');
-
       if (category !== 'christmas' && category !== 'sale') {
         if (category !== 'bridal') {
           query = query.eq('category', category);
         }
       }
-
       const { data, error } = await query;
-
       if (error) throw error;
       setBrands(data || []);
     } catch (error) {
       console.error('Error fetching brands:', error);
       toast.error('Failed to load brands');
-    }
-  };
-
-  const fetchSubcategories = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('categories')
-        .select('id, name, slug, parent_category')
-        .not('parent_category', 'is', null);
-
-      if (error) throw error;
-      setDbSubcategories(data || []);
-    } catch (error) {
-      console.error('Error fetching subcategories:', error);
-      toast.error('Failed to load subcategories');
     }
   };
 
@@ -554,6 +235,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
     try {
       let brandId = formData.brand_id;
 
+      // Handle custom brand creation if needed
       if (formData.custom_brand) {
         const brandSlug = formData.custom_brand
           .toLowerCase()
@@ -578,28 +260,61 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
         brandId = newBrand.id;
       }
 
+      // Map special categories to valid category slug for lookup
+      let dbCategorySlug = category;
+      if (
+        [
+          'christmas', 'diwali', 'eid', 'hanukkah', 'holi', 'vesak', 'passover', 'kwanzaa',
+          'songkran', 'nowruz', 'lunar_new_year', 'mid_autumn_festival', 'yam', 'intiraymi',
+          'las_posadas', 'obon', 'mardi_gras', 'bastille_day', 'st_patricks', 'sale', 'bridal', 'festive'
+        ].includes(category)
+      ) {
+        dbCategorySlug = 'clothing';
+      }
+
+      // --- LOOKUP category_id BY SLUG ---
+      let dbCategoryId = null;
+      try {
+        const { data: categoryRow, error: categoryError } = await supabase
+          .from('categories')
+          .select('id')
+          .eq('slug', dbCategorySlug)
+          .single();
+
+        if (categoryError) throw categoryError;
+        dbCategoryId = categoryRow?.id || null;
+      } catch (err) {
+        toast.error("Failed to fetch category ID");
+        setUploading(false);
+        return;
+      }
+
+      // --- ALWAYS SET SLUG FROM NAME ---
+      const productSlug = formData.name
+        ?.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '') || '';
+
+      // --- PREP PRODUCT DATA ---
       const { brand, images: imagesProp, custom_brand, ...productData } = formData;
-
       productData.tags = Array.isArray(productData.tags) ? productData.tags : [];
-
-      if (isSpecialCategory && !productData.tags.includes(category)) {
+      if (
+        [
+          'christmas', 'diwali', 'eid', 'holi', 'sale', 'bridal', 'festive'
+        ].includes(category) &&
+        !productData.tags.includes(category)
+      ) {
         productData.tags.push(category);
       }
 
-      if (category === 'footwear' || category === 'clothing' || category === 'jewelry' || category === 'beauty') {
-        productData.type = category as any;
-      }
-
-      const slug = productData.name
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, '');
-
+      // --- INSERT PRODUCT WITH category_id AND slug ---
       const { data: product, error: productError } = await supabase
         .from('products')
         .insert([{
           ...productData,
-          slug,
+          slug: productSlug,
+          category: dbCategorySlug,
+          category_id: dbCategoryId,
           brand_id: brandId,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
@@ -609,6 +324,7 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
 
       if (productError) throw productError;
 
+      // --- UPLOAD IMAGES IF NEEDED ---
       if (images.length > 0) {
         const imagePromises = images.map(async (file, index) => {
           const fileExt = file.name.split('.').pop();
@@ -660,7 +376,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen px-4">
         <div className="fixed inset-0 bg-black opacity-30" onClick={onClose}></div>
-        
         <div className="relative bg-white rounded-lg w-full max-w-4xl">
           <div className="flex justify-between items-center p-6 border-b">
             <h2 className="text-xl font-medium">Add New {category.charAt(0).toUpperCase() + category.slice(1)} Product</h2>
@@ -668,7 +383,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
               <X size={24} />
             </button>
           </div>
-
           <form onSubmit={handleSubmit(onSubmit)} className="p-6">
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -680,7 +394,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                   />
                 </div>
-
                 {category !== 'bridal' && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
@@ -703,7 +416,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     )}
                   </div>
                 )}
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Gender <span className="text-red-500">*</span>
@@ -723,7 +435,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     <p className="mt-1 text-sm text-red-600">{errors.gender.message}</p>
                   )}
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Subcategory <span className="text-red-500">*</span>
@@ -743,7 +454,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     <p className="mt-1 text-sm text-red-600">{errors.subcategory.message}</p>
                   )}
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Brand</label>
                   <BrandSelect
@@ -755,7 +465,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     isClearable
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700">SKU</label>
                   <input
@@ -764,7 +473,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Price</label>
                   <div className="mt-1 relative rounded-md shadow-sm">
@@ -779,7 +487,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     />
                   </div>
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Compare at Price</label>
                   <div className="mt-1 relative rounded-md shadow-sm">
@@ -794,7 +501,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     />
                   </div>
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Stock Quantity</label>
                   <input
@@ -803,7 +509,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Tags</label>
                   <Select
@@ -816,7 +521,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                   />
                 </div>
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                 <ReactQuill
@@ -825,10 +529,8 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                   onChange={(content) => setValue('description', content)}
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Product Images</label>
-                
                 <div {...getRootProps()} className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                   <input {...getInputProps()} />
                   <Upload className="mx-auto h-12 w-12 text-gray-400" />
@@ -836,7 +538,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     Drag 'n' drop some images here, or click to select files
                   </p>
                 </div>
-
                 {images.length > 0 && (
                   <div className="mt-4 grid grid-cols-6 gap-4">
                     {images.map((file, index) => (
@@ -858,7 +559,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                   </div>
                 )}
               </div>
-
               <div className="space-y-4">
                 <div className="flex items-center">
                   <input
@@ -870,7 +570,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     Make product visible
                   </label>
                 </div>
-
                 <div className="flex items-center">
                   <input
                     type="checkbox"
@@ -881,7 +580,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     Product is returnable
                   </label>
                 </div>
-
                 <div className="flex items-center">
                   <input
                     type="checkbox"
@@ -892,7 +590,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                     Featured product
                   </label>
                 </div>
-
                 <div className="flex items-center">
                   <input
                     type="checkbox"
@@ -905,7 +602,6 @@ const CategoryProductForm: React.FC<CategoryProductFormProps> = ({
                 </div>
               </div>
             </div>
-
             <div className="mt-6 flex justify-end gap-4">
               <button
                 type="button"
