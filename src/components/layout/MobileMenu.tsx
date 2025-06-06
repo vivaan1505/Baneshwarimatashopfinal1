@@ -1,6 +1,7 @@
+// src/components/layout/MobileMenu.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { X, ChevronRight, Ticket, Heart, Ruler } from 'lucide-react';
+import { X, ChevronRight, Ticket, Heart, Tag } from 'lucide-react'; // Added Tag icon
 import { useAuthStore } from '../../stores/authStore';
 import { cn } from '../../utils/cn';
 import { scrollToTop } from '../../utils/scroll';
@@ -213,6 +214,15 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
               Coupons
             </Link>
             
+            <Link 
+              to="/sale" // Added Sale link
+              className="flex items-center p-3 text-base font-medium text-gray-700 hover:bg-gray-100 rounded-md dark:text-gray-200 dark:hover:bg-gray-700"
+              onClick={handleNavClick}
+            >
+              <Tag className="mr-3 h-5 w-5" /> {/* Using Tag icon for Sale */}
+              Sale
+            </Link>
+
             {/* Wishlist */}
             <Link 
               to="/wishlist" 
@@ -222,7 +232,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
               <Heart className="mr-3 h-5 w-5" />
               <span className="flex-1">Wishlist</span>
               {wishlistCount > 0 && (
-                <span className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold text-white bg-secondary-600 rounded-full dark:bg-secondary-500">
+                <span className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold text-secondary-600 rounded-full dark:bg-secondary-500">
                   {wishlistCount}
                 </span>
               )}
