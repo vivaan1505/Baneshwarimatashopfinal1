@@ -26,7 +26,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // NEW: Track products with missing category or category.slug
+  // Track products with missing category or category.slug
   const [productsMissingCategory, setProductsMissingCategory] = useState<any[]>([]);
 
   useEffect(() => {
@@ -45,7 +45,9 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
           *,
           brand:brands(*),
           category:categories(*),
-          images:product_images(*)
+          images:product_images(*),
+          product_options(*),
+          product_variants(*)
         `);
 
       // Filter by category if provided
@@ -99,32 +101,62 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
         productsToExport = sortedProducts.filter(p => selectedProducts.includes(p.id));
       }
 
-      // Prepare data for export
-      const exportData = productsToExport.map(product => ({
-        id: product.id,
-        name: product.name,
-        slug: product.slug,
-        sku: product.sku || '',
-        type: product.type || '',
-        price: product.price,
-        compare_at_price: product.compare_at_price || '',
-        stock_quantity: product.stock_quantity || 0,
-        description: product.description || '',
-        brand_name: product.brand?.name || '',
-        brand_id: product.brand?.id || '',
-        category_id: product.category?.id || '',
-        category_name: product.category?.name || '',
-        is_visible: product.is_visible ? 'true' : 'false',
-        is_featured: product.is_featured ? 'true' : 'false',
-        is_new: product.is_new ? 'true' : 'false',
-        gender: product.gender || '',
-        tags: Array.isArray(product.tags) ? product.tags.join(',') : '',
-        materials: Array.isArray(product.materials) ? product.materials.join(',') : '',
-        care_instructions: product.care_instructions || '',
-        subcategory: product.subcategory || '',
-        created_at: product.created_at || '',
-        updated_at: product.updated_at || ''
-      }));
+      // Prepare data for export, including options/variants for size/weight
+      const exportData = productsToExport.map(product => {
+        const baseData = {
+          id: product.id,
+          name: product.name,
+          slug: product.slug,
+          sku: product.sku || '',
+          type: product.type || '',
+          price: product.price,
+          compare_at_price: product.compare_at_price || '',
+          stock_quantity: product.stock_quantity || 0,
+          description: product.description || '',
+          brand_name: product.brand?.name || '',
+          brand_id: product.brand?.id || '',
+          category_id: product.category?.id || '',
+          category_name: product.category?.name || '',
+          is_visible: product.is_visible ? 'true' : 'false',
+          is_featured: product.is_featured ? 'true' : 'false',
+          is_new: product.is_new ? 'true' : 'false',
+          gender: product.gender || '',
+          tags: Array.isArray(product.tags) ? product.tags.join(',') : '',
+          materials: Array.isArray(product.materials) ? product.materials.join(',') : '',
+          care_instructions: product.care_instructions || '',
+          subcategory: product.subcategory || '',
+          created_at: product.created_at || '',
+          updated_at: product.updated_at || ''
+        };
+
+        // Export product options (size/weight) and first variant as example
+        let optionsData = {};
+        if (product.product_options && Array.isArray(product.product_options)) {
+          product.product_options.forEach((opt: any, idx: number) => {
+            optionsData[`option_name_${idx+1}`] = opt.name;
+            optionsData[`option_values_${idx+1}`] = Array.isArray(opt.values) ? opt.values.join(',') : '';
+          });
+        }
+
+        let variantsData = {};
+        if (product.product_variants && Array.isArray(product.product_variants)) {
+          const v = product.product_variants[0];
+          if (v) {
+            variantsData = {
+              variant_sku: v.sku,
+              variant_price: v.price,
+              variant_stock_quantity: v.stock_quantity,
+              variant_option_values: Array.isArray(v.option_values) ? v.option_values.join(',') : ''
+            };
+          }
+        }
+
+        return {
+          ...baseData,
+          ...optionsData,
+          ...variantsData
+        };
+      });
 
       // Create a workbook and worksheet
       const workbook = XLSX.utils.book_new();
@@ -161,7 +193,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
     );
   };
 
-  // --- TOGGLE VISIBILITY HANDLER (stub) ---
+  // --- TOGGLE VISIBILITY HANDLER ---
   const handleToggleVisibility = async (productIds: string[], visible: boolean) => {
     try {
       const { error } = await supabase
@@ -179,7 +211,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
     }
   };
 
-  // --- DELETE SELECTED HANDLER (stub) ---
+  // --- DELETE SELECTED HANDLER ---
   const handleDeleteSelected = async () => {
     if (!window.confirm(`Are you sure you want to delete ${selectedProducts.length} selected products?`)) {
       return;
@@ -202,7 +234,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
     }
   };
 
-  // --- EDIT HANDLER (stub, for completeness, if needed) ---
+  // --- EDIT HANDLER ---
   const handleEdit = (productId: string) => {
     if (onEdit) {
       const product = products.find(p => p.id === productId);
@@ -212,7 +244,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
     }
   };
 
-  // --- SORT HANDLER (stub, for completeness, if needed) ---
+  // --- SORT HANDLER ---
   const handleSort = (field: typeof sortField) => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -328,9 +360,6 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ category, onEdit }) => {
           )}
         </div>
       </div>
-
-      {/* Filters */}
-      {/* ... your current Filters code ... */}
 
       {/* Products Display */}
       {loading ? (
