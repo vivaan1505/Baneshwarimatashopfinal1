@@ -111,6 +111,31 @@ export async function getCategoryUrls(): Promise<SitemapUrl[]> {
 }
 
 /**
+ * Fetches all subcategory URLs for the sitemap
+ * @returns Array of subcategory URLs with metadata
+ */
+export async function getSubcategoryUrls(): Promise<SitemapUrl[]> {
+  try {
+    const { data, error } = await supabase
+      .from('subcategories')
+      .select('slug, updated_at, parent_category');
+    
+    if (error) throw error;
+
+    // Assume your subcategory URLs are like /parent-category/subcategory-slug
+    return (data || []).map(subcat => ({
+      url: `/${subcat.parent_category}/${subcat.slug}`,
+      lastmod: subcat.updated_at,
+      changefreq: 'weekly',
+      priority: 0.75
+    }));
+  } catch (error) {
+    console.error('Error fetching subcategory URLs:', error);
+    return [];
+  }
+}
+
+/**
  * Fetches all custom page URLs for the sitemap
  * @returns Array of page URLs with metadata
  */
