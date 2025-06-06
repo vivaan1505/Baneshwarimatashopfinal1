@@ -33,11 +33,11 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
   useEffect(() => {
     // Set template fields based on category
     const baseFields = [
-      'name', 'slug', 'sku', 'price', 'compare_at_price', 'stock_quantity', 
-      'description', 'brand_id', 'is_visible', 'is_featured', 
+      'name', 'slug', 'sku', 'price', 'compare_at_price', 'stock_quantity',
+      'description', 'brand_id', 'is_visible', 'is_featured',
       'is_new', 'tags', 'gender', 'images', 'subcategory', 'type'
     ];
-    
+
     const categorySpecificFields: Record<string, string[]> = {
       'clothing': [...baseFields, 'materials', 'care_instructions', 'size_guide'],
       'footwear': [...baseFields, 'materials', 'care_instructions', 'size_guide'],
@@ -47,7 +47,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
       'christmas': [...baseFields, 'materials', 'is_christmas_sale'],
       'sale': [...baseFields, 'sale_discount']
     };
-    
+
     if (category && categorySpecificFields[category]) {
       setTemplateFields(categorySpecificFields[category]);
     } else {
@@ -59,15 +59,17 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
       fetchSubcategories(category);
       fetchBrands();
     }
+    // eslint-disable-next-line
   }, [category]);
 
+  // --- UPDATED: fetch from subcategories table ---
   const fetchSubcategories = async (categoryName: string) => {
     try {
       const { data, error } = await supabase
-        .from('categories')
-        .select('id, name, slug')
+        .from('subcategories')
+        .select('id, name')
         .eq('parent_category', categoryName);
-      
+
       if (error) throw error;
       setSubcategories(data || []);
     } catch (error) {
@@ -82,7 +84,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
         .select('id, name')
         .eq('is_active', true)
         .order('name');
-      
+
       if (error) throw error;
       setBrands(data || []);
     } catch (error) {
@@ -100,7 +102,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       'application/vnd.ms-excel.sheet.macroEnabled.12'
     ];
-    
+
     if (!validTypes.includes(selectedFile.type)) {
       toast.error('Please upload an Excel file (.xlsx or .xls)');
       return;
@@ -120,7 +122,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        
+
         validateData(jsonData);
         setPreviewData(jsonData.slice(0, 5)); // Show first 5 rows
       } catch (error) {
@@ -128,11 +130,11 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
         setValidationErrors(['Error parsing Excel file. Please ensure it is a valid Excel document.']);
       }
     };
-    
+
     reader.onerror = () => {
       setValidationErrors(['Error reading file']);
     };
-    
+
     reader.readAsBinaryString(selectedFile);
   };
 
@@ -149,7 +151,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
     // Check required columns
     const requiredColumns = ['name', 'price', 'type', 'subcategory'];
     const missingColumns = requiredColumns.filter(col => !Object.keys(data[0]).includes(col));
-    
+
     if (missingColumns.length > 0) {
       errors.push(`Missing required columns: ${missingColumns.join(', ')}`);
     }
@@ -159,7 +161,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
       if (!row.name) {
         errors.push(`Row ${index + 1}: Missing product name`);
       }
-      
+
       if (row.price && isNaN(parseFloat(row.price))) {
         errors.push(`Row ${index + 1}: Price must be a number`);
       }
@@ -171,7 +173,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
       if (row.type && !['footwear', 'clothing', 'jewelry', 'beauty', 'accessories', 'bags'].includes(row.type)) {
         errors.push(`Row ${index + 1}: Invalid product type. Must be one of: footwear, clothing, jewelry, beauty, accessories, bags`);
       }
-      
+
       // Validate images format if present
       if (row.images && typeof row.images === 'string') {
         const imageUrls = row.images.split('|');
@@ -189,7 +191,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
           errors.push(`Row ${index + 1}: Invalid subcategory: ${row.subcategory}. Valid options are: ${validSubcategories.join(', ')}`);
         }
       }
-      
+
       // Validate brand_id if present
       if (row.brand_id && brands.length > 0) {
         const validBrandIds = brands.map(b => b.id);
@@ -213,7 +215,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
     try {
       // Read the Excel file
       const reader = new FileReader();
-      
+
       reader.onload = async (e) => {
         try {
           const data = e.target?.result;
@@ -221,9 +223,9 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
           const jsonData = XLSX.utils.sheet_to_json(worksheet);
-          
+
           stats.total = jsonData.length;
-          
+
           // Process in batches to avoid overwhelming the database
           const batchSize = 10;
           for (let i = 0; i < jsonData.length; i += batchSize) {
@@ -248,12 +250,12 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
           setUploading(false);
         }
       };
-      
+
       reader.onerror = () => {
         toast.error('Error reading file');
         setUploading(false);
       };
-      
+
       reader.readAsBinaryString(file);
     } catch (error) {
       console.error('Error processing upload:', error);
@@ -340,7 +342,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
 
         // Extract images from the Excel
         const imageUrls = item.images ? item.images.split('|').filter(Boolean).map((url: string) => url.trim()) : [];
-        
+
         // Remove images field from the item to avoid database errors
         const { images, ...itemWithoutImages } = processedItem;
 
@@ -352,7 +354,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
             .eq('id', existingProduct.id);
 
           if (error) throw error;
-          
+
           // Process images if provided
           if (imageUrls.length > 0) {
             // First, get existing images to avoid duplicates
@@ -360,12 +362,12 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
               .from('product_images')
               .select('url')
               .eq('product_id', existingProduct.id);
-            
+
             const existingUrls = existingImages?.map(img => img.url) || [];
-            
+
             // Filter out images that already exist
             const newImageUrls = imageUrls.filter(url => !existingUrls.includes(url));
-            
+
             if (newImageUrls.length > 0) {
               // Insert new images
               const { error: imagesError } = await supabase
@@ -378,11 +380,11 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
                     position: existingUrls.length + index
                   }))
                 );
-              
+
               if (imagesError) throw imagesError;
             }
           }
-          
+
           stats.updated++;
           stats.success++;
         } else {
@@ -393,7 +395,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
             .select();
 
           if (error) throw error;
-          
+
           // Process images if provided
           if (imageUrls.length > 0 && newProduct && newProduct.length > 0) {
             const { error: imagesError } = await supabase
@@ -406,10 +408,10 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
                   position: index
                 }))
               );
-            
+
             if (imagesError) throw imagesError;
           }
-          
+
           stats.created++;
           stats.success++;
         }
@@ -425,16 +427,16 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
       // Create a new workbook
       const workbook = new ExcelJS.Workbook();
       const worksheet = workbook.addWorksheet('Products');
-      
+
       // Define columns
       const columns = templateFields.map(field => ({
         header: field,
         key: field,
         width: 15
       }));
-      
+
       worksheet.columns = columns;
-      
+
       // Style the header row
       const headerRow = worksheet.getRow(1);
       headerRow.font = { bold: true };
@@ -443,7 +445,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
         pattern: 'solid',
         fgColor: { argb: 'FFE0E0E0' }
       };
-      
+
       // Add comment rows
       worksheet.addRow({
         name: '# Available subcategories: ' + subcategories.map(s => s.id).join(', '),
@@ -453,7 +455,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
         subcategory: '',
         type: ''
       });
-      
+
       worksheet.addRow({
         name: '# Gender options: men, women, kids, unisex',
         sku: '',
@@ -462,7 +464,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
         subcategory: '',
         type: ''
       });
-      
+
       worksheet.addRow({
         name: '# Type options: footwear, clothing, jewelry, beauty, accessories, bags',
         sku: '',
@@ -471,7 +473,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
         subcategory: '',
         type: ''
       });
-      
+
       // Add sample data
       const sampleData: any = {
         name: 'Sample Product',
@@ -491,11 +493,11 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
         subcategory: subcategories.length > 0 ? subcategories[0].id : '',
         type: category || 'clothing'
       };
-      
+
       // Add category-specific fields
       if (category) {
         sampleData.type = category;
-        
+
         if (category === 'clothing' || category === 'footwear') {
           sampleData.materials = 'cotton,polyester';
           sampleData.care_instructions = 'Machine wash cold, tumble dry low';
@@ -518,25 +520,25 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
           sampleData.tags = 'sale,discount,clearance';
         }
       }
-      
+
       worksheet.addRow(sampleData);
-      
+
       // Add data validation for specific columns
-      
+
       // Gender validation
       worksheet.dataValidations.add('G5:G1000', {
         type: 'list',
         allowBlank: true,
         formulae: ['"men,women,kids,unisex"']
       });
-      
+
       // Type validation
       worksheet.dataValidations.add('P5:P1000', {
         type: 'list',
         allowBlank: false,
         formulae: ['"footwear,clothing,jewelry,beauty,accessories,bags"']
       });
-      
+
       // Boolean fields validation
       ['is_visible', 'is_featured', 'is_new'].forEach((field, index) => {
         const col = String.fromCharCode(73 + index); // I, J, K columns
@@ -546,7 +548,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
           formulae: ['"true,false"']
         });
       });
-      
+
       // Subcategory validation
       if (subcategories.length > 0) {
         const subcategoryOptions = subcategories.map(s => s.id).join(',');
@@ -556,7 +558,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
           formulae: [`"${subcategoryOptions}"`]
         });
       }
-      
+
       // Brand validation
       if (brands.length > 0) {
         const brandOptions = brands.map(b => b.id).join(',');
@@ -566,12 +568,12 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
           formulae: [`"${brandOptions}"`]
         });
       }
-      
+
       // Generate the Excel file
       const buffer = await workbook.xlsx.writeBuffer();
       const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       saveAs(blob, `${category || 'product'}_upload_template.xlsx`);
-      
+
       toast.success('Template downloaded successfully');
     } catch (error) {
       console.error('Error generating template:', error);
@@ -585,12 +587,12 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen px-4">
         <div className="fixed inset-0 bg-black opacity-30" onClick={onClose}></div>
-        
+
         <div className="relative bg-white rounded-lg w-full max-w-4xl dark:bg-gray-800">
           <div className="flex justify-between items-center p-6 border-b dark:border-gray-700">
             <h2 className="text-xl font-medium dark:text-white">
-              {category 
-                ? `Bulk Upload ${category.charAt(0).toUpperCase() + category.slice(1)} Products` 
+              {category
+                ? `Bulk Upload ${category.charAt(0).toUpperCase() + category.slice(1)} Products`
                 : 'Bulk Product Upload'}
             </h2>
             <button onClick={onClose} className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
@@ -605,14 +607,14 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
                 Upload an Excel file containing product data. The file should include columns for product name, price, type, subcategory, and other details.
               </p>
               <div className="flex items-center mb-4">
-                <button 
+                <button
                   onClick={downloadTemplate}
                   className="btn-outline flex items-center dark:border-gray-600 dark:text-gray-300"
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Download Template
                 </button>
-                <button 
+                <button
                   onClick={() => window.open('https://docs.google.com/spreadsheets/d/1-example-spreadsheet-id/edit?usp=sharing', '_blank')}
                   className="btn-outline flex items-center ml-4 dark:border-gray-600 dark:text-gray-300"
                 >
@@ -629,7 +631,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
                   <li>subcategory - Product subcategory (see template for available options)</li>
                   {category && <li>type - Product type (automatically set to {category})</li>}
                 </ul>
-                
+
                 <h4 className="text-sm font-medium text-blue-800 mt-4 mb-2 dark:text-blue-300">Image Format:</h4>
                 <p className="text-sm text-blue-700 dark:text-blue-400">
                   To include multiple images, separate URLs with the pipe character (|):<br />
@@ -727,7 +729,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ isOpen, onClose, onSu
                                 className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
                               >
                                 {header}
-                              
+
                               </th>
                             ))}
                           </tr>
