@@ -11,7 +11,18 @@ interface CategoryFilterProps {
   setSortBy: (sort: string) => void;
   categories: { id: string; name: string }[];
   mainCategory?: string;
+  allowedGenders?: string[];
+  activeGender?: string;
+  setActiveGender?: (gender: string) => void;
 }
+
+const GENDER_LABELS: Record<string, string> = {
+  men: 'Men',
+  women: 'Women',
+  kids: 'Kids',
+  unisex: 'Unisex',
+  all: 'All'
+};
 
 const CategoryFilter: React.FC<CategoryFilterProps> = ({
   searchQuery,
@@ -21,13 +32,15 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
   sortBy,
   setSortBy,
   categories,
-  mainCategory
+  mainCategory,
+  allowedGenders = ['men', 'women', 'kids', 'unisex'],
+  activeGender = 'all',
+  setActiveGender
 }) => {
   const [subcategories, setSubcategories] = useState<{id: string, name: string}[]>([]);
   const [loading, setLoading] = useState(false);
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [activeGender, setActiveGender] = useState('all');
 
   useEffect(() => {
     if (mainCategory) {
@@ -36,7 +49,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
     // eslint-disable-next-line
   }, [mainCategory]);
 
-  // --- UPDATED: fetch from subcategories table ---
+  // Fetch from subcategories table
   const fetchSubcategories = async (category: string) => {
     try {
       setLoading(true);
@@ -47,16 +60,13 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
 
       if (error) throw error;
 
-      // Combine database subcategories with provided categories
+      // Combine database subcategories with provided categories, remove duplicates
       const dbSubcategories = data || [];
-
-      // Create a set of all subcategories to remove duplicates
       const allSubcategories = new Set([
         { id: 'all', name: 'All Categories' },
         ...dbSubcategories,
         ...categories.filter(cat => cat.id !== 'all')
       ].map(cat => JSON.stringify(cat)));
-
       setSubcategories(Array.from(allSubcategories).map(cat => JSON.parse(cat)));
     } catch (error) {
       console.error('Error fetching subcategories:', error);
@@ -67,64 +77,36 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
 
   // Use subcategories if available, otherwise use provided categories
   const displayCategories = subcategories.length > 0 ? subcategories : categories;
-
-  // Limit displayed categories for initial view
   const visibleCategories = showAllCategories
     ? displayCategories
     : displayCategories.slice(0, 8);
 
   const handleGenderChange = (gender: string) => {
-    setActiveGender(gender);
-    // You could pass this up to the parent to filter products by gender
+    setActiveGender?.(gender);
   };
 
   return (
     <div className="bg-white rounded-lg shadow-sm mb-8 dark:bg-gray-800">
       {/* Gender Tabs */}
-      <div className="border-b dark:border-gray-700">
-        <div className="flex overflow-x-auto">
-          <button
-            onClick={() => handleGenderChange('all')}
-            className={`px-6 py-3 text-sm font-medium whitespace-nowrap ${
-              activeGender === 'all'
-                ? 'border-b-2 border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
-                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-            }`}
-          >
-            All
-          </button>
-          <button
-            onClick={() => handleGenderChange('men')}
-            className={`px-6 py-3 text-sm font-medium whitespace-nowrap ${
-              activeGender === 'men'
-                ? 'border-b-2 border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
-                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-            }`}
-          >
-            Men
-          </button>
-          <button
-            onClick={() => handleGenderChange('women')}
-            className={`px-6 py-3 text-sm font-medium whitespace-nowrap ${
-              activeGender === 'women'
-                ? 'border-b-2 border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
-                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-            }`}
-          >
-            Women
-          </button>
-          <button
-            onClick={() => handleGenderChange('kids')}
-            className={`px-6 py-3 text-sm font-medium whitespace-nowrap ${
-              activeGender === 'kids'
-                ? 'border-b-2 border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
-                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-            }`}
-          >
-            Kids
-          </button>
+      {allowedGenders && allowedGenders.length > 0 && setActiveGender && (
+        <div className="border-b dark:border-gray-700">
+          <div className="flex overflow-x-auto">
+            {allowedGenders.map(gender => (
+              <button
+                key={gender}
+                onClick={() => handleGenderChange(gender)}
+                className={`px-6 py-3 text-sm font-medium whitespace-nowrap ${
+                  activeGender === gender
+                    ? 'border-b-2 border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                }`}
+              >
+                {GENDER_LABELS[gender] || gender}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Search and Sort Bar */}
       <div className="p-6 border-b dark:border-gray-700">
