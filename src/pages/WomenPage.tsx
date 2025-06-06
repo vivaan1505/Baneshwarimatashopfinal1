@@ -11,37 +11,35 @@ const WomenPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [products, setProducts] = useState<any[]>([]);
+  const [subcategories, setSubcategories] = useState<{ id: string; name: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const metaUpdatedRef = useRef(false);
 
   useEffect(() => {
     fetchWomensProducts();
-    
-    // Update meta tags for SEO and social sharing
+    fetchSubcategories();
+
     updateMetaTags(
-      'Women\'s Collection | MinddShopp',
-      'Discover our premium selection of women\'s clothing, footwear, jewelry, and beauty products. Shop the latest styles and trends.',
+      "Women's Collection | MinddShopp",
+      "Discover our premium selection of women's clothing, footwear, jewelry, and beauty products. Shop the latest styles and trends.",
       'https://images.pexels.com/photos/1619801/pexels-photo-1619801.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       window.location.href
     );
-    
-    // Add structured data
+
     const webPageSchema = generateWebPageSchema({
-      title: 'Women\'s Collection | MinddShopp',
-      description: 'Discover our premium selection of women\'s clothing, footwear, jewelry, and beauty products. Shop the latest styles and trends.',
+      title: "Women's Collection | MinddShopp",
+      description: "Discover our premium selection of women's clothing, footwear, jewelry, and beauty products. Shop the latest styles and trends.",
       url: window.location.href
     });
-    
+
     addStructuredData(webPageSchema);
-    
+
     metaUpdatedRef.current = true;
   }, []);
 
-  // Update meta tags when category filter changes
   useEffect(() => {
     if (!metaUpdatedRef.current || selectedCategory === 'all') return;
-    
-    const categoryName = categories.find(c => c.id === selectedCategory)?.name || 'Women\'s';
+    const categoryName = categories.find(c => c.id === selectedCategory)?.name || "Women's";
     updateMetaTags(
       `Women's ${categoryName} | MinddShopp Collection`,
       `Shop our premium selection of women's ${categoryName.toLowerCase()}. Find the perfect style for any occasion.`,
@@ -53,7 +51,7 @@ const WomenPage: React.FC = () => {
   const fetchWomensProducts = async () => {
     try {
       setLoading(true);
-      
+
       const { data, error } = await supabase
         .from('products')
         .select(`
@@ -63,20 +61,41 @@ const WomenPage: React.FC = () => {
         `)
         .eq('gender', 'women')
         .eq('is_visible', true);
-      
+
       if (error) throw error;
       setProducts(data || []);
     } catch (error) {
-      console.error('Error fetching women\'s products:', error);
+      console.error("Error fetching women's products:", error);
       toast.error('Failed to load products');
     } finally {
       setLoading(false);
     }
   };
 
+  // Fetch all women's subcategories from Supabase
+  const fetchSubcategories = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('subcategories')
+        .select('id, name')
+        .eq('parent_category', 'women');
+      if (error) throw error;
+      setSubcategories(data || []);
+    } catch (error) {
+      console.error('Error fetching subcategories:', error);
+      toast.error('Failed to load categories');
+    }
+  };
+
+  // Build categories array for filter (from subcategories)
+  const categories = [
+    { id: 'all', name: 'All Categories' },
+    ...subcategories
+  ];
+
   const filterProducts = (products: any[]) => {
     let filtered = [...products];
-    
+
     // Apply search filter
     if (searchQuery) {
       filtered = filtered.filter(product =>
@@ -84,14 +103,14 @@ const WomenPage: React.FC = () => {
         product.description?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-    
-    // Apply category filter
+
+    // Apply category filter (by subcategory)
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(product => 
-        product.type === selectedCategory
+      filtered = filtered.filter(product =>
+        product.subcategory === selectedCategory
       );
     }
-    
+
     // Apply sorting
     filtered.sort((a, b) => {
       switch (sortBy) {
@@ -106,21 +125,11 @@ const WomenPage: React.FC = () => {
           return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
       }
     });
-    
+
     return filtered;
   };
 
   const filteredProducts = filterProducts(products);
-
-  // Create categories array for filter
-  const categories = [
-    { id: 'all', name: 'All Categories' },
-    { id: 'clothing', name: 'Clothing' },
-    { id: 'footwear', name: 'Footwear' },
-    { id: 'accessories', name: 'Accessories' },
-    { id: 'jewelry', name: 'Jewelry' },
-    { id: 'beauty', name: 'Beauty' }
-  ];
 
   return (
     <div className="py-8">
@@ -149,9 +158,9 @@ const WomenPage: React.FC = () => {
         {/* Featured Categories */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <Link to="/clothing?gender=women" className="relative overflow-hidden rounded-lg aspect-square group">
-            <img 
-              src="https://images.pexels.com/photos/5709665/pexels-photo-5709665.jpeg" 
-              alt="Women's Clothing" 
+            <img
+              src="https://images.pexels.com/photos/5709665/pexels-photo-5709665.jpeg"
+              alt="Women's Clothing"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
@@ -161,11 +170,11 @@ const WomenPage: React.FC = () => {
               </div>
             </div>
           </Link>
-          
+
           <Link to="/footwear?gender=women" className="relative overflow-hidden rounded-lg aspect-square group">
-            <img 
-              src="https://images.pexels.com/photos/3782786/pexels-photo-3782786.jpeg" 
-              alt="Women's Footwear" 
+            <img
+              src="https://images.pexels.com/photos/3782786/pexels-photo-3782786.jpeg"
+              alt="Women's Footwear"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
@@ -175,11 +184,11 @@ const WomenPage: React.FC = () => {
               </div>
             </div>
           </Link>
-          
+
           <Link to="/jewelry?gender=women" className="relative overflow-hidden rounded-lg aspect-square group">
-            <img 
-              src="https://images.pexels.com/photos/8891959/pexels-photo-8891959.jpeg" 
-              alt="Women's Jewelry" 
+            <img
+              src="https://images.pexels.com/photos/8891959/pexels-photo-8891959.jpeg"
+              alt="Women's Jewelry"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
@@ -189,11 +198,11 @@ const WomenPage: React.FC = () => {
               </div>
             </div>
           </Link>
-          
+
           <Link to="/beauty?gender=women" className="relative overflow-hidden rounded-lg aspect-square group">
-            <img 
-              src="https://images.pexels.com/photos/4938502/pexels-photo-4938502.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-              alt="Women's Beauty" 
+            <img
+              src="https://images.pexels.com/photos/4938502/pexels-photo-4938502.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+              alt="Women's Beauty"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
@@ -214,6 +223,10 @@ const WomenPage: React.FC = () => {
           sortBy={sortBy}
           setSortBy={setSortBy}
           categories={categories}
+          mainCategory="women"
+          allowedGenders={['women']}
+          activeGender="women"
+          setActiveGender={() => {}}
         />
 
         {/* Products Grid */}
