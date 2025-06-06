@@ -50,7 +50,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
       <div className="absolute inset-0 bg-black bg-opacity-50" onClick={onClose} />
-      
+
       <div className="absolute inset-y-0 right-0 max-w-full flex">
         <div className="relative w-screen max-w-md">
           <div className="h-full flex flex-col bg-white">
@@ -89,6 +89,19 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                               ${(item.price * item.quantity).toFixed(2)}
                             </p>
                           </div>
+                          {/* Option/Variant display */}
+                          {item.optionValues && item.optionValues.length > 0 && (
+                            <div className="mt-1 flex flex-wrap gap-1">
+                              {item.optionValues.map((opt: string, idx: number) => (
+                                <span
+                                  key={opt + idx}
+                                  className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-xs"
+                                >
+                                  {opt}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                           <div className="mt-4 flex items-center justify-between">
                             <div className="flex items-center border rounded">
                               <button
