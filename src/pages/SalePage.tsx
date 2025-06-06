@@ -14,10 +14,18 @@ const GENDER_OPTIONS = [
   { label: 'Unisex', value: 'unisex' }
 ];
 
+// Replace with your product types if you have more
+const PRODUCT_TYPE_OPTIONS = [
+  { id: 'all', name: 'All Products' },
+  { id: 'footwear', name: 'Footwear' },
+  { id: 'clothing', name: 'Clothing' },
+  { id: 'accessories', name: 'Accessories' },
+];
+
 const SalePage: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedGender, setSelectedGender] = useState('all');
+  const [selectedProductType, setSelectedProductType] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -106,19 +114,17 @@ const SalePage: React.FC = () => {
   const filterProducts = (products: any[]) => {
     let filtered = [...products];
 
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (product) =>
-          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.description?.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
     if (selectedCategory !== 'all') {
       filtered = filtered.filter((product) => product.subcategory === selectedCategory);
     }
     if (selectedGender !== 'all') {
       filtered = filtered.filter(
         (product) => product.gender === selectedGender || product.gender === 'unisex'
+      );
+    }
+    if (selectedProductType !== 'all') {
+      filtered = filtered.filter(
+        (product) => (product.type || product.product_type) === selectedProductType
       );
     }
     filtered.sort((a, b) => {
@@ -142,8 +148,8 @@ const SalePage: React.FC = () => {
   const filteredProducts = filterProducts(products);
 
   return (
-    <div className="py-8 min-h-screen bg-gradient-to-br from-yellow-100 via-pink-50 to-white dark:from-gray-900 dark:via-gray-950 dark:to-black">
-      <div className="container-custom">
+    <div className="py-10 min-h-screen bg-gradient-to-br from-yellow-100 via-pink-50 to-white dark:from-gray-900 dark:via-gray-950 dark:to-black">
+      <div className="container-custom max-w-7xl mx-auto px-4">
         {/* Breadcrumbs */}
         <nav className="mb-6">
           <ol className="flex text-sm">
@@ -172,55 +178,69 @@ const SalePage: React.FC = () => {
           </ol>
         </nav>
 
-        {/* Category Header */}
+        {/* Header Modernized */}
         <div className="mb-8 text-center">
-          <h1 className="text-4xl font-heading font-bold mb-4 text-primary-700 dark:text-white">
+          <h1 className="text-5xl font-heading font-extrabold mb-2 text-primary-700 dark:text-white tracking-tight">
             🔥 Sale: Best Deals!
           </h1>
-          <p className="mb-8 text-lg text-gray-700 dark:text-gray-300">
-            Shop big savings across all categories and genders.
+          <p className="mb-8 text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+            Discover the hottest discounts across all categories and genders.
           </p>
         </div>
 
-        {/* Gender Filter */}
-        <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {GENDER_OPTIONS.map(({ label, value }) => (
-            <button
-              key={value}
-              onClick={() => setSelectedGender(value)}
-              className={`px-5 py-2 rounded-full text-sm font-semibold shadow-sm transition-colors ${
-                selectedGender === value
-                  ? 'bg-blue-700 text-white dark:bg-blue-500'
-                  : 'bg-gray-100 text-gray-700 hover:bg-blue-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {/* Category Dropdown Filter */}
-        <CategoryDropdownFilter
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          categories={categories}
-          loading={loading}
-        />
-
-        {/* Search Bar and Sort */}
-        <div className="flex flex-wrap gap-4 mb-8">
-          <div className="flex-1 min-w-[240px]">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search sale products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-4 pr-4 py-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              />
+        {/* Filters */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+          {/* Gender Filter */}
+          <div className="flex gap-2 flex-wrap">
+            <div className="font-semibold text-gray-700 dark:text-gray-300 flex items-center mr-2">
+              Gender:
             </div>
+            {GENDER_OPTIONS.map(({ label, value }) => (
+              <button
+                key={value}
+                onClick={() => setSelectedGender(value)}
+                className={`px-5 py-2 rounded-full text-sm font-semibold shadow-sm transition-colors ${
+                  selectedGender === value
+                    ? 'bg-blue-700 text-white dark:bg-blue-500'
+                    : 'bg-gray-100 text-gray-700 hover:bg-blue-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
-          <div className="flex items-center space-x-4">
+
+          {/* Product Type Dropdown */}
+          <div className="flex items-center gap-3">
+            <label className="font-semibold text-gray-700 dark:text-gray-300">
+              Product Type:
+            </label>
+            <CategoryDropdownFilter
+              selectedCategory={selectedProductType}
+              setSelectedCategory={setSelectedProductType}
+              categories={PRODUCT_TYPE_OPTIONS}
+              loading={false}
+            />
+          </div>
+
+          {/* Category Dropdown */}
+          <div className="flex items-center gap-3">
+            <label className="font-semibold text-gray-700 dark:text-gray-300">
+              Category:
+            </label>
+            <CategoryDropdownFilter
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+              categories={categories}
+              loading={loading}
+            />
+          </div>
+
+          {/* Sort Dropdown */}
+          <div className="flex items-center gap-2">
+            <label className="font-semibold text-gray-700 dark:text-gray-300">
+              Sort by:
+            </label>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
@@ -236,19 +256,19 @@ const SalePage: React.FC = () => {
 
         {/* Products Grid */}
         {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600 dark:border-primary-400"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading products...</p>
+          <div className="text-center py-16">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 dark:border-primary-400"></div>
+            <p className="mt-6 text-lg text-gray-600 dark:text-gray-400">Loading sale products...</p>
           </div>
         ) : filteredProducts.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow-md dark:bg-gray-800">
-            <h2 className="text-xl font-medium mb-2 dark:text-white">No sale products found</h2>
+          <div className="text-center py-16 bg-white rounded-lg shadow-md dark:bg-gray-800">
+            <h2 className="text-2xl font-medium mb-2 dark:text-white">No sale products found</h2>
             <p className="text-gray-500 dark:text-gray-400">
-              No sale products found matching your criteria
+              No sale products found matching your criteria.
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
