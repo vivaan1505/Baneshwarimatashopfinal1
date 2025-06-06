@@ -128,15 +128,14 @@ const KidsPage: React.FC = () => {
 
   const filteredProducts = filterProducts(products);
 
-  // Friendly illustrations and pastel color backgrounds
+  // Replace with robust, reliable Unsplash/Pexels images
   const ageGroups = [
-    { name: 'Baby (0-2 years)', image: 'https://cdn.pixabay.com/photo/2017/01/31/13/14/animal-2023924_1280.png' },
-    { name: 'Toddler (2-4 years)', image: 'https://cdn.pixabay.com/photo/2013/07/13/10/07/animal-156957_1280.png' },
-    { name: 'Kids (4-8 years)', image: 'https://cdn.pixabay.com/photo/2017/01/31/13/05/animal-2023922_1280.png' },
-    { name: 'Pre-Teen (8-12 years)', image: 'https://cdn.pixabay.com/photo/2016/03/31/20/11/animal-1297766_1280.png' }
+    { name: 'Baby (0-2 years)', image: 'https://images.pexels.com/photos/1556706/pexels-photo-1556706.jpeg?auto=compress&w=400&h=400' },
+    { name: 'Toddler (2-4 years)', image: 'https://images.pexels.com/photos/3661352/pexels-photo-3661352.jpeg?auto=compress&w=400&h=400' },
+    { name: 'Kids (4-8 years)', image: 'https://images.pexels.com/photos/1648376/pexels-photo-1648376.jpeg?auto=compress&w=400&h=400' },
+    { name: 'Pre-Teen (8-12 years)', image: 'https://images.pexels.com/photos/1707828/pexels-photo-1707828.jpeg?auto=compress&w=400&h=400' }
   ];
 
-  // Fun, playful background
   return (
     <div className="py-8 min-h-screen bg-gradient-to-br from-[#fff7e6] via-[#e1f6ff] to-[#e7ffe6] dark:from-gray-900 dark:via-gray-950 dark:to-black relative">
       {/* Decorative clouds and stars */}
@@ -183,10 +182,11 @@ const KidsPage: React.FC = () => {
             {ageGroups.map((group, index) => (
               <div key={index} className="relative overflow-hidden rounded-2xl aspect-square group border-2 border-dashed border-[#ffe066] bg-[#fffae6] hover:shadow-2xl transition-all duration-300">
                 <img 
-                  src={group.image} 
-                  alt={group.name} 
-                  className="w-full h-full object-contain p-4 scale-90 group-hover:scale-100 transition-transform duration-500"
-                  style={{ filter: 'drop-shadow(0 4px 8px #f59e4266)' }}
+                  src={group.image}
+                  alt={group.name}
+                  className="w-full h-full object-cover p-2 scale-90 group-hover:scale-100 transition-transform duration-500"
+                  loading="lazy"
+                  onError={e => { e.currentTarget.src = '/assets/fallback-kid.svg'; }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#ffda7ecc] to-transparent flex items-end pointer-events-none">
                   <div className="p-3">
