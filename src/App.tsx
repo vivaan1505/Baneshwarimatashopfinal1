@@ -1,9 +1,9 @@
+// src/App.tsx
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Layout from './components/layout/Layout';
 import AdminLayout from './components/admin/AdminLayout';
-import ThemeProvider from './components/theme/ThemeProvider';
 
 // Eagerly loaded components
 import HomePage from './pages/HomePage';
@@ -34,6 +34,7 @@ const FestiveGiftGuidesPage = lazy(() => import('./pages/specialty/FestiveGiftGu
 const AccessibilityPage = lazy(() => import('./pages/AccessibilityPage'));
 const SitemapPage = lazy(() => import('./pages/SitemapPage'));
 const SizeChartPage = lazy(() => import('./pages/SizeChartPage'));
+const SalePage = lazy(() => import('./pages/SalePage')); // Added SalePage import
 
 // Category Pages
 const FootwearPage = lazy(() => import('./pages/FootwearPage'));
@@ -167,6 +168,7 @@ function App() {
                 
                 {/* Shop Routes */}
                 <Route path="new-arrivals" element={<NewArrivalsPage />} />
+                <Route path="sale" element={<SalePage />} /> {/* Added SalePage route */}
                 <Route path="footwear" element={<FootwearPage />} />
                 <Route path="clothing" element={<ClothingPage />} />
                 <Route path="jewelry" element={<JewelryPage />} />
