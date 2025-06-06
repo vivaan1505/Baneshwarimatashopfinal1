@@ -6,9 +6,18 @@ import ProductCard from '../components/common/ProductCard';
 import CategoryFilter from '../components/shop/CategoryFilter';
 import { updateMetaTags, addStructuredData, generateWebPageSchema } from '../utils/seo';
 
+const GENDER_OPTIONS = [
+  { label: 'All', value: 'all' },
+  { label: 'Men', value: 'men' },
+  { label: 'Women', value: 'women' },
+  { label: 'Kids', value: 'kids' },
+  { label: 'Unisex', value: 'unisex' }
+];
+
 const BeautyPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedGender, setSelectedGender] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -118,6 +127,11 @@ const BeautyPage: React.FC = () => {
         product.subcategory === selectedCategory
       );
     }
+    if (selectedGender !== 'all') {
+      filtered = filtered.filter(product =>
+        product.gender === selectedGender || product.gender === 'unisex'
+      );
+    }
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'price-asc':
@@ -158,6 +172,23 @@ const BeautyPage: React.FC = () => {
           <p className="text-lg text-gray-600 max-w-2xl mx-auto dark:text-gray-300">
             Discover our premium selection of beauty products, crafted with the finest ingredients and attention to detail.
           </p>
+        </div>
+
+        {/* Gender Filter */}
+        <div className="flex flex-wrap gap-2 mb-8 justify-center">
+          {GENDER_OPTIONS.map(({ label, value }) => (
+            <button
+              key={value}
+              onClick={() => setSelectedGender(value)}
+              className={`px-5 py-2 rounded-full text-sm font-semibold shadow-sm transition-colors ${
+                selectedGender === value
+                  ? 'bg-blue-700 text-white dark:bg-blue-500'
+                  : 'bg-gray-100 text-gray-700 hover:bg-blue-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
 
         {/* Popular Categories */}
