@@ -109,10 +109,10 @@ const SettingsPage: React.FC = () => {
 
     setIsApplyingDiscount(true);
     try {
-      // First, get all products
+      // First, get all products with all required fields
       const { data: products, error: fetchError } = await supabase
         .from('products')
-        .select('id, price, compare_at_price');
+        .select('id, name, slug, price, compare_at_price');
         
       if (fetchError) throw fetchError;
       
@@ -134,6 +134,8 @@ const SettingsPage: React.FC = () => {
         
         return {
           id: product.id,
+          name: product.name,
+          slug: product.slug,
           compare_at_price: compareAtPrice,
           price: newPrice
         };
@@ -185,10 +187,10 @@ const SettingsPage: React.FC = () => {
 
     setIsApplyingDiscount(true);
     try {
-      // Get all products with a compare_at_price (discounted products)
+      // Get all products with a compare_at_price (discounted products) including required fields
       const { data: products, error: fetchError } = await supabase
         .from('products')
-        .select('id, price, compare_at_price')
+        .select('id, name, slug, price, compare_at_price')
         .not('compare_at_price', 'is', null);
         
       if (fetchError) throw fetchError;
@@ -201,6 +203,8 @@ const SettingsPage: React.FC = () => {
       // For each product, restore the original price
       const updates = products.map(product => ({
         id: product.id,
+        name: product.name,
+        slug: product.slug,
         price: product.compare_at_price,
         compare_at_price: null
       }));
