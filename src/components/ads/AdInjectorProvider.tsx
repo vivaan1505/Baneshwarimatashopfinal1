@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '../../utils/supabaseClient';
+import { supabase } from '../../lib/supabase';
 import { Ad } from '../../types/ad';
 
 const AdContext = createContext<{ ads: Ad[] }>({ ads: [] });

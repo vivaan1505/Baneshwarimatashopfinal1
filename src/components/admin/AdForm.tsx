@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase } from '../../utils/supabaseClient';
+import { supabase } from '../../lib/supabase';
 import { Ad, AdProvider, AdType } from '../../types/ad';
 
 const providers: AdProvider[] = [
