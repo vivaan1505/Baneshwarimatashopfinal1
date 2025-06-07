@@ -1,14 +1,13 @@
-// src/components/layout/Header.tsx
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu as MenuIcon, Search, ShoppingBag, User, Heart, Ticket, Tag } from 'lucide-react'; // Added Tag icon
+import { Menu as MenuIcon, Search, ShoppingBag, User, Heart, Tag } from 'lucide-react'; // Removed Ticket, kept Tag
 import NavigationMenu from './NavigationMenu';
 import CartDrawer from '../cart/CartDrawer';
 import { useCartStore } from '../../stores/cartStore';
 import { useAuthStore } from '../../stores/authStore';
 import { cn } from '../../utils/cn';
 import { scrollToTop } from '../../utils/scroll';
-import ThemeToggle from '../theme/ThemeToggle';
+// import ThemeToggle from '../theme/ThemeToggle'; // Removed
 import ThemeManagerButton from '../theme/ThemeManagerButton';
 import SearchOverlay from '../common/SearchOverlay';
 import { supabase } from '../../lib/supabase';
@@ -141,20 +140,11 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
               <Search size={20} />
             </motion.button>
             
-            <motion.div whileHover={{ scale: 1.1 }}>
-              <Link 
-                to="/coupons" 
-                onClick={scrollToTop}
-                className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400"
-                title="Coupons"
-              >
-                <Ticket size={20} />
-              </Link>
-            </motion.div>
+            {/* Coupons button removed */}
             
             <motion.div whileHover={{ scale: 1.1 }}>
               <Link 
-                to="/sale" // Added Sale link
+                to="/sale" // Sale link remains
                 onClick={scrollToTop}
                 className="p-2 text-gray-700 hover:text-primary-700 dark:text-gray-300 dark:hover:text-primary-400"
                 title="Sale"
@@ -183,7 +173,7 @@ const Header: React.FC<HeaderProps> = ({ toggleMobileMenu }) => {
               </Link>
             </motion.div>
             
-            <ThemeToggle />
+            {/* <ThemeToggle />  ThemeToggle button removed */}
             <ThemeManagerButton />
             
             {/* User Profile Menu */}
