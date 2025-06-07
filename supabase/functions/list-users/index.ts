@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ users }),
+      JSON.stringify(users.users),
       {
         headers: {
           ...corsHeaders,
