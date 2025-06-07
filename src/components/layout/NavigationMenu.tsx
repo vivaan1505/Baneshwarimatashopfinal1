@@ -6,14 +6,22 @@ import { motion } from 'framer-motion';
 
 const NavigationMenu: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null);
   const location = useLocation();
 
   const handleMouseEnter = (menu: string) => {
+    if (closeTimeout) {
+      clearTimeout(closeTimeout);
+      setCloseTimeout(null);
+    }
     setActiveMenu(menu);
   };
 
   const handleMouseLeave = () => {
-    setActiveMenu(null);
+    const timeout = setTimeout(() => {
+      setActiveMenu(null);
+    }, 120); // Adjust delay as needed
+    setCloseTimeout(timeout);
   };
 
   const handleNavClick = () => {
@@ -54,6 +62,7 @@ const NavigationMenu: React.FC = () => {
             animate="visible"
             variants={menuVariants}
             className="absolute left-0 z-10 mt-2 w-56 origin-top-left bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none animate-fade-in dark:bg-gray-800 dark:ring-gray-700"
+            style={{ top: '100%' }}
           >
             <div className="py-1">
               <motion.div variants={itemVariants}>
@@ -112,6 +121,7 @@ const NavigationMenu: React.FC = () => {
             animate="visible"
             variants={menuVariants}
             className="absolute left-0 z-10 mt-2 w-56 origin-top-left bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none animate-fade-in dark:bg-gray-800 dark:ring-gray-700"
+            style={{ top: '100%' }}
           >
             <div className="py-1">
               <motion.div variants={itemVariants}>
@@ -201,6 +211,7 @@ const NavigationMenu: React.FC = () => {
             animate="visible"
             variants={menuVariants}
             className="absolute right-0 z-10 mt-2 w-56 origin-top-right bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none animate-fade-in dark:bg-gray-800 dark:ring-gray-700"
+            style={{ top: '100%' }}
           >
             <div className="py-1">
               <motion.div variants={itemVariants}>
