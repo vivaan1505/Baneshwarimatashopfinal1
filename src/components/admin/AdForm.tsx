@@ -7,7 +7,7 @@ const providers: AdProvider[] = [
 
 const initialForm: Partial<Ad> = {
   name: '',
-  provider: 'Google AdSense',
+  provider: '',
   ad_type: '',
   status: 'active',
   device_types: ['desktop'],
@@ -60,20 +60,24 @@ const AdForm: React.FC<{
         </div>
 
         {/* Provider */}
-        <div className="relative mb-5">
+        <div className="mb-5">
+          <label htmlFor="provider" className="block mb-1 text-gray-600 font-medium">
+            Provider
+          </label>
           <select
             id="provider"
-            className="peer w-full border-b-2 border-gray-300 focus:border-primary-600 outline-none py-3 bg-transparent"
+            className="w-full border-b-2 border-gray-300 focus:border-primary-600 outline-none py-3 bg-transparent"
             value={form.provider || ''}
             onChange={e => updateField('provider', e.target.value)}
+            required
           >
+            <option value="" disabled>
+              Select provider...
+            </option>
             {providers.map(p => (
               <option key={p} value={p}>{p}</option>
             ))}
           </select>
-          <label htmlFor="provider" className="absolute left-0 top-3 text-gray-500 text-sm pointer-events-none">
-            Provider
-          </label>
         </div>
 
         {/* Ad Type */}
@@ -93,20 +97,21 @@ const AdForm: React.FC<{
         </div>
 
         {/* Status */}
-        <div className="relative mb-5">
+        <div className="mb-5">
+          <label htmlFor="status" className="block mb-1 text-gray-600 font-medium">
+            Status
+          </label>
           <select
             id="status"
-            className="peer w-full border-b-2 border-gray-300 focus:border-primary-600 outline-none py-3 bg-transparent"
+            className="w-full border-b-2 border-gray-300 focus:border-primary-600 outline-none py-3 bg-transparent"
             value={form.status || ''}
             onChange={e => updateField('status', e.target.value)}
+            required
           >
             <option value="active">Active</option>
             <option value="hidden">Hidden</option>
             <option value="deleted">Deleted</option>
           </select>
-          <label htmlFor="status" className="absolute left-0 top-3 text-gray-500 text-sm pointer-events-none">
-            Status
-          </label>
         </div>
 
         {/* Device Types */}
