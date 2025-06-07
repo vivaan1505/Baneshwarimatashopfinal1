@@ -61,6 +61,12 @@ const ReferralsPage: React.FC = () => {
       }
 
       const userData = await response.json();
+      
+      // Check if userData is an array before mapping
+      if (!Array.isArray(userData)) {
+        throw new Error(userData?.error || "Failed to fetch users - invalid response format");
+      }
+
       // Create a map from the array of users directly
       const userMap = new Map(userData.map((user: any) => [user.id, user]));
 
