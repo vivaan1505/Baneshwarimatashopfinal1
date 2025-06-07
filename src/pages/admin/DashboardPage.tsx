@@ -12,7 +12,8 @@ import {
   Calendar,
   Package,
   DollarSign,
-  Clock
+  Clock,
+  AlertTriangle
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { supabase } from '../../lib/supabase';
@@ -47,6 +48,7 @@ const DashboardPage: React.FC = () => {
     revenue: 0
   });
   const [connectionError, setConnectionError] = useState<string | null>(null);
+  const [isOfflineMode, setIsOfflineMode] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -57,18 +59,52 @@ const DashboardPage: React.FC = () => {
     }
   }, [user]);
 
+  const handleConnectionError = (error: any, context: string) => {
+    console.error(`Error in ${context}:`, error);
+    
+    let errorMessage = '';
+    if (error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError')) {
+      errorMessage = 'Unable to connect to database. Please check your internet connection.';
+      setIsOfflineMode(true);
+    } else if (error.message?.includes('Invalid API key') || error.message?.includes('unauthorized')) {
+      errorMessage = 'Database authentication failed. Please check your Supabase configuration.';
+    } else if (error.message?.includes('timeout')) {
+      errorMessage = 'Database connection timed out. Please try again.';
+    } else {
+      errorMessage = `Database error: ${error.message || 'Unknown error occurred'}`;
+    }
+    
+    setConnectionError(errorMessage);
+  };
+
   const fetchAdminRole = async () => {
     try {
+      setConnectionError(null);
+      
+      // Test basic connectivity first
+      const { error: pingError } = await supabase
+        .from('admin_users')
+        .select('id')
+        .limit(1);
+      
+      if (pingError) {
+        throw pingError;
+      }
+
       const { data, error } = await supabase
         .from('admin_users')
         .select('role')
         .eq('user_id', user?.id)
         .single();
 
-      if (error) throw error;
-      setAdminRole(data?.role || null);
-    } catch (error) {
-      console.error('Error fetching admin role:', error);
+      if (error && error.code !== 'PGRST116') { // PGRST116 is "not found" which is acceptable
+        throw error;
+      }
+      
+      setAdminRole(data?.role || 'admin'); // Default to admin if no specific role found
+    } catch (error: any) {
+      handleConnectionError(error, 'fetchAdminRole');
+      setAdminRole('admin'); // Fallback role
     } finally {
       setLoading(false);
     }
@@ -84,8 +120,10 @@ const DashboardPage: React.FC = () => {
 
       if (error) throw error;
       setPartnerServices(data || []);
-    } catch (error) {
-      console.error('Error fetching partner services:', error);
+    } catch (error: any) {
+      handleConnectionError(error, 'fetchPartnerServices');
+      // Set empty array as fallback
+      setPartnerServices([]);
     }
   };
 
@@ -118,106 +156,71 @@ const DashboardPage: React.FC = () => {
       if (error) throw error;
       
       if (!data || data.length === 0) {
-        // Create sample orders for demonstration
-        const sampleOrders = [
-          {
-            id: 'ORD-001',
-            status: 'processing',
-            total_amount: 299.99,
-            created_at: new Date().toISOString(),
-            user: {
-              first_name: 'John',
-              last_name: 'Doe',
-              email: 'john.doe@example.com'
-            },
-            items: [{ id: 'item1' }, { id: 'item2' }]
-          },
-          {
-            id: 'ORD-002',
-            status: 'shipped',
-            total_amount: 149.99,
-            created_at: new Date(Date.now() - 86400000).toISOString(),
-            user: {
-              first_name: 'Jane',
-              last_name: 'Smith',
-              email: 'jane.smith@example.com'
-            },
-            items: [{ id: 'item3' }]
-          },
-          {
-            id: 'ORD-003',
-            status: 'delivered',
-            total_amount: 599.99,
-            created_at: new Date(Date.now() - 172800000).toISOString(),
-            user: {
-              first_name: 'Robert',
-              last_name: 'Johnson',
-              email: 'robert.johnson@example.com'
-            },
-            items: [{ id: 'item4' }, { id: 'item5' }]
-          }
-        ];
-        setRecentOrders(sampleOrders as Order[]);
+        // Use sample data if no real orders exist
+        setSampleOrders();
       } else {
         setRecentOrders(data);
       }
-    } catch (error) {
-      console.error('Error fetching recent orders:', error);
-      // Set sample data for development
-      const sampleOrders = [
-        {
-          id: 'ORD-001',
-          status: 'processing',
-          total_amount: 299.99,
-          created_at: new Date().toISOString(),
-          user: {
-            first_name: 'John',
-            last_name: 'Doe',
-            email: 'john.doe@example.com'
-          },
-          items: [{ id: 'item1' }, { id: 'item2' }]
-        },
-        {
-          id: 'ORD-002',
-          status: 'shipped',
-          total_amount: 149.99,
-          created_at: new Date(Date.now() - 86400000).toISOString(),
-          user: {
-            first_name: 'Jane',
-            last_name: 'Smith',
-            email: 'jane.smith@example.com'
-          },
-          items: [{ id: 'item3' }]
-        },
-        {
-          id: 'ORD-003',
-          status: 'delivered',
-          total_amount: 599.99,
-          created_at: new Date(Date.now() - 172800000).toISOString(),
-          user: {
-            first_name: 'Robert',
-            last_name: 'Johnson',
-            email: 'robert.johnson@example.com'
-          },
-          items: [{ id: 'item4' }, { id: 'item5' }]
-        }
-      ];
-      setRecentOrders(sampleOrders as Order[]);
+    } catch (error: any) {
+      handleConnectionError(error, 'fetchRecentOrders');
+      setSampleOrders();
     }
+  };
+
+  const setSampleOrders = () => {
+    const sampleOrders = [
+      {
+        id: 'ORD-001',
+        status: 'processing',
+        total_amount: 299.99,
+        created_at: new Date().toISOString(),
+        user: {
+          first_name: 'John',
+          last_name: 'Doe',
+          email: 'john.doe@example.com'
+        },
+        items: [{ id: 'item1' }, { id: 'item2' }]
+      },
+      {
+        id: 'ORD-002',
+        status: 'shipped',
+        total_amount: 149.99,
+        created_at: new Date(Date.now() - 86400000).toISOString(),
+        user: {
+          first_name: 'Jane',
+          last_name: 'Smith',
+          email: 'jane.smith@example.com'
+        },
+        items: [{ id: 'item3' }]
+      },
+      {
+        id: 'ORD-003',
+        status: 'delivered',
+        total_amount: 599.99,
+        created_at: new Date(Date.now() - 172800000).toISOString(),
+        user: {
+          first_name: 'Robert',
+          last_name: 'Johnson',
+          email: 'robert.johnson@example.com'
+        },
+        items: [{ id: 'item4' }, { id: 'item5' }]
+      }
+    ];
+    setRecentOrders(sampleOrders as Order[]);
   };
 
   const fetchOrderStats = async () => {
     try {
       setConnectionError(null);
       
-      // Test connection first
+      // Test connection first with a simple query
       const { error: connectionTest } = await supabase
         .from('orders')
         .select('id')
         .limit(1);
       
       if (connectionTest) {
-        throw new Error(`Database connection failed: ${connectionTest.message}`);
+        throw connectionTest;
       }
 
       // Fetch total orders count
@@ -261,14 +264,7 @@ const DashboardPage: React.FC = () => {
         revenue: totalRevenue
       });
     } catch (error: any) {
-      console.error('Error fetching order stats:', error);
-      
-      // Set connection error message
-      if (error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError')) {
-        setConnectionError('Unable to connect to database. Please check your internet connection and Supabase configuration.');
-      } else {
-        setConnectionError(`Database error: ${error.message}`);
-      }
+      handleConnectionError(error, 'fetchOrderStats');
       
       // Set sample data for development/fallback
       setOrderStats({
@@ -283,6 +279,19 @@ const DashboardPage: React.FC = () => {
     }
   };
 
+  const retryConnection = () => {
+    setConnectionError(null);
+    setIsOfflineMode(false);
+    setLoading(true);
+    
+    if (user) {
+      fetchAdminRole();
+      fetchPartnerServices();
+      fetchRecentOrders();
+      fetchOrderStats();
+    }
+  };
+
   return (
     <div>
       {/* Connection Error Alert */}
@@ -290,17 +299,25 @@ const DashboardPage: React.FC = () => {
         <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 dark:bg-red-900/20 dark:border-red-800">
           <div className="flex">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-red-400\" viewBox="0 0 20 20\" fill="currentColor">
-                <path fillRule="evenodd\" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z\" clipRule="evenodd" />
-              </svg>
+              <AlertTriangle className="h-5 w-5 text-red-400" />
             </div>
-            <div className="ml-3">
+            <div className="ml-3 flex-1">
               <h3 className="text-sm font-medium text-red-800 dark:text-red-200">
-                Database Connection Error
+                Database Connection Issue
               </h3>
               <div className="mt-2 text-sm text-red-700 dark:text-red-300">
                 <p>{connectionError}</p>
-                <p className="mt-1">Displaying sample data for demonstration purposes.</p>
+                {isOfflineMode && (
+                  <p className="mt-1">Running in offline mode with sample data.</p>
+                )}
+              </div>
+              <div className="mt-3">
+                <button
+                  onClick={retryConnection}
+                  className="bg-red-100 hover:bg-red-200 text-red-800 px-3 py-1 rounded text-sm font-medium dark:bg-red-800 dark:hover:bg-red-700 dark:text-red-200"
+                >
+                  Retry Connection
+                </button>
               </div>
             </div>
           </div>
@@ -319,6 +336,11 @@ const DashboardPage: React.FC = () => {
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400">
                 {adminRole ? `Admin (${adminRole})` : 'Admin'}
+                {isOfflineMode && (
+                  <span className="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded text-xs dark:bg-yellow-900/20 dark:text-yellow-400">
+                    Offline
+                  </span>
+                )}
               </p>
             </div>
           </div>
