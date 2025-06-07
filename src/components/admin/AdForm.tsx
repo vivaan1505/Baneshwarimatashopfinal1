@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import { supabase } from '../../utils/supabaseClient'; // Uncomment if saving to Supabase
 import { Ad, AdProvider } from '../../types/ad';
 
 const providers: AdProvider[] = [
@@ -33,134 +32,170 @@ const AdForm: React.FC<{
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full mx-auto space-y-4"
-    >
-      <h2 className="text-xl font-bold mb-2">{initialData ? 'Edit Ad/Script' : 'Add New Ad/Script'}</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 mx-4 sm:mx-0 relative"
+        style={{ animation: 'fadeIn 0.2s' }}
+      >
+        <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 text-center">
+          {initialData ? 'Edit Ad/Script' : 'Add New Ad/Script'}
+        </h2>
 
-      <div>
-        <label className="block mb-1 font-medium">Name</label>
-        <input
-          type="text"
-          className="input input-bordered w-full"
-          value={form.name || ''}
-          onChange={e => updateField('name', e.target.value)}
-          required
-        />
-      </div>
-
-      <div>
-        <label className="block mb-1 font-medium">Provider</label>
-        <select
-          className="input input-bordered w-full"
-          value={form.provider || ''}
-          onChange={e => updateField('provider', e.target.value)}
-        >
-          {providers.map(p => (
-            <option key={p} value={p}>{p}</option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label className="block mb-1 font-medium">Ad Type</label>
-        <input
-          type="text"
-          className="input input-bordered w-full"
-          value={form.ad_type || ''}
-          onChange={e => updateField('ad_type', e.target.value)}
-          required
-          placeholder="e.g. banner, pixel, script"
-        />
-      </div>
-
-      <div>
-        <label className="block mb-1 font-medium">Status</label>
-        <select
-          className="input input-bordered w-full"
-          value={form.status || ''}
-          onChange={e => updateField('status', e.target.value)}
-        >
-          <option value="active">Active</option>
-          <option value="hidden">Hidden</option>
-          <option value="deleted">Deleted</option>
-        </select>
-      </div>
-
-      <div>
-        <label className="block mb-1 font-medium">Device Types</label>
-        <div className="flex gap-4">
-          <label>
-            <input
-              type="checkbox"
-              checked={form.device_types?.includes('desktop')}
-              onChange={e => {
-                if (e.target.checked) {
-                  updateField('device_types', [...(form.device_types || []), 'desktop']);
-                } else {
-                  updateField('device_types', (form.device_types || []).filter((d: string) => d !== 'desktop'));
-                }
-              }}
-            />
-            <span className="ml-2">Desktop</span>
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              checked={form.device_types?.includes('mobile')}
-              onChange={e => {
-                if (e.target.checked) {
-                  updateField('device_types', [...(form.device_types || []), 'mobile']);
-                } else {
-                  updateField('device_types', (form.device_types || []).filter((d: string) => d !== 'mobile'));
-                }
-              }}
-            />
-            <span className="ml-2">Mobile</span>
+        {/* Name */}
+        <div className="relative mb-5">
+          <input
+            type="text"
+            id="name"
+            className="peer w-full border-b-2 border-gray-300 focus:border-primary-600 outline-none py-3 bg-transparent transition"
+            value={form.name || ''}
+            onChange={e => updateField('name', e.target.value)}
+            required
+            placeholder=" "
+            autoFocus
+          />
+          <label htmlFor="name" className="absolute left-0 top-3 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-2 peer-focus:text-xs peer-focus:text-primary-700">
+            Name
           </label>
         </div>
-      </div>
 
-      <div>
-        <label className="block mb-1 font-medium">Placement</label>
-        <input
-          type="text"
-          className="input input-bordered w-full"
-          value={form.placement || ''}
-          onChange={e => updateField('placement', e.target.value)}
-          required
-          placeholder="e.g. home_top, article_inline"
-        />
-      </div>
+        {/* Provider */}
+        <div className="relative mb-5">
+          <select
+            id="provider"
+            className="peer w-full border-b-2 border-gray-300 focus:border-primary-600 outline-none py-3 bg-transparent"
+            value={form.provider || ''}
+            onChange={e => updateField('provider', e.target.value)}
+          >
+            {providers.map(p => (
+              <option key={p} value={p}>{p}</option>
+            ))}
+          </select>
+          <label htmlFor="provider" className="absolute left-0 top-3 text-gray-500 text-sm pointer-events-none">
+            Provider
+          </label>
+        </div>
 
-      <div>
-        <label className="block mb-1 font-medium">Script/Code</label>
-        <textarea
-          className="input input-bordered w-full h-24"
-          value={form.script_code || ''}
-          onChange={e => updateField('script_code', e.target.value)}
-          required
-          placeholder="<script>...</script> or ad HTML/JS snippet"
-        />
-      </div>
+        {/* Ad Type */}
+        <div className="relative mb-5">
+          <input
+            type="text"
+            id="ad_type"
+            className="peer w-full border-b-2 border-gray-300 focus:border-primary-600 outline-none py-3 bg-transparent transition"
+            value={form.ad_type || ''}
+            onChange={e => updateField('ad_type', e.target.value)}
+            required
+            placeholder=" "
+          />
+          <label htmlFor="ad_type" className="absolute left-0 top-3 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-2 peer-focus:text-xs peer-focus:text-primary-700">
+            Ad Type (e.g. banner, pixel)
+          </label>
+        </div>
 
-      <div className="flex justify-end gap-3 pt-4">
-        <button
-          type="button"
-          className="btn btn-outline"
-          onClick={onCancel}
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="btn btn-primary"
-        >
-          {initialData ? 'Update' : 'Add'}
-        </button>
-      </div>
-    </form>
+        {/* Status */}
+        <div className="relative mb-5">
+          <select
+            id="status"
+            className="peer w-full border-b-2 border-gray-300 focus:border-primary-600 outline-none py-3 bg-transparent"
+            value={form.status || ''}
+            onChange={e => updateField('status', e.target.value)}
+          >
+            <option value="active">Active</option>
+            <option value="hidden">Hidden</option>
+            <option value="deleted">Deleted</option>
+          </select>
+          <label htmlFor="status" className="absolute left-0 top-3 text-gray-500 text-sm pointer-events-none">
+            Status
+          </label>
+        </div>
+
+        {/* Device Types */}
+        <div className="mb-5">
+          <label className="block mb-1 text-sm font-medium text-gray-600">Device Types</label>
+          <div className="flex gap-6">
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={form.device_types?.includes('desktop')}
+                onChange={e => {
+                  if (e.target.checked) {
+                    updateField('device_types', [...(form.device_types || []), 'desktop']);
+                  } else {
+                    updateField('device_types', (form.device_types || []).filter((d: string) => d !== 'desktop'));
+                  }
+                }}
+                className="accent-primary-600"
+              />
+              <span>Desktop</span>
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={form.device_types?.includes('mobile')}
+                onChange={e => {
+                  if (e.target.checked) {
+                    updateField('device_types', [...(form.device_types || []), 'mobile']);
+                  } else {
+                    updateField('device_types', (form.device_types || []).filter((d: string) => d !== 'mobile'));
+                  }
+                }}
+                className="accent-primary-600"
+              />
+              <span>Mobile</span>
+            </label>
+          </div>
+        </div>
+
+        {/* Placement */}
+        <div className="relative mb-5">
+          <input
+            type="text"
+            id="placement"
+            className="peer w-full border-b-2 border-gray-300 focus:border-primary-600 outline-none py-3 bg-transparent transition"
+            value={form.placement || ''}
+            onChange={e => updateField('placement', e.target.value)}
+            required
+            placeholder=" "
+          />
+          <label htmlFor="placement" className="absolute left-0 top-3 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-2 peer-focus:text-xs peer-focus:text-primary-700">
+            Placement (e.g. home_top)
+          </label>
+        </div>
+
+        {/* Script/Code */}
+        <div className="relative mb-6">
+          <textarea
+            id="script_code"
+            className="peer w-full border-b-2 border-gray-300 focus:border-primary-600 outline-none py-3 bg-transparent resize-none transition"
+            value={form.script_code || ''}
+            onChange={e => updateField('script_code', e.target.value)}
+            required
+            placeholder=" "
+            rows={3}
+          />
+          <label htmlFor="script_code" className="absolute left-0 top-3 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-2 peer-focus:text-xs peer-focus:text-primary-700">
+            Script or HTML Snippet
+          </label>
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-3 justify-end pt-2">
+          <button
+            type="button"
+            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold transition w-1/2"
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-semibold transition w-1/2"
+          >
+            {initialData ? 'Update' : 'Add'}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 
