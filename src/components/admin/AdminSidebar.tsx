@@ -77,6 +77,7 @@ const AdminSidebar: React.FC = () => {
     },
     { name: 'Chatbot', href: '/admin/chatbot', icon: MessageSquare },
     { name: 'Newsletter', href: '/admin/newsletter', icon: Mail },
+    { name: 'Ad Management', href: '/admin/ads', icon: MonitorSmartphone },
     { name: 'Settings', href: '/admin/settings', icon: Settings },
   ];
   
