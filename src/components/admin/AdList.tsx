@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Ad } from '../../types/ad';
 import AdForm from './AdForm';
+import toast from 'react-hot-toast';
 
 const AdList: React.FC = () => {
   const [ads, setAds] = useState<Ad[]>([]);
