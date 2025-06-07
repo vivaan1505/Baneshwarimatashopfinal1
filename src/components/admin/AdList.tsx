@@ -26,6 +26,31 @@ const AdList: React.FC = () => {
     fetchAds();
   };
 
+  const handleSaveAd = async (adData: Partial<Ad>) => {
+    try {
+      if (adData.id) {
+        // Update existing ad
+        const { error } = await supabase
+          .from('ads')
+          .update(adData)
+          .eq('id', adData.id);
+        if (error) throw error;
+      } else {
+        // Insert new ad
+        const { error } = await supabase
+          .from('ads')
+          .insert([adData]);
+        if (error) throw error;
+      }
+      
+      setEditingAd(null);
+      fetchAds();
+    } catch (error) {
+      console.error('Error saving ad:', error);
+      alert('Error saving ad. Please try again.');
+    }
+  };
+
   return (
     <div>
       <h2 className="text-xl font-bold mb-2">Ad/Script Units</h2>
@@ -53,7 +78,13 @@ const AdList: React.FC = () => {
           ))}
         </tbody>
       </table>
-      {editingAd && <AdForm ad={editingAd} onCancel={() => { setEditingAd(null); fetchAds(); }} />}
+      {editingAd && (
+        <AdForm 
+          initialData={editingAd} 
+          onSubmit={handleSaveAd}
+          onCancel={() => setEditingAd(null)} 
+        />
+      )}
     </div>
   );
 };
