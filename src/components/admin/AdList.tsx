@@ -35,19 +35,21 @@ const AdList: React.FC = () => {
           .update(adData)
           .eq('id', adData.id);
         if (error) throw error;
+        toast.success('Ad saved successfully!');
       } else {
         // Insert new ad
         const { error } = await supabase
           .from('ads')
           .insert([adData]);
         if (error) throw error;
+        toast.success('Ad saved successfully!');
       }
       
       setEditingAd(null);
       fetchAds();
     } catch (error) {
       console.error('Error saving ad:', error);
-      alert('Error saving ad. Please try again.');
+      toast.error('Error saving ad. Please try again.');
     }
   };
 
