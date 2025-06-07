@@ -1,84 +1,166 @@
 import React, { useState } from 'react';
-import { supabase } from '../../lib/supabase';
-import { Ad, AdProvider, AdType } from '../../types/ad';
+// import { supabase } from '../../utils/supabaseClient'; // Uncomment if saving to Supabase
+import { Ad, AdProvider } from '../../types/ad';
 
 const providers: AdProvider[] = [
-  'Google AdSense', 'Meta Pixel', 'Ezoic', 'Mediavine', 'AdThrive', 'Monumetric',
-  'Media.net', 'PropellerAds', 'RevenueHits', 'SHE Media', 'Playwire', 'Newor Media',
-  'Freestar', 'Sortable', 'AdPushup', 'Bidvertiser', 'Infolinks', 'Amazon Publisher Services',
-  'Index Exchange', 'OpenX', 'AppNexus', 'Primis', 'Custom'
-];
-const adTypes: AdType[] = [
-  'banner', 'in-article', 'in-feed', 'multiplex', 'pixel', 'script', 'analytics', 'tag', 'video', 'other'
+  'Google AdSense', 'Meta Pixel', 'Ezoic', 'Mediavine', 'AdThrive', 'Monumetric', 'Custom'
 ];
 
-interface Props {
-  ad: Partial<Ad>;
-  onClose: () => void;
-}
+const initialForm: Partial<Ad> = {
+  name: '',
+  provider: 'Google AdSense',
+  ad_type: '',
+  status: 'active',
+  device_types: ['desktop'],
+  placement: '',
+  script_code: '',
+};
 
-const AdForm: React.FC<Props> = ({ ad, onClose }) => {
-  const [form, setForm] = useState<Partial<Ad>>(ad);
+const AdForm: React.FC<{
+  onSubmit: (ad: Partial<Ad>) => void;
+  onCancel: () => void;
+  initialData?: Partial<Ad>;
+}> = ({ onSubmit, onCancel, initialData }) => {
+  const [form, setForm] = useState<Partial<Ad>>(initialData || initialForm);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value, type, checked } = e.target;
-    if (type === 'checkbox') {
-      setForm(f => ({
-        ...f,
-        device_types: f.device_types
-          ? (checked ? [...f.device_types, value] : f.device_types.filter(d => d !== value))
-          : [value]
-      }));
-    } else {
-      setForm(f => ({ ...f, [name]: value }));
-    }
+  const updateField = (key: keyof Ad, value: any) => {
+    setForm(prev => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (form.id) {
-      await supabase.from('ads').update(form).eq('id', form.id);
-    } else {
-      await supabase.from('ads').insert([{ ...form, status: 'active' }]);
-    }
-    onClose();
+    onSubmit(form);
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-40 flex items-center justify-center">
-      <form className="bg-white p-6 rounded shadow w-96" onSubmit={handleSubmit}>
-        <h3 className="text-lg font-bold mb-2">{form.id ? 'Edit Ad/Script' : 'Add New Ad/Script'}</h3>
-        <input name="name" placeholder="Name" value={form.name || ''} onChange={handleChange} className="input input-bordered w-full mb-2" required />
-        <select name="provider" value={form.provider || ''} onChange={handleChange} className="select select-bordered w-full mb-2" required>
-          <option value="">Provider</option>
-          {providers.map(p => <option key={p} value={p}>{p}</option>)}
-        </select>
-        <select name="ad_type" value={form.ad_type || ''} onChange={handleChange} className="select select-bordered w-full mb-2" required>
-          <option value="">Ad/Script Type</option>
-          {adTypes.map(type => <option key={type} value={type}>{type}</option>)}
-        </select>
-        <div className="mb-2">
-          <label><input type="checkbox" name="device_types" value="desktop" checked={form.device_types?.includes('desktop')} onChange={handleChange} /> Desktop</label>
-          <label className="ml-2"><input type="checkbox" name="device_types" value="mobile" checked={form.device_types?.includes('mobile')} onChange={handleChange} /> Mobile</label>
-        </div>
-        <input name="placement" placeholder="Placement (e.g. home_top, footer, head, after_3rd_feed)" value={form.placement || ''} onChange={handleChange} className="input input-bordered w-full mb-2" required />
-        <textarea
-          name="script_code"
-          placeholder="Paste ad code, meta pixel, or any script/snippet here"
-          value={form.script_code || ''}
-          onChange={handleChange}
-          className="textarea textarea-bordered w-full mb-2"
-          rows={6}
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full mx-auto space-y-4"
+    >
+      <h2 className="text-xl font-bold mb-2">{initialData ? 'Edit Ad/Script' : 'Add New Ad/Script'}</h2>
+
+      <div>
+        <label className="block mb-1 font-medium">Name</label>
+        <input
+          type="text"
+          className="input input-bordered w-full"
+          value={form.name || ''}
+          onChange={e => updateField('name', e.target.value)}
           required
         />
-        <input type="date" name="start_date" value={form.start_date || ''} onChange={handleChange} className="input input-bordered w-full mb-2" />
-        <input type="date" name="end_date" value={form.end_date || ''} onChange={handleChange} className="input input-bordered w-full mb-2" />
-        <div className="flex justify-end">
-          <button type="button" className="btn btn-ghost mr-2" onClick={onClose}>Cancel</button>
-          <button type="submit" className="btn btn-primary">{form.id ? 'Save' : 'Add'}</button>
+      </div>
+
+      <div>
+        <label className="block mb-1 font-medium">Provider</label>
+        <select
+          className="input input-bordered w-full"
+          value={form.provider || ''}
+          onChange={e => updateField('provider', e.target.value)}
+        >
+          {providers.map(p => (
+            <option key={p} value={p}>{p}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className="block mb-1 font-medium">Ad Type</label>
+        <input
+          type="text"
+          className="input input-bordered w-full"
+          value={form.ad_type || ''}
+          onChange={e => updateField('ad_type', e.target.value)}
+          required
+          placeholder="e.g. banner, pixel, script"
+        />
+      </div>
+
+      <div>
+        <label className="block mb-1 font-medium">Status</label>
+        <select
+          className="input input-bordered w-full"
+          value={form.status || ''}
+          onChange={e => updateField('status', e.target.value)}
+        >
+          <option value="active">Active</option>
+          <option value="hidden">Hidden</option>
+          <option value="deleted">Deleted</option>
+        </select>
+      </div>
+
+      <div>
+        <label className="block mb-1 font-medium">Device Types</label>
+        <div className="flex gap-4">
+          <label>
+            <input
+              type="checkbox"
+              checked={form.device_types?.includes('desktop')}
+              onChange={e => {
+                if (e.target.checked) {
+                  updateField('device_types', [...(form.device_types || []), 'desktop']);
+                } else {
+                  updateField('device_types', (form.device_types || []).filter((d: string) => d !== 'desktop'));
+                }
+              }}
+            />
+            <span className="ml-2">Desktop</span>
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={form.device_types?.includes('mobile')}
+              onChange={e => {
+                if (e.target.checked) {
+                  updateField('device_types', [...(form.device_types || []), 'mobile']);
+                } else {
+                  updateField('device_types', (form.device_types || []).filter((d: string) => d !== 'mobile'));
+                }
+              }}
+            />
+            <span className="ml-2">Mobile</span>
+          </label>
         </div>
-      </form>
-    </div>
+      </div>
+
+      <div>
+        <label className="block mb-1 font-medium">Placement</label>
+        <input
+          type="text"
+          className="input input-bordered w-full"
+          value={form.placement || ''}
+          onChange={e => updateField('placement', e.target.value)}
+          required
+          placeholder="e.g. home_top, article_inline"
+        />
+      </div>
+
+      <div>
+        <label className="block mb-1 font-medium">Script/Code</label>
+        <textarea
+          className="input input-bordered w-full h-24"
+          value={form.script_code || ''}
+          onChange={e => updateField('script_code', e.target.value)}
+          required
+          placeholder="<script>...</script> or ad HTML/JS snippet"
+        />
+      </div>
+
+      <div className="flex justify-end gap-3 pt-4">
+        <button
+          type="button"
+          className="btn btn-outline"
+          onClick={onCancel}
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="btn btn-primary"
+        >
+          {initialData ? 'Update' : 'Add'}
+        </button>
+      </div>
+    </form>
   );
 };
 
