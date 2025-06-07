@@ -27,7 +27,8 @@ import {
   User,
   Handshake,
   Image,
-  Palette
+  Palette,
+  MonitorSmartphone
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { cn } from '../../utils/cn';
