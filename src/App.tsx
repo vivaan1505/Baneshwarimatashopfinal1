@@ -1,10 +1,12 @@
-// src/App.tsx
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Layout from './components/layout/Layout';
 import AdminLayout from './components/admin/AdminLayout';
 import ThemeProvider from './components/theme/ThemeProvider';
+
+// Ad Injector Provider
+import { AdInjectorProvider } from './components/ads/AdInjectorProvider';
 
 // Eagerly loaded components
 import HomePage from './pages/HomePage';
@@ -77,6 +79,7 @@ const NewsletterPage = lazy(() => import('./pages/admin/NewsletterPage'));
 const CreateAdminPage = lazy(() => import('./pages/admin/CreateAdminPage'));
 const HeroSlidesPage = lazy(() => import('./pages/admin/HeroSlidesPage'));
 const SiteBrandingPage = lazy(() => import('./pages/admin/SiteBrandingPage'));
+const AdminAdsPage = lazy(() => import('./pages/admin/ads')); // <-- NEW
 
 // Loading component for Suspense
 const LoadingFallback = () => (
@@ -134,112 +137,115 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider>
-        <Router>
-          <Toaster 
-            position="top-right" 
-            toastOptions={{
-              duration: 4000,
-              style: {
-                background: '#fff',
-                color: '#333',
-              },
-              success: {
-                iconTheme: {
-                  primary: '#10B981',
-                  secondary: '#fff',
+        <AdInjectorProvider> {/* <-- Wrap the app for dynamic ad support */}
+          <Router>
+            <Toaster 
+              position="top-right" 
+              toastOptions={{
+                duration: 4000,
+                style: {
+                  background: '#fff',
+                  color: '#333',
                 },
-              },
-              error: {
-                iconTheme: {
-                  primary: '#EF4444',
-                  secondary: '#fff',
+                success: {
+                  iconTheme: {
+                    primary: '#10B981',
+                    secondary: '#fff',
+                  },
                 },
-              },
-            }}
-          />
-          <Suspense fallback={<LoadingFallback />}>
-            <Routes>
-              {/* Auth Routes */}
-              <Route path="/auth/signin" element={<SignInPage />} />
-              <Route path="/auth/signup" element={<SignUpPage />} />
-              
-              {/* Main Layout Routes */}
-              <Route path="/" element={<Layout />}>
-                <Route index element={<HomePage />} />
+                error: {
+                  iconTheme: {
+                    primary: '#EF4444',
+                    secondary: '#fff',
+                  },
+                },
+              }}
+            />
+            <Suspense fallback={<LoadingFallback />}>
+              <Routes>
+                {/* Auth Routes */}
+                <Route path="/auth/signin" element={<SignInPage />} />
+                <Route path="/auth/signup" element={<SignUpPage />} />
                 
-                {/* Shop Routes */}
-                <Route path="new-arrivals" element={<NewArrivalsPage />} />
-                <Route path="sale" element={<SalePage />} /> {/* Added SalePage route */}
-                <Route path="footwear" element={<FootwearPage />} />
-                <Route path="clothing" element={<ClothingPage />} />
-                <Route path="jewelry" element={<JewelryPage />} />
-                <Route path="beauty" element={<BeautyPage />} />
-                <Route path="men" element={<MenPage />} />
-                <Route path="women" element={<WomenPage />} />
-                <Route path="kids" element={<KidsPage />} />
-                <Route path="product/:id" element={<ProductPage />} />
-                <Route path="coupons" element={<CouponsPage />} />
-                <Route path="brand/:slug" element={<BrandPage />} />
-                <Route path="wishlist" element={<WishlistPage />} />
-                <Route path="search" element={<SearchResultsPage />} />
-                <Route path="size-chart" element={<SizeChartPage />} />
-                
-                {/* Protected Routes */}
-                <Route path="account" element={<AccountPage />} />
-                <Route path="account/referrals" element={<ReferralPage />} />
-                <Route path="account/recycling" element={<RecyclingRequestPage />} />
-                <Route path="checkout" element={<CheckoutPage />} />
-                <Route path="order-confirmation" element={<OrderConfirmationPage />} />
-                
-                {/* Specialty Store Routes */}
-                <Route path="bridal-boutique" element={<BridalBoutique />} />
-                <Route path="festive-store" element={<FestiveStore />} />
-                <Route path="festive-store/gift-guides" element={<FestiveGiftGuidesPage />} />
-                
-                {/* Information Routes */}
-                <Route path="blog" element={<BlogPage />} />
-                <Route path="blog/:slug" element={<BlogPost />} />
-                <Route path="careers" element={<CareersPage />} />
-                <Route path="about" element={<AboutPage />} />
-                <Route path="contact" element={<ContactPage />} />
-                <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
-                <Route path="terms-conditions" element={<TermsConditionsPage />} />
-                <Route path="disclaimer" element={<DisclaimerPage />} />
-                <Route path="accessibility" element={<AccessibilityPage />} />
-                <Route path="sitemap" element={<SitemapPage />} />
-                
-                {/* 404 Route */}
-                <Route path="*" element={<NotFoundPage />} />
-              </Route>
+                {/* Main Layout Routes */}
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<HomePage />} />
+                  
+                  {/* Shop Routes */}
+                  <Route path="new-arrivals" element={<NewArrivalsPage />} />
+                  <Route path="sale" element={<SalePage />} /> {/* Added SalePage route */}
+                  <Route path="footwear" element={<FootwearPage />} />
+                  <Route path="clothing" element={<ClothingPage />} />
+                  <Route path="jewelry" element={<JewelryPage />} />
+                  <Route path="beauty" element={<BeautyPage />} />
+                  <Route path="men" element={<MenPage />} />
+                  <Route path="women" element={<WomenPage />} />
+                  <Route path="kids" element={<KidsPage />} />
+                  <Route path="product/:id" element={<ProductPage />} />
+                  <Route path="coupons" element={<CouponsPage />} />
+                  <Route path="brand/:slug" element={<BrandPage />} />
+                  <Route path="wishlist" element={<WishlistPage />} />
+                  <Route path="search" element={<SearchResultsPage />} />
+                  <Route path="size-chart" element={<SizeChartPage />} />
+                  
+                  {/* Protected Routes */}
+                  <Route path="account" element={<AccountPage />} />
+                  <Route path="account/referrals" element={<ReferralPage />} />
+                  <Route path="account/recycling" element={<RecyclingRequestPage />} />
+                  <Route path="checkout" element={<CheckoutPage />} />
+                  <Route path="order-confirmation" element={<OrderConfirmationPage />} />
+                  
+                  {/* Specialty Store Routes */}
+                  <Route path="bridal-boutique" element={<BridalBoutique />} />
+                  <Route path="festive-store" element={<FestiveStore />} />
+                  <Route path="festive-store/gift-guides" element={<FestiveGiftGuidesPage />} />
+                  
+                  {/* Information Routes */}
+                  <Route path="blog" element={<BlogPage />} />
+                  <Route path="blog/:slug" element={<BlogPost />} />
+                  <Route path="careers" element={<CareersPage />} />
+                  <Route path="about" element={<AboutPage />} />
+                  <Route path="contact" element={<ContactPage />} />
+                  <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
+                  <Route path="terms-conditions" element={<TermsConditionsPage />} />
+                  <Route path="disclaimer" element={<DisclaimerPage />} />
+                  <Route path="accessibility" element={<AccessibilityPage />} />
+                  <Route path="sitemap" element={<SitemapPage />} />
+                  
+                  {/* 404 Route */}
+                  <Route path="*" element={<NotFoundPage />} />
+                </Route>
 
-              {/* Admin Routes */}
-              <Route path="/admin/login" element={<AdminLoginPage />} />
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<DashboardPage />} />
-                <Route path="products" element={<ProductsPage />} />
-                <Route path="products/:category" element={<CategoryProductsPage />} />
-                <Route path="orders" element={<OrdersPage />} />
-                <Route path="users" element={<UsersPage />} />
-                <Route path="create-admin" element={<CreateAdminPage />} />
-                <Route path="coupons" element={<AdminCouponsPage />} />
-                <Route path="jobs" element={<JobsPage />} />
-                <Route path="referrals" element={<ReferralsPage />} />
-                <Route path="recycling" element={<RecyclingPage />} />
-                <Route path="settings" element={<SettingsPage />} />
-                <Route path="update-brand-links" element={<UpdateBrandLinksPage />} />
-                <Route path="partner-services" element={<PartnerServicesPage />} />
-                <Route path="blog-posts" element={<BlogPostsPage />} />
-                <Route path="blog-categories" element={<BlogCategoriesPage />} />
-                <Route path="pages" element={<PagesPage />} />
-                <Route path="faq" element={<FAQPage />} />
-                <Route path="chatbot" element={<ChatbotPage />} />
-                <Route path="newsletter" element={<NewsletterPage />} />
-                <Route path="hero-slides" element={<HeroSlidesPage />} />
-                <Route path="site-branding" element={<SiteBrandingPage />} />
-              </Route>
-            </Routes>
-          </Suspense>
-        </Router>
+                {/* Admin Routes */}
+                <Route path="/admin/login" element={<AdminLoginPage />} />
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<DashboardPage />} />
+                  <Route path="products" element={<ProductsPage />} />
+                  <Route path="products/:category" element={<CategoryProductsPage />} />
+                  <Route path="orders" element={<OrdersPage />} />
+                  <Route path="users" element={<UsersPage />} />
+                  <Route path="create-admin" element={<CreateAdminPage />} />
+                  <Route path="coupons" element={<AdminCouponsPage />} />
+                  <Route path="jobs" element={<JobsPage />} />
+                  <Route path="referrals" element={<ReferralsPage />} />
+                  <Route path="recycling" element={<RecyclingPage />} />
+                  <Route path="settings" element={<SettingsPage />} />
+                  <Route path="update-brand-links" element={<UpdateBrandLinksPage />} />
+                  <Route path="partner-services" element={<PartnerServicesPage />} />
+                  <Route path="blog-posts" element={<BlogPostsPage />} />
+                  <Route path="blog-categories" element={<BlogCategoriesPage />} />
+                  <Route path="pages" element={<PagesPage />} />
+                  <Route path="faq" element={<FAQPage />} />
+                  <Route path="chatbot" element={<ChatbotPage />} />
+                  <Route path="newsletter" element={<NewsletterPage />} />
+                  <Route path="hero-slides" element={<HeroSlidesPage />} />
+                  <Route path="site-branding" element={<SiteBrandingPage />} />
+                  <Route path="ads" element={<AdminAdsPage />} /> {/* <-- AD MANAGEMENT ROUTE */}
+                </Route>
+              </Routes>
+            </Suspense>
+          </Router>
+        </AdInjectorProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );
