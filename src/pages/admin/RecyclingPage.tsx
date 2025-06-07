@@ -80,8 +80,21 @@ const RecyclingPage: React.FC = () => {
       }
 
       const userData = await response.json();
+      console.log('userData:', userData);
+
+      // Check if userData has a users property that is an array
+      let usersArray;
+      if (Array.isArray(userData)) {
+        usersArray = userData;
+      } else if (userData && Array.isArray(userData.users)) {
+        usersArray = userData.users;
+      } else {
+        console.error('userData structure:', userData);
+        throw new Error("Failed to fetch users - invalid response format");
+      }
+
       // Create a map from the array of users
-      const userMap = new Map(userData.map((user: any) => [user.id, user]));
+      const userMap = new Map(usersArray.map((user: any) => [user.id, user]));
 
       // Map user data to recycling requests
       const requestsWithUserData = recyclingData?.map(request => ({
