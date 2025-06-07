@@ -53,7 +53,7 @@ const AdList: React.FC = () => {
           ))}
         </tbody>
       </table>
-      {editingAd && <AdForm ad={editingAd} onClose={() => { setEditingAd(null); fetchAds(); }} />}
+      {editingAd && <AdForm ad={editingAd} onCancel={() => { setEditingAd(null); fetchAds(); }} />}
     </div>
   );
 };
