@@ -250,10 +250,10 @@ const SalePage: React.FC = () => {
           {/* Replace this with your Ad component or banner */}
           <div className="bg-gray-200 dark:bg-gray-800 rounded-lg h-32 w-full max-w-3xl flex items-center justify-center text-gray-400 text-xl font-semibold">
           <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2832897689800151"
-     crossorigin="anonymous"></script>
-<!-- horizontal ads -->
-<ins class="adsbygoogle"
-     style="display:block"
+     crossOrigin="anonymous"></script>
+{/* horizontal ads */}
+<ins className="adsbygoogle"
+     style={{display:"block"}}
      data-ad-client="ca-pub-2832897689800151"
      data-ad-slot="1039130756"
      data-ad-format="auto"
