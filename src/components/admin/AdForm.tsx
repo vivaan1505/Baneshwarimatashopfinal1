@@ -30,7 +30,7 @@ const AdForm: React.FC<{
   onCancel: () => void;
   initialData?: Partial<Ad>;
 }> = ({ onSubmit, onCancel, initialData }) => {
-  const [form, setForm] = useState<Partial<Ad>>(initialData || initialForm);
+  const [form, setForm] = useState<Partial<Ad>>({ ...initialForm, ...initialData });
   const modalRef = useRef<HTMLDivElement>(null);
 
   // Trap focus inside modal for accessibility
